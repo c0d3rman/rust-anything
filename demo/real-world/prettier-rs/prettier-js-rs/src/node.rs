@@ -109,8 +109,10 @@ pub fn skip_chain(n: &Value) -> &Value {
     }
 }
 
+/// `isObjectProperty`: object methods (`Property` with `method` or `kind` get/set) are not
+/// properties here.
 pub fn is_object_property(n: &Value) -> bool {
-    n.is("Property") || n.is("ObjectProperty")
+    n.is("ObjectProperty") || (n.is("Property") && !crate::estree::is_method(n))
 }
 
 pub fn is_function_or_arrow(n: &Value) -> bool {

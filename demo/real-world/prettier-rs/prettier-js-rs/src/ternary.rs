@@ -342,9 +342,19 @@ fn print_ternary_new(p: &mut Printer<'_>, args: &Args) -> R {
         || (is_ts && !is_parent_ternary)
         || (is_parent_ternary && is_ce && is_simple_expression_by_node_count(test_node, 1))
         || try_parenthesize_alternate;
+    // Prettier prints these through `path.call(..., "consequent")` and `"alternate"`, keys a
+    // conditional type does not have (it has `trueType` and `falseType`), so for one it prints
+    // nothing there and leaves the comments to the branch.
+    let dangling_of = |p: &mut Printer<'_>, n: &Value| {
+        if is_ce {
+            p.print_dangling(n, false, None)
+        } else {
+            empty()
+        }
+    };
     let mut consequent_comments = Vec::new();
     if !is_consequent_ternary && p.has_comment(consequent_node, crate::comments::Flags::DANGLING) {
-        consequent_comments.push(p.print_dangling(consequent_node, false, None));
+        consequent_comments.push(dangling_of(p, consequent_node));
         consequent_comments.push(hardline());
     }
     let mut alternate_comments = Vec::new();
@@ -352,7 +362,7 @@ fn print_ternary_new(p: &mut Printer<'_>, args: &Args) -> R {
         alternate_comments.push(p.print_dangling(test_node, false, None));
     }
     if !is_alternate_ternary && p.has_comment(alternate_node, crate::comments::Flags::DANGLING) {
-        alternate_comments.push(p.print_dangling(alternate_node, false, None));
+        alternate_comments.push(dangling_of(p, alternate_node));
     }
     if p.has_comment(node, crate::comments::Flags::DANGLING) {
         alternate_comments.push(p.print_dangling(node, false, None));

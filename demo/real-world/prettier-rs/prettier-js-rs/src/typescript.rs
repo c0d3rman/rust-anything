@@ -233,7 +233,7 @@ pub fn print_type_parameters(p: &mut Printer<'_>, key: &'static str) -> R {
         empty()
     } else if should_force_trailing_comma(p, key) {
         s(",")
-    } else if p.opts.should_print_comma(false) {
+    } else if p.opts.should_print_comma(true) {
         if_break(s(","), empty())
     } else {
         empty()
@@ -740,7 +740,7 @@ pub fn print_typescript(p: &mut Printer<'_>, args: &Args) -> R {
             let params = node.list("parameters");
             let trailing = if params.len() > 1 {
                 if_break(
-                    s(if p.opts.should_print_comma(false) {
+                    s(if p.opts.should_print_comma(true) {
                         ","
                     } else {
                         ""

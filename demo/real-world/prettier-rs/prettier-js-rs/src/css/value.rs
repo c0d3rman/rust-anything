@@ -1,6 +1,9 @@
 //! postcss-values-parser 2.0.1 (`lib/tokenize.js`, `lib/parser.js`; MIT, Copyright (c) Andrew
 //! Powell) in loose mode, and Prettier's `parse-value.js` grouping and `loc.js` value offsets.
-//! Byte offsets. Positions that postcss-values-parser computes from a stale variable are kept so.
+//! The tokenizer counts bytes; `build` turns positions into UTF-16 offsets as Prettier has them.
+//! Positions that postcss-values-parser computes from a stale variable are kept so.
+
+use super::u16::{Idx, len16};
 
 #[derive(Clone, Debug)]
 struct Tok {
@@ -87,6 +90,10 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
     let mut paren = 0i64;
     let mut is_url_arg = false;
     let mut next: Option<i64> = None;
+    // postcss-values-parser's columns are differences of UTF-16 indices.
+    let idx = Idx::new(css);
+    let pos16 = |x: i64| if x < 0 { x } else { idx.pos(x as usize) };
+    let col = |x: i64, from: i64| pos16(x) - pos16(from);
     let slice = |a: usize, b: usize| css.get(a.min(len)..b.min(len)).unwrap_or("").to_string();
     while pos < len {
         let mut code = s[pos];
@@ -114,9 +121,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                     ty: "space",
                     text: slice(pos, n),
                     line,
-                    col: p - offset,
+                    col: col(p, offset),
                     end_line: line,
-                    end_col: Some(n as i64 - offset),
+                    end_col: Some(col(n as i64, offset)),
                     pos: p,
                 });
                 pos = n - 1;
@@ -128,9 +135,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                     ty: if code == b':' { "colon" } else { "comma" },
                     text: slice(pos, n),
                     line,
-                    col: p - offset,
+                    col: col(p, offset),
                     end_line: line,
-                    end_col: Some(n as i64 - offset),
+                    end_col: Some(col(n as i64, offset)),
                     pos: p,
                 });
             }
@@ -156,9 +163,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                     ty,
                     text: (code as char).to_string(),
                     line,
-                    col: p - offset,
+                    col: col(p, offset),
                     end_line: line,
-                    end_col: next.map(|n| n - offset),
+                    end_col: next.map(|n| col(n, offset)),
                     pos: p,
                 });
             }
@@ -181,9 +188,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                     ty: "string",
                     text: slice(pos, n + 1),
                     line,
-                    col: p - offset,
+                    col: col(p, offset),
                     end_line: line,
-                    end_col: Some(n as i64 - offset),
+                    end_col: Some(col(n as i64, offset)),
                     pos: p,
                 });
                 pos = n;
@@ -215,9 +222,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                     ty: "atword",
                     text: slice(pos, n + 1),
                     line,
-                    col: p - offset,
+                    col: col(p, offset),
                     end_line: line,
-                    end_col: Some(n as i64 - offset),
+                    end_col: Some(col(n as i64, offset)),
                     pos: p,
                 });
                 pos = n;
@@ -228,9 +235,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                     ty: "word",
                     text: slice(pos, pos + 1),
                     line,
-                    col: p - offset,
+                    col: col(p, offset),
                     end_line: line,
-                    end_col: Some(p - offset),
+                    end_col: Some(col(p, offset)),
                     pos: p,
                 });
             }
@@ -243,9 +250,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                         ty: "word",
                         text: slice(pos, n),
                         line,
-                        col: p - offset,
+                        col: col(p, offset),
                         end_line: line,
-                        end_col: Some(n as i64 - offset),
+                        end_col: Some(col(n as i64, offset)),
                         pos: p,
                     });
                     pos = n - 1;
@@ -255,9 +262,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                         ty: "operator",
                         text: slice(pos, n),
                         line,
-                        col: p - offset,
+                        col: col(p, offset),
                         end_line: line,
-                        end_col: Some(n as i64 - offset),
+                        end_col: Some(col(n as i64, offset)),
                         pos: p,
                     });
                     n -= 1;
@@ -288,9 +295,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                         ty: "comment",
                         text: content,
                         line,
-                        col: p - offset,
+                        col: col(p, offset),
                         end_line: next_line,
-                        end_col: Some(n as i64 - next_offset),
+                        end_col: Some(col(n as i64, next_offset)),
                         pos: p,
                     });
                     offset = next_offset;
@@ -303,9 +310,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                         ty: "#",
                         text: slice(pos, n),
                         line,
-                        col: p - offset,
+                        col: col(p, offset),
                         end_line: line,
-                        end_col: Some(n as i64 - offset),
+                        end_col: Some(col(n as i64, offset)),
                         pos: p,
                     });
                 } else if (code == b'u' || code == b'U') && c(s, pos + 1) == b'+' {
@@ -323,9 +330,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                         ty: "unicoderange",
                         text: slice(pos, n),
                         line,
-                        col: p - offset,
+                        col: col(p, offset),
                         end_line: line,
-                        end_col: Some(n as i64 - offset),
+                        end_col: Some(col(n as i64, offset)),
                         pos: p,
                     });
                     pos = n - 1;
@@ -336,9 +343,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                         ty: "operator",
                         text: slice(pos, n),
                         line,
-                        col: p - offset,
+                        col: col(p, offset),
                         end_line: line,
-                        end_col: Some(n as i64 - offset),
+                        end_col: Some(col(n as i64, offset)),
                         pos: p,
                     });
                 } else {
@@ -372,9 +379,9 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                         ty: "word",
                         text: slice(pos, n + 1),
                         line,
-                        col: p - offset,
+                        col: col(p, offset),
                         end_line: line,
-                        end_col: Some(n as i64 - offset),
+                        end_col: Some(col(n as i64, offset)),
                         pos: p,
                     });
                     pos = n;
@@ -652,7 +659,7 @@ impl P {
                 has_source: true,
                 sl: cur.line,
                 el: cur.end_line,
-                ec: Some(cur.col + index as i64 - 1),
+                ec: Some(cur.col + len16(word.get(..index).unwrap_or(&word)) - 1),
                 source_index: cur.pos + ind as i64,
                 ..Default::default()
             };
@@ -745,7 +752,8 @@ fn number_prefix(s: &str) -> Option<usize> {
     Some(i)
 }
 
-fn line_col_to_index(line: i64, col: Option<i64>, text: &str) -> Option<i64> {
+/// `lineColumnToIndex`, in UTF-16 units.
+fn line_col_to_index(line: i64, col: Option<i64>, text: &str, idx: &Idx) -> Option<i64> {
     let col = col?;
     let mut index: i64 = 0;
     for _ in 0..(line - 1).max(0) {
@@ -754,7 +762,7 @@ fn line_col_to_index(line: i64, col: Option<i64>, text: &str) -> Option<i64> {
             None => 0,
         };
     }
-    Some(index + col)
+    Some(idx.b2u(index as usize) + col)
 }
 
 fn fix_word(v: &V, i: i64) -> i64 {
@@ -769,16 +777,18 @@ fn fix_word(v: &V, i: i64) -> i64 {
     }
 }
 
-fn build(p: &P, id: usize, text: &str, root_offset: i64, is_scss: bool) -> Option<V> {
+fn build(p: &P, id: usize, text: &str, idx: &Idx, root_offset: i64, is_scss: bool) -> Option<V> {
     let mut v = p.arena[id].clone();
     if v.has_source {
+        // The tokenizer counts bytes; Prettier's `sourceIndex` counts UTF-16 units.
+        let u = |b: i64| if b < 0 { b } else { idx.b2u(b as usize) };
         let start = if v.ty == "word" {
-            fix_word(&v, v.source_index)
+            fix_word(&v, u(v.source_index))
         } else {
-            v.source_index
+            u(v.source_index)
         };
         v.start = start + root_offset;
-        v.end = line_col_to_index(v.el, v.ec, text)
+        v.end = line_col_to_index(v.el, v.ec, text, idx)
             .map(|e| (if v.ty == "word" { fix_word(&v, e) } else { e }) + root_offset);
         v.start_line = v.sl;
     }
@@ -789,7 +799,7 @@ fn build(p: &P, id: usize, text: &str, root_offset: i64, is_scss: bool) -> Optio
     if let Some(nodes) = v.nodes.take() {
         let mut children: Vec<V> = Vec::new();
         for &c in &nodes {
-            let mut child = build(p, c, text, root_offset, is_scss)?;
+            let mut child = build(p, c, text, idx, root_offset, is_scss)?;
             if child.ty == "func"
                 && child.value == "selector"
                 && let Some(g) = child.group.as_mut()
@@ -974,7 +984,8 @@ pub fn parse_value(value: &str, root_offset: i64, is_scss: bool) -> Result<Optio
         return Ok(None);
     }
     let _ = &p.parent;
-    let mut root = build(&p, 0, value, root_offset, is_scss).ok_or(())?;
+    let idx = Idx::new(value);
+    let mut root = build(&p, 0, value, &idx, root_offset, is_scss).ok_or(())?;
     root.value = value.to_string();
     Ok(Some(root))
 }

@@ -627,6 +627,18 @@ fn print_block(p: &mut Printer<'_>) -> R {
         if has_body {
             parts.push(print_statement_sequence(p, "body")?);
         }
+        // Babel keeps directives out of `body`, and `printBlockBody` puts a line between them and
+        // dangling comments when nothing else follows them.
+        let last = node.list("body").iter().rfind(|n| !n.is("EmptyStatement"));
+        if has_dangling
+            && p.comments.babel
+            && let Some(last) = last.filter(|n| n.get("directive").is_some_and(Value::is_string))
+        {
+            parts.push(hardline());
+            if is_next_line_empty(last, p.text) {
+                parts.push(hardline());
+            }
+        }
         if has_dangling {
             parts.push(p.print_dangling(node, false, None));
         }

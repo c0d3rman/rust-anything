@@ -31,11 +31,18 @@ pub fn group_with(contents: Doc, should_break: bool, id: Option<String>) -> Doc 
 }
 
 pub fn conditional_group(states: Vec<Doc>, should_break: bool) -> Doc {
+    cond_group(states, should_break, None)
+}
+
+/// A group with expanded states whose `contents` is the same node as `states[0]`, as
+/// `conditionalGroup` and `mapDoc` build it.
+pub fn cond_group(states: Vec<Doc>, should_break: bool, id: Option<String>) -> Doc {
+    let (contents, states) = doc_printer_rs::port::conditional_group_parts(states);
     Doc::Group {
-        contents: Box::new(states[0].clone()),
+        contents: Box::new(contents),
         brk: Cell::new(should_break),
         expanded: Some(states),
-        id: None,
+        id,
     }
 }
 
@@ -273,15 +280,11 @@ pub fn remove_lines(doc: &Doc) -> Doc {
             expanded,
             id,
         } => match expanded {
-            Some(states) => {
-                let states: Vec<Doc> = states.iter().map(remove_lines).collect();
-                Doc::Group {
-                    contents: Box::new(states[0].clone()),
-                    brk: Cell::new(brk.get()),
-                    expanded: Some(states),
-                    id: id.clone(),
-                }
-            }
+            Some(states) => cond_group(
+                states.iter().map(remove_lines).collect(),
+                brk.get(),
+                id.clone(),
+            ),
             None => Doc::Group {
                 contents: Box::new(remove_lines(contents)),
                 brk: Cell::new(brk.get()),
@@ -403,8 +406,9 @@ fn clean_rec(doc: &Doc, cache: &mut doc_printer_rs::port::fx::FxHashMap<*const D
         } => {
             let (contents, expanded) = match expanded {
                 Some(states) => {
-                    let states: Vec<Doc> = states.iter().map(|d| clean_rec(d, cache)).collect();
-                    (states[0].clone(), Some(states))
+                    let states = states.iter().map(|d| clean_rec(d, cache)).collect();
+                    let (contents, states) = doc_printer_rs::port::conditional_group_parts(states);
+                    (contents, Some(states))
                 }
                 None => (clean_rec(contents, cache), None),
             };

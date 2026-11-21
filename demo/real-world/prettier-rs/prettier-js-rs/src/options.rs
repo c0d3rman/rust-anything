@@ -199,6 +199,17 @@ pub enum EndOfLine {
     Auto,
 }
 
+impl EndOfLine {
+    /// `convertEndOfLine`; `format` resolves `Auto` before printing.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            EndOfLine::Crlf => "\r\n",
+            EndOfLine::Cr => "\r",
+            EndOfLine::Lf | EndOfLine::Auto => "\n",
+        }
+    }
+}
+
 impl Options {
     pub fn for_path(filepath: &str) -> Option<Self> {
         Self::for_path_with(filepath, None)

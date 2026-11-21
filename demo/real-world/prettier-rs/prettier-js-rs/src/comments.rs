@@ -84,6 +84,8 @@ pub struct Attached {
 
 #[derive(Default)]
 pub struct Comments {
+    /// Attached for a JavaScript file, as Prettier's Babel parser shapes it (see `attach`).
+    pub babel: bool,
     pub list: Vec<Comment>,
     by_node: doc_printer_rs::port::fx::FxHashMap<*const Value, Vec<Attached>>,
     printed: RefCell<doc_printer_rs::port::fx::FxHashSet<usize>>,
@@ -162,7 +164,7 @@ impl Comments {
 
     pub fn of(&self, node: &Value) -> &[Attached] {
         self.by_node
-            .get(&(node as *const Value))
+            .get(&(comment_holder(node, self.babel) as *const Value))
             .map_or(&[], Vec::as_slice)
     }
 
@@ -300,14 +302,61 @@ fn can_attach_comment(n: &Value) -> bool {
     )
 }
 
-fn children(n: &Value) -> Vec<&Value> {
-    if n.is("MethodDefinition")
+/// The node holding the comments that attach to `node`. Babel has no `ChainExpression`: its
+/// outermost optional node, which oxc nests inside one, takes that place in the tree.
+fn comment_holder(node: &Value, babel: bool) -> &Value {
+    let mut node = node;
+    while babel
+        && node.is("ChainExpression")
+        && let Some(e) = node.field("expression")
+    {
+        node = e;
+    }
+    node
+}
+
+/// The type Babel gives a method that oxc's ESTree output splits into a `MethodDefinition` or
+/// `Property` and its `FunctionExpression` value: Babel has one `ClassMethod`,
+/// `ClassPrivateMethod` or `ObjectMethod` node holding the key, parameters and body.
+fn babel_method_type(n: &Value) -> Option<&'static str> {
+    if !n.field("value").is_some_and(|v| v.is("FunctionExpression")) {
+        return None;
+    }
+    if n.is("MethodDefinition") {
+        let private = n.field("key").is_some_and(|k| k.is("PrivateIdentifier"));
+        return Some(if private {
+            "ClassPrivateMethod"
+        } else {
+            "ClassMethod"
+        });
+    }
+    (n.is("Property") && crate::estree::is_method(n)).then_some("ObjectMethod")
+}
+
+/// `getSortedChildNodes`' child list. With `babel` (JavaScript files, which Prettier parses with
+/// Babel), a method's `FunctionExpression` value is transparent, as Babel has no such node.
+fn children(n: &Value, babel: bool) -> Vec<&Value> {
+    if babel && babel_method_type(n).is_some() {
+        let mut out = Vec::new();
+        for c in children(n, false) {
+            if c.is("FunctionExpression") && n.field("value").is_some_and(|v| v.same(c)) {
+                out.extend(children(c, false));
+            } else {
+                out.push(c);
+            }
+        }
+        return out;
+    }
+    // `getCommentChildNodes` for the ESTree parsers. `isNonEmptyArray(node.value.typeParameters)`
+    // is always false for typescript-estree's `TSTypeParameterDeclaration`, so type parameters do
+    // not stop this.
+    if !babel
+        && n.is("MethodDefinition")
         && let Some(value) = n.field("value")
         && value.is("FunctionExpression")
         && function_parameters(value).is_empty()
         && value.field("returnType").is_none()
         && value.list("typeParameters").is_empty()
-        && value.field("typeParameters").is_none()
         && let Some(body) = value.field("body")
     {
         let mut out: Vec<&Value> = n.list("decorators").iter().collect();
@@ -341,6 +390,7 @@ fn children(n: &Value) -> Vec<&Value> {
 
 struct Attacher<'a> {
     text: &'a str,
+    babel: bool,
     sorted: doc_printer_rs::port::fx::FxHashMap<*const Value, Vec<&'a Value>>,
     by_node: doc_printer_rs::port::fx::FxHashMap<*const Value, Vec<Attached>>,
     ignore_nodes: doc_printer_rs::port::fx::FxHashSet<*const Value>,
@@ -353,8 +403,11 @@ impl<'a> Attacher<'a> {
             return v.clone();
         }
         let mut out = Vec::new();
-        for c in children(n) {
-            if can_attach_comment(c) {
+        for c in children(n, self.babel) {
+            // Babel's outermost optional node stands where oxc's `ChainExpression` does, and
+            // handlers compare it with the parent's fields; comments added to it go to its
+            // expression (see `add`).
+            if can_attach_comment(c) || (self.babel && c.is("ChainExpression")) {
                 out.push(c);
             } else {
                 out.extend(self.sorted_children(c));
@@ -413,7 +466,31 @@ impl<'a> Attacher<'a> {
         })
     }
 
+    /// The node's type as Babel would report it (see `babel_method_type`).
+    fn ty<'v>(&self, n: &'v Value) -> &'v str {
+        if self.babel
+            && let Some(t) = babel_method_type(n)
+        {
+            return t;
+        }
+        n.ty()
+    }
+
+    /// The node holding the function parts (`params`, `body`) of what Babel sees as `n`.
+    fn function_node<'v>(&self, n: &'v Value) -> &'v Value {
+        if self.babel
+            && babel_method_type(n).is_some()
+            && let Some(v) = n.field("value")
+        {
+            return v;
+        }
+        n
+    }
+
     fn add(&mut self, node: &Value, index: usize, kind: Kind, marker: Option<&'static str>) {
+        // With typescript-estree the `ChainExpression` keeps its comments (a handler naming a
+        // field can reach it).
+        let node = comment_holder(node, self.babel);
         self.by_node
             .entry(node as *const Value)
             .or_default()
@@ -450,18 +527,26 @@ fn is_all_empty_and_no_line_break(text: &str) -> bool {
 }
 
 /// `attachComments`, returning the side table.
+///
+/// `babel` makes attachment follow the tree shape Babel gives JavaScript files (Prettier's
+/// default parser for them) rather than typescript-estree's, which oxc's output follows.
 pub fn attach(
     ast: &Value,
     list: Vec<Comment>,
     text: &str,
     experimental_ternaries: bool,
+    babel: bool,
 ) -> Result<Comments, String> {
     let mut list = list;
     if list.is_empty() {
-        return Ok(Comments::default());
+        return Ok(Comments {
+            babel,
+            ..Comments::default()
+        });
     }
     let mut a = Attacher {
         text,
+        babel,
         sorted: Default::default(),
         by_node: Default::default(),
         ignore_nodes: Default::default(),
@@ -556,6 +641,7 @@ pub fn attach(
     }
     break_ties(&mut a, &mut ties, &list);
     Ok(Comments {
+        babel,
         list,
         by_node: a.by_node,
         printed: RefCell::new(Default::default()),
@@ -593,6 +679,7 @@ fn break_ties(a: &mut Attacher<'_>, ties: &mut Vec<Ctx<'_>>, list: &[Comment]) {
         }
     }
     for node in [preceding, following] {
+        let node = comment_holder(node, a.babel);
         if let Some(v) = a.by_node.get_mut(&(node as *const Value))
             && v.len() > 1
         {
@@ -616,7 +703,14 @@ fn add_block_statement_first(a: &mut Attacher<'_>, node: &Value, i: usize) {
     } else {
         node.list("properties")
     };
-    match body.iter().find(|n| !n.is("EmptyStatement")) {
+    // Babel keeps directives out of `body`.
+    let is_directive = |n: &Value| {
+        a.babel && n.is("ExpressionStatement") && n.get("directive").is_some_and(Value::is_string)
+    };
+    match body
+        .iter()
+        .find(|n| !n.is("EmptyStatement") && !is_directive(n))
+    {
         Some(first) => a.add(first, i, Kind::Leading, None),
         None => a.add(node, i, Kind::Dangling, None),
     }
@@ -630,9 +724,9 @@ fn add_block_or_not(a: &mut Attacher<'_>, node: &Value, i: usize) {
     }
 }
 
-fn is_real_function_like(n: &Value) -> bool {
+fn is_real_function_like(ty: &str) -> bool {
     matches!(
-        n.ty(),
+        ty,
         "ArrowFunctionExpression"
             | "FunctionExpression"
             | "FunctionDeclaration"
@@ -1215,7 +1309,7 @@ fn method_name(
     if let (Some(e), Some(p)) = (ctx.enclosing, ctx.preceding)
         && next_char(text, c.end) == Some('(')
         && matches!(
-            e.ty(),
+            a.ty(e),
             "Property" | "TSDeclareMethod" | "TSAbstractMethodDefinition"
         )
         && p.is("Identifier")
@@ -1229,7 +1323,7 @@ fn method_name(
         && p.is("Decorator")
         && ctx
             .enclosing
-            .is_some_and(|e| PROPERTY_LIKE.contains(&e.ty()))
+            .is_some_and(|e| PROPERTY_LIKE.contains(&a.ty(e)))
         && (c.is_line() || c.placement == Placement::OwnLine)
     {
         a.add(p, ctx.index, Kind::Trailing, None);
@@ -1252,7 +1346,7 @@ fn function_name(
     if let Some(p) = ctx.preceding
         && ctx.enclosing.is_some_and(|e| {
             matches!(
-                e.ty(),
+                a.ty(e),
                 "FunctionDeclaration"
                     | "FunctionExpression"
                     | "ClassMethod"
@@ -1301,13 +1395,15 @@ fn comment_in_empty_parens(
     let Some(e) = ctx.enclosing else {
         return false;
     };
-    if (is_real_function_like(e) && function_parameters(e).is_empty())
+    if (is_real_function_like(a.ty(e)) && function_parameters(a.function_node(e)).is_empty())
         || (is_call_like_expression(e) && call_arguments(e).is_empty())
     {
-        a.add(e, ctx.index, Kind::Dangling, None);
+        // Prettier prints a Babel method's dangling comments where the port prints its value's.
+        let target = a.function_node(e);
+        a.add(target, ctx.index, Kind::Dangling, None);
         return true;
     }
-    if matches!(e.ty(), "MethodDefinition" | "TSAbstractMethodDefinition")
+    if matches!(a.ty(e), "MethodDefinition" | "TSAbstractMethodDefinition")
         && let Some(v) = e.field("value")
         && function_parameters(v).is_empty()
     {
@@ -1336,7 +1432,7 @@ fn last_function_arg(
                 | "RestElement"
                 | "TSParameterProperty"
         )
-        && is_real_function_like(e)
+        && is_real_function_like(a.ty(e))
         && next_char(text, c.end) == Some(')')
     {
         a.add(p, ctx.index, Kind::Trailing, None);
@@ -1345,11 +1441,11 @@ fn last_function_arg(
     if c.is_line()
         && let (Some(e), Some(f)) = (ctx.enclosing, ctx.following)
         && matches!(
-            e.ty(),
+            a.ty(e),
             "FunctionDeclaration" | "FunctionExpression" | "ObjectMethod"
         )
         && f.is("BlockStatement")
-        && e.field("body").is_some_and(|b| b.same(f))
+        && a.function_node(e).field("body").is_some_and(|b| b.same(f))
         && next_non_space_non_comment_index(text, c.end) == Some(f.start())
     {
         add_block_statement_first(a, f, ctx.index);

@@ -43,7 +43,6 @@ pub struct Printer<'a> {
     pub opts: &'a Options,
     stack: Vec<Frame<'a>>,
     cache: doc_printer_rs::port::fx::FxHashMap<*const Value, Doc>,
-    ids: usize,
     group_ids: doc_printer_rs::port::fx::FxHashMap<(&'static str, *const Value), String>,
     pub in_jest_each: bool,
     pub comments: crate::comments::Comments,
@@ -65,7 +64,6 @@ impl<'a> Printer<'a> {
                 index: None,
             }],
             cache: Default::default(),
-            ids: 0,
             group_ids: Default::default(),
             in_jest_each: false,
             comments,
@@ -125,9 +123,13 @@ impl<'a> Printer<'a> {
         id
     }
 
+    /// Prettier's group ids are `Symbol`s, unique across the whole run. Embedded code (one
+    /// `Printer` per Markdown code block) shares one doc, so the counter is process-wide, not
+    /// per printer.
     pub fn new_id(&mut self, name: &str) -> String {
-        self.ids += 1;
-        format!("{name}#{}", self.ids)
+        static IDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        let n = IDS.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
+        format!("{name}#{n}")
     }
 
     fn push(&mut self, node: &'a Value, key: &'static str, index: Option<usize>) {
@@ -243,7 +245,11 @@ impl<'a> Printer<'a> {
             return Ok(d.clone());
         }
         let printed = self.generic_print(args)?;
-        let printed = if self.will_print_own_comments() {
+        // Babel has no `ChainExpression`; the optional node it holds stands in its place, so that
+        // node's comments are printed around the `ChainExpression` (and its parentheses).
+        let in_chain =
+            self.comments.babel && self.parent().is_some_and(|p| p.is("ChainExpression"));
+        let printed = if self.will_print_own_comments() || in_chain {
             printed
         } else {
             crate::comments::print_comments(&self.comments, node, printed, self.text)
@@ -257,6 +263,11 @@ impl<'a> Printer<'a> {
     }
 
     pub fn has_node_ignore_comment(&self, node: &Value) -> bool {
+        // Under Babel the optional node inside holds the comment and is the one printed as
+        // written (with the parentheses `needs_parens` gives it).
+        if self.comments.babel && node.is("ChainExpression") {
+            return false;
+        }
         self.comments.is_ignore_node(node)
             || self
                 .comments
@@ -305,7 +316,19 @@ impl<'a> Printer<'a> {
                 ) || ((p.is("ClassDeclaration") || p.is("ClassExpression"))
                     && p.field("superClass").is_some_and(|s| s.same(node)))
             }))
-            && (!self.has_node_ignore_comment(node) || union_parent)
+            && (!self.has_own_comments_ignore_comment(node) || union_parent)
+    }
+
+    /// `hasNodeIgnoreComment` as `willPrintOwnComments` asks it. Under Babel a `ChainExpression`
+    /// stands for the optional node inside, whose prettier-ignore comment counts here, although
+    /// the inner node is the one printed as written.
+    fn has_own_comments_ignore_comment(&self, node: &Value) -> bool {
+        self.has_node_ignore_comment(node)
+            || (self.comments.babel
+                && node.is("ChainExpression")
+                && self
+                    .comments
+                    .has(node, crate::comments::Flags::PRETTIER_IGNORE))
     }
 
     pub fn has_comment(&self, node: &Value, flags: crate::comments::Flags) -> bool {
@@ -335,6 +358,11 @@ impl<'a> Printer<'a> {
     fn generic_print(&mut self, args: Args) -> R {
         let node = self.node();
         let printed = if self.is_ignored() {
+            // Prettier prints embedded languages before the estree printer sees the
+            // `prettier-ignore` comment, so an embedded template is formatted anyway.
+            if node.is("TemplateLiteral") && crate::template::is_embedded(self) {
+                return bail("embedded language");
+            }
             let (start, end) = (node.start(), node.end());
             self.comments.ignore_range(start, end);
             doc::s(self.text.get(start..end).unwrap_or("").to_string())

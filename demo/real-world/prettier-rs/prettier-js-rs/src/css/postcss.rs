@@ -41,6 +41,15 @@ fn c(css: &[u8], i: usize) -> u8 {
     css.get(i).copied().unwrap_or(0)
 }
 
+/// The last byte of the character at `i`: postcss steps one UTF-16 unit, the port one character.
+pub fn last_byte(css: &[u8], i: usize) -> usize {
+    let mut j = i;
+    while j + 1 < css.len() && (css[j + 1] & 0xc0) == 0x80 {
+        j += 1;
+    }
+    j
+}
+
 fn is_space(b: u8) -> bool {
     matches!(b, b' ' | b'\n' | b'\t' | b'\r' | 0x0c)
 }
@@ -299,7 +308,7 @@ impl Tokenizer<'_> {
                 }
                 let code = c(css, next + 1);
                 if escape && code != b'/' && !is_space(code) && next + 1 < len {
-                    next += 1;
+                    next = last_byte(css, next + 1);
                     if c(css, next).is_ascii_hexdigit() {
                         while c(css, next + 1).is_ascii_hexdigit() {
                             next += 1;
@@ -1099,6 +1108,13 @@ impl<'a> Parser<'a> {
             }
         }
         if let Some(b) = bang {
+            // postcss-less joins the tokens' texts. After the paren merge above overshot (it
+            // slices to `lastParenIndex + firstParenIndex`), tokens after the last `)` appear
+            // twice and the joined text is longer than its span, which a port token can't hold.
+            let joined: usize = tokens[b..=bang_end].iter().map(|t| t.end - t.start).sum();
+            if joined != tokens[bang_end].end - tokens[b].start {
+                return None;
+            }
             let first = tokens[b];
             let merged = Tok {
                 ty: Ty::Word,
@@ -1144,9 +1160,21 @@ impl<'a> Parser<'a> {
             return self.less_inline_comment(token);
         }
         if text == "/" {
+            // postcss-less issue #135: `/` then `/*...` is `//` then the word `*...`.
             let next = self.t.next_token()??;
             if next.ty == Ty::Comment && self.text(&next).starts_with("/*") {
-                return None;
+                let word = Tok {
+                    ty: Ty::Word,
+                    start: next.start + 1,
+                    ..next
+                };
+                // The word keeps the comment's start offset in postcss-less; a port token's
+                // text is its span, so one that would be handed back to the parser is refused.
+                if self.text(&word).contains('\n') {
+                    return None;
+                }
+                self.t.back(word);
+                return self.less_inline_comment(token);
             }
         }
         self.other(token)

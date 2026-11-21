@@ -124,7 +124,7 @@ fn tokenize(css: &str) -> Option<Vec<Tok>> {
                     && !matches!(code, b'/' | b' ' | b'\n' | b'\t' | b'\r' | 0x0c)
                     && n + 1 < len
                 {
-                    n += 1;
+                    n = super::postcss::last_byte(s, n + 1);
                 }
                 out.push(Tok {
                     ty: "word",
@@ -230,6 +230,8 @@ struct P {
     tokens: Vec<Tok>,
     position: usize,
     current: usize,
+    /// A `parse` step that consumed nothing: postcss-selector-parser loops forever there.
+    hung: bool,
 }
 
 type O<T = ()> = Option<T>;
@@ -268,6 +270,16 @@ impl P {
 
     fn last(&self, id: usize) -> O<usize> {
         self.t.n[id].nodes.as_ref()?.last().copied()
+    }
+
+    fn step(&mut self, throw_on_paren: bool) -> O {
+        let at = self.position;
+        self.parse(throw_on_paren)?;
+        if self.position == at {
+            self.hung = true;
+            return None;
+        }
+        Some(())
     }
 
     fn parse(&mut self, throw_on_paren: bool) -> O {
@@ -485,8 +497,11 @@ impl P {
                 if ty == ")" {
                     balanced -= 1;
                 }
-                if balanced > 0 {
+                if balanced > 0 && ty == ")" {
+                    // Consumes nothing; the next turn counts the `)` again.
                     self.parse(false)?;
+                } else if balanced > 0 {
+                    self.step(false)?;
                 } else {
                     self.position += 1;
                 }
@@ -499,7 +514,8 @@ impl P {
             let l = last?;
             let mut balanced = 1;
             self.position += 1;
-            self.t.n[l].value.push('(');
+            // `last.value += "("`; an attribute's `value` is its value, `undefined` if absent.
+            paren_target(&mut self.t.n[l]).push('(');
             while self.position < self.tokens.len() && balanced > 0 {
                 let t = self.tok()?.clone();
                 if t.ty == "(" {
@@ -508,7 +524,7 @@ impl P {
                 if t.ty == ")" {
                     balanced -= 1;
                 }
-                self.t.n[l].value.push_str(&t.text);
+                paren_target(&mut self.t.n[l]).push_str(&t.text);
                 self.position += 1;
             }
             if balanced > 0 {
@@ -525,7 +541,9 @@ impl P {
             s.push_str(&self.tok()?.text.clone());
             self.position += 1;
         }
-        if self.position == self.tokens.len() && !s.contains(']') {
+        // Without a `]` token postcss-selector-parser throws: explicitly, or on reading
+        // `this.currToken[2]` past the end when the string holds a `]`.
+        if self.position == self.tokens.len() {
             return None;
         }
         let (name_part, operator, value) = split_attribute(&s);
@@ -538,22 +556,35 @@ impl P {
             } else {
                 Ns::Str(ns_parts[0].to_string())
             };
-            node.attribute = ns_parts[1].to_string();
+            // `parts[0].split(/(\|)/g)[2]`: up to a second `|`.
+            node.attribute = ns_parts[1].split('|').next().unwrap_or("").to_string();
         } else {
             node.attribute = name_part.to_string();
         }
-        if let Some(v) = value.filter(|v| !v.is_empty()) {
-            match insensitive_split(&v) {
+        // `value` is `parts[2]`: absent without an operator, possibly empty after one.
+        match value {
+            Some(v) if !v.is_empty() => match insensitive_split(&v) {
                 Some((head, _)) => {
                     node.attr_value = Some(head);
                     node.insensitive = true;
                 }
                 None => node.attr_value = Some(v),
-            }
+            },
+            v => node.attr_value = v,
         }
         self.new_node(node, None);
         self.position += 1;
         Some(())
+    }
+}
+
+/// The string postcss-selector-parser's `parentheses` appends to: `value`, which on an
+/// attribute is its value (`undefined` while absent).
+fn paren_target(n: &mut S) -> &mut String {
+    if n.ty == "attribute" {
+        n.attr_value.get_or_insert_with(|| "undefined".to_string())
+    } else {
+        &mut n.value
     }
 }
 
@@ -589,8 +620,11 @@ fn insensitive_split(v: &str) -> Option<(String, String)> {
 }
 
 /// postcss-selector-parser's result for `selector`, or `None` where it throws.
-pub fn parse(selector: &str) -> Option<Tree> {
-    let tokens = tokenize(selector)?;
+/// `Ok(None)` where postcss-selector-parser throws; `Err` where it never returns.
+pub fn parse(selector: &str) -> Result<Option<Tree>, ()> {
+    let Some(tokens) = tokenize(selector) else {
+        return Ok(None);
+    };
     let mut root = s_node("root", String::new());
     root.nodes = Some(vec![1]);
     let mut sel = s_node("selector", String::new());
@@ -603,9 +637,12 @@ pub fn parse(selector: &str) -> Option<Tree> {
         tokens,
         position: 0,
         current: 1,
+        hung: false,
     };
     while p.position < p.tokens.len() {
-        p.parse(true)?;
+        if p.step(true).is_none() {
+            return if p.hung { Err(()) } else { Ok(None) };
+        }
     }
-    Some(p.t)
+    Ok(Some(p.t))
 }

@@ -16,6 +16,7 @@ pub mod doc;
 pub mod estree;
 pub mod function;
 pub mod graphql;
+mod id_chars;
 pub mod json;
 pub mod jsx;
 pub mod markdown;
@@ -28,6 +29,7 @@ pub mod parens;
 mod postprocess;
 pub mod printer;
 pub mod property;
+pub mod soundness;
 pub mod template;
 pub mod ternary;
 pub mod text;
@@ -57,8 +59,11 @@ const ACCEPTED_DIAGNOSTICS: [&str; 16] = [
     "Classes can't have a field named 'constructor'",
     "Only ambient modules can use quoted names.",
     "Unexpected new.target expression",
-    "`await` is only allowed within async functions and at the top levels of modules",
+    AWAIT_DIAGNOSTIC,
 ];
+
+const AWAIT_DIAGNOSTIC: &str =
+    "`await` is only allowed within async functions and at the top levels of modules";
 
 /// Formats `text` as Prettier does with `opts`, or says why this port cannot.
 pub fn format(text: &str, opts: &Options) -> R<String> {
@@ -66,15 +71,25 @@ pub fn format(text: &str, opts: &Options) -> R<String> {
         Some(rest) => (true, rest),
         None => (false, text),
     };
-    let eol = match opts.end_of_line {
+    // Prettier resolves `auto` (`guessEndOfLine`) before printing, and printers that render docs
+    // to strings (template literal interpolations) print with the resolved line ending.
+    let end_of_line = match opts.end_of_line {
         options::EndOfLine::Auto => match text.find('\r') {
-            Some(i) if text.as_bytes().get(i + 1) == Some(&b'\n') => "\r\n",
-            Some(_) => "\r",
-            None => "\n",
+            Some(i) if text.as_bytes().get(i + 1) == Some(&b'\n') => options::EndOfLine::Crlf,
+            Some(_) => options::EndOfLine::Cr,
+            None => options::EndOfLine::Lf,
         },
-        options::EndOfLine::Lf => "\n",
-        options::EndOfLine::Crlf => "\r\n",
-        options::EndOfLine::Cr => "\r",
+        other => other,
+    };
+    let resolved;
+    let opts = if opts.end_of_line == end_of_line {
+        opts
+    } else {
+        resolved = Options {
+            end_of_line,
+            ..opts.clone()
+        };
+        &resolved
     };
     let normalized;
     let text = if text.contains('\r') {
@@ -83,7 +98,7 @@ pub fn format(text: &str, opts: &Options) -> R<String> {
     } else {
         text
     };
-    let formatted = format_text(text, opts, eol)?;
+    let formatted = format_text(text, opts, end_of_line.as_str())?;
     Ok(if has_bom {
         format!("\u{FEFF}{formatted}")
     } else {
@@ -125,7 +140,7 @@ pub fn text_to_doc(text: &str, opts: &Options) -> R<doc_printer_rs::port::Doc> {
         let doc = if opts.parser == options::Parser::JsonStringify {
             json::print_stringify(&ast)?
         } else {
-            let attached = match comments::attach(&ast, comment_list, text, false) {
+            let attached = match comments::attach(&ast, comment_list, text, false, false) {
                 Ok(c) => c,
                 Err(e) => return bail(format!("comments: {e}")),
             };
@@ -156,7 +171,12 @@ pub fn text_to_doc(text: &str, opts: &Options) -> R<doc_printer_rs::port::Doc> {
         .diagnostics
         .errors()
         .chain(ret.diagnostics.warnings())
-        .any(|d| !ACCEPTED_DIAGNOSTICS.contains(&d.to_string().as_str()))
+        .any(|d| {
+            let d = d.to_string();
+            !ACCEPTED_DIAGNOSTICS.contains(&d.as_str())
+                // Babel rejects `await` outside async functions and module top levels.
+                || (d == AWAIT_DIAGNOSTIC && !source_type.is_typescript())
+        })
     {
         return bail("parse error");
     }
@@ -164,14 +184,27 @@ pub fn text_to_doc(text: &str, opts: &Options) -> R<doc_printer_rs::port::Doc> {
     let json = ret
         .program
         .to_estree_json(source_type.is_typescript(), false);
-    let mut de = serde_json::Deserializer::from_str(&json);
-    de.disable_recursion_limit();
-    let mut ast: crate::value::Value = match serde::Deserialize::deserialize(&mut de) {
+    let mut ast: crate::value::Value = match crate::value::from_estree_json(&json) {
         Ok(v) => v,
         Err(e) => return bail(format!("estree json: {e}")),
     };
+    soundness::check(
+        &ast,
+        &soundness::Source {
+            text,
+            comments: &comment_list,
+            ts: source_type.is_typescript(),
+            tsx: source_type.is_typescript() && source_type.is_jsx(),
+        },
+    )?;
     postprocess::postprocess(&mut ast, text, &comment_list, source_type.is_typescript())?;
-    let attached = match comments::attach(&ast, comment_list, text, opts.experimental_ternaries) {
+    let attached = match comments::attach(
+        &ast,
+        comment_list,
+        text,
+        opts.experimental_ternaries,
+        !source_type.is_typescript(),
+    ) {
         Ok(c) => c,
         Err(e) => return bail(format!("comments: {e}")),
     };

@@ -3,7 +3,7 @@
 use crate::value::Value;
 
 use crate::node::*;
-use crate::printer::{Printer, R};
+use crate::printer::{Printer, R, bail};
 use crate::utils::*;
 
 type Pred<'p> = Option<&'p dyn Fn(&Value, Option<&str>) -> bool>;
@@ -160,7 +160,12 @@ pub fn needs_parens(p: &mut Printer<'_>) -> R<bool> {
             return Ok(should_wrap_function_for_export_default(p)? || node.is("SequenceExpression"));
         }
         "Decorator" => {
-            if key == Some("expression") && !can_decorator_expression_unparenthesized(node) {
+            if key == Some("expression")
+                && !can_decorator_expression_unparenthesized(
+                    node,
+                    p.opts.parser == crate::options::Parser::Typescript,
+                )?
+            {
                 return Ok(true);
             }
         }
@@ -447,6 +452,11 @@ pub fn needs_parens(p: &mut Printer<'_>) -> R<bool> {
                         }
                         "TaggedTemplateExpression" => object = o.field("tag"),
                         "TSNonNullExpression" => object = o.field("expression"),
+                        // Babel has no `ChainExpression`: the chain's links are its
+                        // `Optional*` nodes, which this loop walks through.
+                        "ChainExpression" if p.opts.parser == crate::options::Parser::Babel => {
+                            object = o.field("expression")
+                        }
                         _ => return Ok(false),
                     }
                 }
@@ -485,31 +495,43 @@ pub fn needs_parens(p: &mut Printer<'_>) -> R<bool> {
     }
 }
 
-fn is_decorator_member_expression(n: &Value) -> bool {
+/// `isDecoratorMemberExpression`. typescript-estree keeps `ChainExpression` inside a member
+/// chain (`(a?.b).c`), which `isMemberExpression` sees through but `node.property` does not:
+/// Prettier throws there.
+fn is_decorator_member_expression(n: &Value, ts: bool) -> R<bool> {
     if n.is("Identifier") {
-        return true;
+        return Ok(true);
     }
     if is_member_expression(n) {
-        return !n.flag("computed")
+        if ts && n.is("ChainExpression") {
+            return bail("Prettier crashes on a parenthesized optional chain in a decorator");
+        }
+        return Ok(!n.flag("computed")
             && !n.flag("optional")
             && n.field("property").is_some_and(|p| p.is("Identifier"))
-            && n.field("object")
-                .is_some_and(is_decorator_member_expression);
+            && match n.field("object") {
+                Some(o) => is_decorator_member_expression(o, ts)?,
+                None => false,
+            });
     }
-    false
+    Ok(false)
 }
 
-fn can_decorator_expression_unparenthesized(n: &Value) -> bool {
+fn can_decorator_expression_unparenthesized(n: &Value, ts: bool) -> R<bool> {
     let n = if n.is("ChainExpression") {
         n.field("expression").unwrap_or(n)
     } else {
         n
     };
-    is_decorator_member_expression(n)
-        || (is_call_expression(n)
-            && !n.flag("optional")
-            && n.field("callee")
-                .is_some_and(is_decorator_member_expression))
+    if is_decorator_member_expression(n, ts)? {
+        return Ok(true);
+    }
+    Ok(is_call_expression(n)
+        && !n.flag("optional")
+        && match n.field("callee") {
+            Some(c) => is_decorator_member_expression(c, ts)?,
+            None => false,
+        })
 }
 
 fn is_path_in_for_statement_initializer(p: &Printer<'_>) -> bool {

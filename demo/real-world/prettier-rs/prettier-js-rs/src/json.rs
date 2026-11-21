@@ -97,12 +97,11 @@ pub fn parse(text: &str, parser: Parser) -> R<(Value, Vec<Comment>)> {
         return bail("comment in json-stringify");
     }
     let json = ret.program.to_estree_json(false, false);
-    let mut de = serde_json::Deserializer::from_str(&json);
-    de.disable_recursion_limit();
-    let mut program: Value = match serde::Deserialize::deserialize(&mut de) {
+    let mut program: Value = match crate::value::from_estree_json(&json) {
         Ok(v) => v,
         Err(e) => return bail(format!("estree json: {e}")),
     };
+    crate::soundness::check_json_identifiers(&program)?;
     let body = match program.get_mut("body") {
         Some(Value::Array(body)) if body.len() == 1 => body,
         _ => return bail("json shape"),
@@ -262,7 +261,12 @@ fn print_node(node: &Value, is_key: bool) -> R {
                 Value::Null => "null".to_string(),
                 Value::Bool(b) => b.to_string(),
                 Value::String(text) => js_string(text),
-                Value::Number(_) if is_key => js_string(&js_number(value)),
+                // `JSON.stringify(String(node.value))`: `String(Infinity)` is "Infinity".
+                Value::Number(_) if is_key => js_string(
+                    &value
+                        .as_f64()
+                        .map_or_else(|| "null".to_string(), doc_printer_rs::js::number_to_string),
+                ),
                 Value::Number(_) => js_number(value),
                 _ => return bail("json literal"),
             }))

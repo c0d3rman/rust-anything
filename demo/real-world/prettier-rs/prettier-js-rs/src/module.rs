@@ -6,8 +6,43 @@ use crate::doc::*;
 use crate::node::*;
 use crate::printer::{Args, Printer, R, bail};
 
+/// `getTextWithoutComments`. Prettier splices each comment out with offsets relative to `start`
+/// in the text as spliced so far, in UTF-16 units; a comment that ends exactly at `start` gives a
+/// negative offset, and `String#slice` then counts it from the end. That case is ported as is.
 pub fn text_without_comments(p: &Printer<'_>, start: usize, end: usize) -> String {
-    let mut bytes: Vec<u8> = p.text.as_bytes()[start..end].to_vec();
+    let straddles = p
+        .comments
+        .list
+        .iter()
+        .any(|c| c.start < start && c.end >= start && c.start <= end);
+    if !straddles {
+        let mut bytes: Vec<u8> = p.text.as_bytes()[start..end].to_vec();
+        for c in &p.comments.list {
+            if c.start > end {
+                break;
+            }
+            if c.end < start {
+                continue;
+            }
+            for i in c.start.max(start)..c.end.min(end) {
+                bytes[i - start] = b' ';
+            }
+        }
+        return String::from_utf8_lossy(&bytes).into_owned();
+    }
+    let units = |b: usize| p.text[..b].encode_utf16().count() as i64;
+    let slice = |t: &[u16], from: i64, to: Option<i64>| -> Vec<u16> {
+        let len = t.len() as i64;
+        let norm = |i: i64| if i < 0 { (len + i).max(0) } else { i.min(len) };
+        let (a, b) = (norm(from), to.map_or(len, norm));
+        if a >= b {
+            Vec::new()
+        } else {
+            t[a as usize..b as usize].to_vec()
+        }
+    };
+    let start16 = units(start);
+    let mut text: Vec<u16> = p.text[start..end].encode_utf16().collect();
     for c in &p.comments.list {
         if c.start > end {
             break;
@@ -15,11 +50,13 @@ pub fn text_without_comments(p: &Printer<'_>, start: usize, end: usize) -> Strin
         if c.end < start {
             continue;
         }
-        for i in c.start.max(start)..c.end.min(end) {
-            bytes[i - start] = b' ';
-        }
+        let (cs, ce) = (units(c.start), units(c.end));
+        let mut next = slice(&text, 0, Some(cs - start16));
+        next.extend(std::iter::repeat_n(b' ' as u16, (ce - cs) as usize));
+        next.extend(slice(&text, ce - start16, None));
+        text = next;
     }
-    String::from_utf8_lossy(&bytes).into_owned()
+    String::from_utf16_lossy(&text)
 }
 
 fn kind(k: Option<&str>) -> Doc {

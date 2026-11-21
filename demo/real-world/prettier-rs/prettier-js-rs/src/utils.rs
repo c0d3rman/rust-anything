@@ -469,6 +469,30 @@ pub fn is_test_call(n: &Value, parent: Option<&Value>) -> bool {
     false
 }
 
+/// Whether `isTestCall(node)` throws: typescript-estree wraps `b?.()` in a `ChainExpression`,
+/// which `isCallExpression` sees through and `isAngularTestWrapper` then reads `.callee` of.
+pub fn test_call_crashes(n: &Value) -> bool {
+    if !n.is("CallExpression") || n.flag("optional") {
+        return false;
+    }
+    let chained_call = |a: &Value| a.is("ChainExpression") && is_call_expression(a);
+    let args = call_arguments(n);
+    let callee = n.field("callee");
+    if args.len() == 1 {
+        return !is_angular_test_wrapper(n)
+            && callee.is_some_and(is_unit_test_setup_identifier)
+            && chained_call(args[0]);
+    }
+    (args.len() == 2 || (args.len() == 3 && is_numeric_literal(args[2])))
+        && (args[0].is("TemplateLiteral") || is_string_literal(args[0]))
+        && callee.is_some_and(|c| {
+            TEST_CALL_CALLEES
+                .iter()
+                .any(|p| is_node_matches_name_or_path(c, p))
+        })
+        && chained_call(args[1])
+}
+
 pub fn template_literal_has_newlines(n: &Value) -> bool {
     n.list("quasis").iter().any(|q| {
         q.get("value")

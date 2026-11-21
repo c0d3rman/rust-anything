@@ -234,14 +234,15 @@ impl Pre<'_> {
         found || any
     }
 
-    fn ordered_info(&self, item: &Node) -> (u64, usize) {
+    /// `getOrderedListItemInfo`: `Number(numberText)` is a double.
+    fn ordered_info(&self, item: &Node) -> (f64, usize) {
         let t = chars_slice(self.text, item.start.offset, item.end.offset);
         let t = t.trim_start_matches(is_js_whitespace);
         let digits: String = t.chars().take_while(char::is_ascii_digit).collect();
         let rest = &t[digits.len()..];
         let rest = rest.strip_prefix(['.', ')']).unwrap_or(rest);
         let spaces = rest.chars().take_while(|c| is_js_whitespace(*c)).count();
-        (digits.parse().unwrap_or(0), spaces)
+        (digits.parse().unwrap_or(f64::NAN), spaces)
     }
 
     fn item_start(item: &Node) -> i64 {
@@ -482,13 +483,18 @@ fn map_strings(doc: &Doc) -> Doc {
             brk,
             expanded,
             id,
-        } => Doc::Group {
-            contents: Box::new(map_strings(contents)),
-            brk: brk.clone(),
-            expanded: expanded
-                .as_ref()
-                .map(|v| v.iter().map(map_strings).collect()),
-            id: id.clone(),
+        } => match expanded {
+            Some(states) => cond_group(
+                states.iter().map(map_strings).collect(),
+                brk.get(),
+                id.clone(),
+            ),
+            None => Doc::Group {
+                contents: Box::new(map_strings(contents)),
+                brk: brk.clone(),
+                expanded: None,
+                id: id.clone(),
+            },
         },
         Doc::IfBreak {
             brk,
@@ -1408,15 +1414,19 @@ impl<'a> Pr<'a> {
         let parts = self.children(path, &mut |p, path| {
             let (child, index) = *path.last().ok_or(()).or_else(|_| bail("path"))?;
             let raw = if node.ordered {
-                let start = node.start_num.unwrap_or(1);
+                let start = node.start_num.unwrap_or(1.0);
                 let number = if index == 0 {
                     start
                 } else if git_friendly {
-                    1
+                    1.0
                 } else {
-                    start + index as u64
+                    start + index as f64
                 };
-                format!("{number}{}", if nth % 2 == 0 { ". " } else { ") " })
+                format!(
+                    "{}{}",
+                    doc_printer_rs::js::number_to_string(number),
+                    if nth % 2 == 0 { ". " } else { ") " }
+                )
             } else if nth % 2 == 0 {
                 "- ".to_string()
             } else {
@@ -1486,14 +1496,14 @@ impl<'a> Pr<'a> {
             tab_width: self.opts.tab_width,
         };
         let second = pre.ordered_info(&list.children[1]).0;
-        if second != 1 {
+        if second != 1.0 {
             return false;
         }
         let first = pre.ordered_info(&list.children[0]).0;
-        if first != 0 {
+        if first != 0.0 {
             return true;
         }
-        list.children.len() > 2 && pre.ordered_info(&list.children[2]).0 == 1
+        list.children.len() > 2 && pre.ordered_info(&list.children[2]).0 == 1.0
     }
 
     fn print_table(&self, path: &mut Path<'a>) -> R {

@@ -2,6 +2,9 @@
 //! `is-next-line-empty.js`, `get-next-non-space-non-comment-character-index.js`. Offsets are
 //! byte offsets.
 
+/// JavaScript's line terminators, the characters a regular expression's `.` does not match.
+pub const LINE_TERMINATORS: [char; 4] = ['\n', '\r', '\u{2028}', '\u{2029}'];
+
 fn char_at(text: &str, i: usize) -> Option<char> {
     text.get(i..).and_then(|t| t.chars().next())
 }

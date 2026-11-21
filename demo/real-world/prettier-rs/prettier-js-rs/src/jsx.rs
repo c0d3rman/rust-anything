@@ -118,7 +118,7 @@ fn is_empty_doc(d: &Doc) -> bool {
         | Doc::Label(_, c) => is_empty_doc(c),
         Doc::Cursor => true,
         Doc::Trim | Doc::LineSuffixBoundary | Doc::Line { .. } | Doc::BreakParent => false,
-        Doc::Invalid(_) => false,
+        Doc::Invalid(..) => false,
     }
 }
 
@@ -698,6 +698,7 @@ pub fn print_jsx(p: &mut Printer<'_>) -> R {
         )),
         "JSXSpreadAttribute" | "JSXSpreadChild" => print_jsx_spread(p),
         "JSXExpressionContainer" => print_jsx_expression_container(p),
+        // A JSX element continued on the next line is refused in `soundness.rs`.
         "JSXFragment" | "JSXElement" => print_jsx_element(p),
         "JSXOpeningElement" => print_jsx_opening_element(p),
         "JSXClosingElement" => print_jsx_closing_element(p),

@@ -318,6 +318,20 @@ impl Resolver<'_, '_> {
         match name.as_deref() {
             Some(MAP) if !is_map => None,
             Some(SEQ) if !is_seq => None,
+            // yaml 1.10 `resolveByTagName` resolves a collection tagged with a core-schema scalar
+            // tag through that tag (`resolveString` gives "" for a collection) and wraps the
+            // result in a `Scalar`; yaml-unist-parser's `transformSeq` / `transformMap` then read
+            // `items` of it and throw a TypeError. Tags outside the core schema (`!!binary`,
+            // `!foo`, ...) match no tag and fall back to the collection, which Prettier formats.
+            Some(t)
+                if (is_map || is_seq)
+                    && matches!(
+                        t.strip_prefix("tag:yaml.org,2002:"),
+                        Some("str" | "null" | "bool" | "int" | "float")
+                    ) =>
+            {
+                None
+            }
             _ if is_map => self.resolve_map(id, shown),
             _ if is_seq => self.resolve_seq(id, shown),
             _ if !scalar => None,

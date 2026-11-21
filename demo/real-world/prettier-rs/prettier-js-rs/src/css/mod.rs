@@ -4,19 +4,21 @@
 mod media;
 mod postcss;
 mod selector;
+mod u16;
 mod units;
 mod value;
 
 use media::M;
 use postcss::Kind;
 use selector::{Ns, Tree};
+use u16::{Idx, len16};
 use value::V;
 
 use crate::comments::is_js_whitespace;
 use crate::doc::*;
 use crate::options::{Options, Parser, TrailingComma};
 use crate::printer::{R, bail};
-use crate::text::{has_newline, is_next_line_empty};
+use crate::text::{LINE_TERMINATORS, has_newline, is_next_line_empty};
 
 fn trim(s: &str) -> &str {
     s.trim_matches(is_js_whitespace)
@@ -38,6 +40,8 @@ enum Params {
     Raw(String),
     Media(Box<M>),
     MediaUnknown(String),
+    /// `parseMediaQuery`'s fallback when the parser throws.
+    SelectorUnknown(String),
     Root(Box<V>),
     Unknown(String),
 }
@@ -69,13 +73,14 @@ struct N {
     nodes: Option<Vec<N>>,
 }
 
-fn parse_selector(s: &str) -> Sel {
+fn parse_selector(s: &str) -> R<Sel> {
     if s.contains("//") || s.contains("/*") {
-        return Sel::Unknown(trim(s).to_string());
+        return Ok(Sel::Unknown(trim(s).to_string()));
     }
     match selector::parse(s) {
-        Some(t) => Sel::Parsed(t),
-        None => Sel::Unknown(s.to_string()),
+        Ok(Some(t)) => Ok(Sel::Parsed(t)),
+        Ok(None) => Ok(Sel::Unknown(s.to_string())),
+        Err(()) => bail("postcss-selector-parser never returns"),
     }
 }
 
@@ -86,20 +91,34 @@ fn parse_val(s: &str, root_offset: i64, p: Parser) -> R<Option<V>> {
     value::parse_value(s, root_offset, p == Parser::Scss).or_else(|_| bail("css value"))
 }
 
+/// `value.match(/(\s*)(!default).*$/u)`: `.` stops at line terminators and `$` is the end, so
+/// the first occurrence with no line break after it.
 fn directive(value: &str, word: &str) -> Option<(usize, String)> {
-    let i = value.find(word)?;
+    let i = value
+        .match_indices(word)
+        .map(|(i, _)| i)
+        .find(|&i| !value[i + word.len()..].contains(LINE_TERMINATORS))?;
     let ws_start = value[..i].len() - value[..i].trim_end_matches(is_js_whitespace).len();
     let start = i - ws_start;
     Some((start, value[start..].to_string()))
 }
 
-fn process(n: postcss::Node, text: &str, p: Parser) -> R<N> {
-    let start = n.start as i64;
-    let end = n.end.map(|e| e as i64);
+/// The index of the text a postcss tree was parsed from, and the original text Prettier slices
+/// (`options.originalText`); they differ under front matter and in custom-property blocks.
+#[derive(Clone, Copy)]
+struct Src<'t> {
+    idx: &'t Idx,
+    orig: &'t str,
+    oidx: &'t Idx,
+}
+
+fn process(n: postcss::Node, src: Src, p: Parser) -> R<N> {
+    let start = src.idx.b2u(n.start);
+    let end = n.end.map(|e| src.idx.b2u(e));
     let mut children = Vec::new();
     if let Some(nodes) = n.nodes.clone() {
         for c in nodes {
-            children.push(process(c, text, p)?);
+            children.push(process(c, src, p)?);
         }
     }
     let mut out = N {
@@ -142,21 +161,28 @@ fn process(n: postcss::Node, text: &str, p: Parser) -> R<N> {
         let v = n.value.as_deref().unwrap_or("");
         let mut rules = None;
         if v.trim_end_matches(is_js_whitespace).ends_with('}') {
-            let before: String = text[..(n.start).min(text.len())]
+            let prop_len = len16(&n.prop);
+            let (Some(before), Some(body)) = (
+                src.oidx.slice(src.orig, 0, Some(start)),
+                src.oidx.slice(src.orig, start + prop_len, end),
+            ) else {
+                return bail("custom property splits a surrogate pair");
+            };
+            let before: String = before
                 .chars()
                 .map(|c| if c == '\n' { '\n' } else { ' ' })
                 .collect();
-            let end = n.end.unwrap_or(text.len()).min(text.len());
-            let body = text.get(n.start + n.prop.len()..end).unwrap_or("");
-            let fake = format!("{before}{}{body}", "a".repeat(n.prop.len()));
+            let fake = format!("{before}{}{body}", "a".repeat(prop_len as usize));
             if let Some(ast) = parse_root(&fake, p)
                 && let Some(nodes) = &ast.nodes
                 && nodes.len() == 1
                 && nodes[0].kind == Kind::Rule
             {
+                let fidx = Idx::new(&fake);
+                let fsrc = Src { idx: &fidx, ..src };
                 let mut kids = Vec::new();
                 for c in nodes[0].nodes.clone().unwrap_or_default() {
-                    kids.push(process(c, &fake, p)?);
+                    kids.push(process(c, fsrc, p)?);
                 }
                 rules = Some(kids);
             }
@@ -210,16 +236,16 @@ fn process(n: postcss::Node, text: &str, p: Parser) -> R<N> {
         if selector.starts_with('@') && selector.ends_with(':') {
             return Ok(out);
         }
-        if p == Parser::Scss && is_nested_prop(&selector) {
+        if p == Parser::Scss && is_nested_prop(n.selector.as_deref().unwrap_or("")) {
             out.nested_prop = true;
         }
-        out.selector = Some(parse_selector(&selector));
+        out.selector = Some(parse_selector(&selector)?);
         return Ok(out);
     }
     let value_offset = || {
         let mut r = start;
         if out_kind_is_decl(n.kind) {
-            r += n.prop.len() as i64 + n.raws.between.len() as i64;
+            r += len16(&n.prop) + len16(&n.raws.between);
         }
         if n.kind == Kind::AtRule {
             r = atrule_offset(start, &n.name, &n.raws.after_name);
@@ -255,13 +281,13 @@ fn process(n: postcss::Node, text: &str, p: Parser) -> R<N> {
             out.value = None;
             let mut inner = value["extend(".len()..].to_string();
             inner.pop();
-            out.selector = Some(parse_selector(&inner));
+            out.selector = Some(parse_selector(&inner)?);
         }
     }
     if p == Parser::Less && n.kind == Kind::AtRule {
         if n.mixin {
             let source = format!("{}{}{}{}", n.identifier, n.name, n.raws.after_name, params);
-            out.selector = Some(parse_selector(&source));
+            out.selector = Some(parse_selector(&source)?);
             out.params = None;
             return Ok(out);
         }
@@ -271,20 +297,25 @@ fn process(n: postcss::Node, text: &str, p: Parser) -> R<N> {
     }
     if p == Parser::Css && n.kind == Kind::AtRule && n.name == "custom-selector" {
         let p = n.params.clone().unwrap_or_default();
-        let Some(i) = p.find(":--") else {
+        // `params.match(/:--\S+\s+/)[0].trim()`: the first `:--` with a name and whitespace.
+        let found = p.match_indices(":--").find_map(|(i, _)| {
+            let rest = &p[i..];
+            let name_end = rest.find(is_js_whitespace).unwrap_or(rest.len());
+            let ws_end = rest[name_end..]
+                .find(|c: char| !is_js_whitespace(c))
+                .map_or(rest.len(), |x| x + name_end);
+            (name_end > 3 && ws_end > name_end).then_some((rest, ws_end))
+        });
+        let Some((rest, ws_end)) = found else {
             return bail("custom-selector");
         };
-        let rest = &p[i..];
-        let name_end = rest.find(is_js_whitespace).unwrap_or(rest.len());
-        let ws_end = rest[name_end..]
-            .find(|c: char| !is_js_whitespace(c))
-            .map_or(rest.len(), |x| x + name_end);
-        if ws_end == name_end {
-            return bail("custom-selector");
-        }
         let custom = trim(&rest[..ws_end]).to_string();
         out.custom_selector = Some(custom.clone());
-        out.selector = Some(parse_selector(trim(&p[custom.len()..])));
+        // `node.params.slice(customSelector.length)`: from the start, not from the match.
+        let Some(rest) = Idx::new(&p).slice(&p, len16(&custom), None) else {
+            return bail("custom-selector splits a surrogate pair");
+        };
+        out.selector = Some(parse_selector(trim(rest))?);
         out.params = None;
         return Ok(out);
     }
@@ -327,27 +358,13 @@ fn process(n: postcss::Node, text: &str, p: Parser) -> R<N> {
     if n.kind == Kind::AtRule && !params.is_empty() {
         let name = n.name.as_str();
         let lower = name.to_lowercase();
-        let ws_colon = {
-            let b = n.raws.after_name.as_bytes();
-            let mut i = 0;
-            while i < b.len() && (b[i] as char).is_whitespace() {
-                i += 1;
-            }
-            if b.get(i) == Some(&b':') {
-                i += 1;
-            }
-            while i < b.len() && (b[i] as char).is_whitespace() {
-                i += 1;
-            }
-            i
-        };
-        let atrule_offset = start + 1 + n.name.len() as i64 + ws_colon as i64;
+        let atrule_offset = atrule_offset(start, &n.name, &n.raws.after_name);
         if name == "warn" || name == "error" {
             out.params = Some(Params::MediaUnknown(params));
             return Ok(out);
         }
         if name == "extend" || name == "nest" {
-            out.selector = Some(parse_selector(&params));
+            out.selector = Some(parse_selector(&params)?);
             out.params = None;
             return Ok(out);
         }
@@ -358,7 +375,7 @@ fn process(n: postcss::Node, text: &str, p: Parser) -> R<N> {
                     None => Params::Unknown(params),
                 });
             } else {
-                out.selector = Some(parse_selector(&params));
+                out.selector = Some(parse_selector(&params)?);
                 out.params = None;
             }
             return Ok(out);
@@ -401,15 +418,15 @@ fn process(n: postcss::Node, text: &str, p: Parser) -> R<N> {
                 return Ok(out);
             }
             out.params = Some(match media::parse(&params) {
-                Some(m) => Params::Media(Box::new(m)),
-                None => return bail("media parse"),
+                Ok(Some(m)) => Params::Media(Box::new(m)),
+                Ok(None) => Params::SelectorUnknown(params),
+                Err(()) => return bail("postcss-media-query-parser never returns"),
             });
             return Ok(out);
         }
         out.params = Some(Params::Raw(params));
         return Ok(out);
     }
-    let _ = text;
     Ok(out)
 }
 
@@ -523,9 +540,7 @@ fn has_extend_call(v: &str) -> bool {
     let mut from = 0;
     while let Some(i) = lower[from..].find("extend(") {
         let rest = &v[from + i + 7..];
-        let line_end = rest
-            .find(['\n', '\r', '\u{2028}', '\u{2029}'])
-            .unwrap_or(rest.len());
+        let line_end = rest.find(LINE_TERMINATORS).unwrap_or(rest.len());
         if rest[..line_end]
             .char_indices()
             .skip(1)
@@ -538,36 +553,35 @@ fn has_extend_call(v: &str) -> bool {
     false
 }
 
+/// `getValueRootOffset` for an at-rule: `1 + name.length + afterName.match(/^\s*:?\s*/)`.
 fn atrule_offset(start: i64, name: &str, after_name: &str) -> i64 {
-    let b = after_name.as_bytes();
-    let mut i = 0;
-    while i < b.len() && (b[i] as char).is_whitespace() {
-        i += 1;
-    }
-    if b.get(i) == Some(&b':') {
-        i += 1;
-    }
-    while i < b.len() && (b[i] as char).is_whitespace() {
-        i += 1;
-    }
-    start + 1 + name.len() as i64 + i as i64
+    let rest = after_name.trim_start_matches(is_js_whitespace);
+    let rest = rest.strip_prefix(':').unwrap_or(rest);
+    let rest = rest.trim_start_matches(is_js_whitespace);
+    // Every character `\s` matches is one UTF-16 unit.
+    let ws = after_name[..after_name.len() - rest.len()].chars().count() as i64;
+    start + 1 + len16(name) + ws
 }
 
+/// `isSCSSNestedPropertyNode`: `node.selector` (postcss's, without `raws.between`) with the
+/// first `/\/\*.*?\*\//u` and `/\/\/.*\n/u` match removed, ending in `:`.
 fn is_nested_prop(selector: &str) -> bool {
     let mut s = selector.to_string();
-    if let Some(i) = s.find("/*")
-        && let Some(j) = s[i + 2..].find("*/")
-        && !s[i..i + 2 + j].contains(['\n', '\r', '\u{2028}', '\u{2029}'])
-    {
-        s.replace_range(i..i + 2 + j + 2, "");
+    let block = s.match_indices("/*").find_map(|(i, _)| {
+        let rest = &s[i + 2..];
+        let j = rest.find("*/")?;
+        (!rest[..j].contains(LINE_TERMINATORS)).then_some((i, i + 2 + j + 2))
+    });
+    if let Some((a, b)) = block {
+        s.replace_range(a..b, "");
     }
-    if let Some(i) = s.find("//") {
-        let rest = &s[i..];
-        if let Some(nl) = rest.find('\n')
-            && !rest[..nl].contains(['\r', '\u{2028}', '\u{2029}'])
-        {
-            s.replace_range(i..i + nl + 1, "");
-        }
+    let line = s.match_indices("//").find_map(|(i, _)| {
+        let rest = &s[i + 2..];
+        let j = rest.find(LINE_TERMINATORS)?;
+        rest[j..].starts_with('\n').then_some((i, i + 2 + j + 1))
+    });
+    if let Some((a, b)) = line {
+        s.replace_range(a..b, "");
     }
     trim(&s).ends_with(':')
 }
@@ -751,6 +765,7 @@ fn is_wide_keyword(v: &str) -> bool {
 
 struct Pr<'a> {
     text: &'a str,
+    idx: &'a Idx,
     opts: &'a Options,
 }
 
@@ -764,11 +779,20 @@ struct Top<'a> {
 }
 
 impl<'a> Pr<'a> {
-    fn slice(&self, a: i64, b: Option<i64>) -> String {
-        let len = self.text.len() as i64;
-        let a = a.clamp(0, len) as usize;
-        let b = b.unwrap_or(len).clamp(0, len) as usize;
-        self.text.get(a..b.max(a)).unwrap_or("").to_string()
+    /// `options.originalText.slice(a, b)`.
+    fn slice(&self, a: i64, b: Option<i64>) -> R<String> {
+        match self.idx.slice(self.text, a, b) {
+            Some(t) => Ok(t.to_string()),
+            None => bail("slice splits a surrogate pair"),
+        }
+    }
+
+    /// The byte offset of UTF-16 index `u` in `options.originalText`.
+    fn byte(&self, u: i64) -> R<usize> {
+        match self.idx.byte(u) {
+            Some(b) => Ok(b),
+            None => bail("index splits a surrogate pair"),
+        }
     }
 
     fn sequence(&self, nodes: &'a [N], top: Top<'a>, parent: &'a N) -> R<Vec<Doc>> {
@@ -776,21 +800,21 @@ impl<'a> Pr<'a> {
         for (i, n) in nodes.iter().enumerate() {
             let prev = if i > 0 { nodes.get(i - 1) } else { None };
             if prev.is_some_and(|p| p.kind == Kind::Comment && trim(&p.text) == "prettier-ignore") {
-                parts.push(s(self.slice(n.start, n.end)));
+                parts.push(s(self.slice(n.start, n.end)?));
             } else {
                 parts.push(self.print_css(n, top, parent, nodes, i)?);
             }
             let Some(next) = nodes.get(i + 1) else {
                 continue;
             };
-            if (next.kind == Kind::Comment && !has_newline(self.text, next.start as usize, true))
+            if (next.kind == Kind::Comment && !has_newline(self.text, self.byte(next.start)?, true))
                 || (next.kind == Kind::AtRule && next.name == "else" && n.kind != Kind::Comment)
             {
                 parts.push(s(" "));
             } else {
                 parts.push(hardline());
                 if let Some(e) = n.end
-                    && is_next_line_empty(self.text, e as usize)
+                    && is_next_line_empty(self.text, self.byte(e)?)
                 {
                     parts.push(hardline());
                 }
@@ -831,7 +855,7 @@ impl<'a> Pr<'a> {
                 ])
             }
             Kind::Comment => {
-                let text = self.slice(n.start, n.end);
+                let text = self.slice(n.start, n.end)?;
                 if n.raws.inline {
                     s(text.trim_end_matches(is_js_whitespace).to_string())
                 } else {
@@ -1095,6 +1119,13 @@ impl<'a> Pr<'a> {
                     Some(Params::Raw(p)) if p.is_empty() => None,
                     Some(Params::Raw(p)) => Some(s(p.clone())),
                     Some(Params::MediaUnknown(p)) | Some(Params::Unknown(p)) => Some(s(p.clone())),
+                    Some(Params::SelectorUnknown(p)) if top.rule.is_some_and(|r| r.nested_prop) => {
+                        Some(s(adjust_numbers(&adjust_strings(
+                            &maybe_lower(p),
+                            self.opts,
+                        ))))
+                    }
+                    Some(Params::SelectorUnknown(p)) => Some(s(p.clone())),
                     Some(Params::Media(m)) => Some(self.print_media(m, false)?),
                     Some(Params::Root(v)) => Some(self.print_value(
                         v,
@@ -1276,8 +1307,8 @@ impl<'a> Pr<'a> {
                 }
                 if owner.raws_selector.is_some() {
                     let start = owner.start;
-                    let end = start + owner.raws_selector.as_ref().map_or(0, |x| x.len()) as i64;
-                    return Ok(s(trim(&self.slice(start, Some(end))).to_string()));
+                    let end = start + owner.raws_selector.as_deref().map_or(0, len16);
+                    return Ok(s(trim(&self.slice(start, Some(end))?).to_string()));
                 }
                 Ok(s(v.clone()))
             }
@@ -1434,7 +1465,7 @@ impl<'a> Pr<'a> {
                 Some(g) => child(self, g)?,
                 None => empty(),
             },
-            "comment" => s(self.slice(v.start, v.end)),
+            "comment" => s(self.slice(v.start, v.end)?),
             "comma_group" => self.print_comma_group(v, &stack, top)?,
             "paren_group" => self.print_paren_group(v, &stack, top)?,
             "func" => {
@@ -1589,7 +1620,8 @@ impl<'a> Pr<'a> {
                 continue;
             }
             if prev.is_some_and(|p| {
-                !p.value.is_empty() && p.value.rfind('\\') == Some(p.value.len() - 1)
+                // `indexOf`: the first backslash is the last character.
+                !p.value.is_empty() && p.value.find('\\') == Some(p.value.len() - 1)
             }) && cur.ty == "operator"
                 && cur.value == "/"
             {
@@ -1732,11 +1764,14 @@ impl<'a> Pr<'a> {
                 parts = vec![concat(vec![fill(taken), s(" ")])];
                 continue;
             }
-            if cur.value.ends_with('#')
-                && next.value == "{"
-                && next.group.as_deref().is_some_and(is_paren_group)
-            {
-                continue;
+            if cur.value.ends_with('#') && next.value == "{" {
+                // `isParenGroupNode(iNextNode.group)` reads `.type` of `undefined` and throws.
+                let Some(g) = next.group.as_deref() else {
+                    return bail("printCommaSeparatedValueGroup throws on `#` before `{`");
+                };
+                if is_paren_group(g) {
+                    continue;
+                }
             }
             if next.ty == "comment" && next.inline && next2.is_none() {
                 continue;
@@ -1773,7 +1808,7 @@ impl<'a> Pr<'a> {
         for g in &node.groups {
             docs.push(match g.ty {
                 "raw" => s(g.value.clone()),
-                "selector" => match parse_selector(&g.value) {
+                "selector" => match parse_selector(&g.value)? {
                     Sel::Parsed(t) => self.print_sel(&t, 0, top)?,
                     Sel::Unknown(_) => {
                         let (Some(open), Some(close)) = (&node.open, &node.close) else {
@@ -1782,7 +1817,7 @@ impl<'a> Pr<'a> {
                         let Some(open_end) = open.end else {
                             return bail("selector paren end");
                         };
-                        let sel = trim(&self.slice(open_end + 1, Some(close.start))).to_string();
+                        let sel = trim(&self.slice(open_end + 1, Some(close.start))?).to_string();
                         if last_line_has_inline_comment(&sel) {
                             concat(vec![break_parent(), s(sel)])
                         } else {
@@ -1861,7 +1896,7 @@ impl<'a> Pr<'a> {
             };
             let mut p = vec![doc];
             p.push(if is_last {
-                self.trailing_comma(node, child, anc, top)
+                self.trailing_comma(node, child, anc, top)?
             } else {
                 s(",")
             });
@@ -1877,7 +1912,7 @@ impl<'a> Pr<'a> {
                     && l.has_source
                     && let Some(e) = l.end
                     && e >= 0
-                    && is_next_line_empty(self.text, e as usize)
+                    && is_next_line_empty(self.text, self.byte(e)?)
                 {
                     p.push(hardline());
                 }
@@ -1925,15 +1960,15 @@ impl<'a> Pr<'a> {
         })
     }
 
-    fn trailing_comma(&self, node: &V, child: &V, anc: &[&V], top: Top<'a>) -> Doc {
+    fn trailing_comma(&self, node: &V, child: &V, anc: &[&V], top: Top<'a>) -> R {
         let grand = anc.last().copied();
         if grand.is_some_and(|g| g.ty == "func" && g.value.to_lowercase() == "var")
             && child.has_source
             && let Some(close) = &node.close
         {
-            let t = self.slice(child.start, Some(close.start));
+            let t = self.slice(child.start, Some(close.start))?;
             if t.trim_end_matches(is_js_whitespace).ends_with(',') {
-                return s(",");
+                return Ok(s(","));
             }
         }
         if child.ty != "comment"
@@ -1941,9 +1976,9 @@ impl<'a> Pr<'a> {
             && self.opts.trailing_comma != TrailingComma::None
             && self.is_scss_map_item(node, anc, top)
         {
-            return if_break(s(","), empty());
+            return Ok(if_break(s(","), empty()));
         }
-        empty()
+        Ok(empty())
     }
 
     fn is_scss_map_item(&self, node: &V, anc: &[&V], top: Top<'a>) -> bool {
@@ -2096,6 +2131,7 @@ fn replace_directive(raw: &str, word: &str) -> String {
 
 /// Prettier's `css` parser and printer: the doc for `text`.
 pub fn print(text: &str, opts: &Options) -> R {
+    let orig = text;
     let fm = crate::markdown::remark::parse_front_matter(text);
     let content: String;
     let text = match &fm {
@@ -2113,7 +2149,14 @@ pub fn print(text: &str, opts: &Options) -> R {
     let Some(root) = parse_root(text, opts.parser) else {
         return bail("css parse error");
     };
-    let root = process(root, text, opts.parser)?;
+    let idx = Idx::new(text);
+    let oidx = Idx::new(orig);
+    let src = Src {
+        idx: &idx,
+        orig,
+        oidx: &oidx,
+    };
+    let root = process(root, src, opts.parser)?;
     let fm_doc = match &fm {
         None => None,
         Some(f) if f.language == "yaml" => {
@@ -2142,7 +2185,11 @@ pub fn print(text: &str, opts: &Options) -> R {
         }
         Some(f) => Some(concat(vec![s(f.raw.clone()), hardline()])),
     };
-    let pr = Pr { text, opts };
+    let pr = Pr {
+        text: orig,
+        idx: &oidx,
+        opts,
+    };
     if let Some(fd) = fm_doc {
         let top = Top {
             decl: None,

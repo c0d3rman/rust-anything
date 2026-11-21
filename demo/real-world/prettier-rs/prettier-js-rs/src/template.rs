@@ -7,12 +7,12 @@ use crate::doc::*;
 use crate::node::*;
 use crate::printer::{Printer, R, bail};
 
-fn render_flat(p: &Printer<'_>, doc: &Doc) -> R<String> {
+fn render_flat(p: &Printer<'_>, doc: &Doc, end_of_line: &'static str) -> R<String> {
     let opts = doc_printer_rs::port::PrintOptions {
         print_width: f64::INFINITY,
         tab_width: p.opts.tab_width as f64,
         use_tabs: p.opts.use_tabs,
-        end_of_line: "\n",
+        end_of_line,
     };
     doc_printer_rs::port::propagate_breaks(doc).or_else(|e| bail(format!("doc: {e}")))?;
     match doc_printer_rs::port::print(doc, &opts) {
@@ -21,31 +21,40 @@ fn render_flat(p: &Printer<'_>, doc: &Doc) -> R<String> {
     }
 }
 
-fn get_indent_size(value: &str, tab_width: usize) -> usize {
+/// `None` stands for the `NaN` Prettier computes when a tab meets `tabWidth: 0`.
+fn get_indent_size(value: &str, tab_width: usize) -> Option<usize> {
     let Some(i) = value.rfind('\n') else {
-        return 0;
+        return Some(0);
     };
-    let mut size = 0;
+    let mut size = Some(0);
     for c in value[i + 1..].chars() {
         match c {
-            '\t' => size = size + tab_width - (size % tab_width),
-            ' ' => size += 1,
+            '\t' => {
+                size = size
+                    .filter(|_| tab_width > 0)
+                    .map(|n| n + tab_width - (n % tab_width))
+            }
+            ' ' => size = size.map(|n| n + 1),
             _ => break,
         }
     }
     size
 }
 
-fn add_alignment_to_doc(doc: Doc, size: usize, tab_width: usize) -> Doc {
-    if size == 0 {
-        return doc;
+fn add_alignment_to_doc(doc: Doc, size: Option<usize>, tab_width: usize) -> R<Doc> {
+    let Some(size) = size.filter(|&n| n > 0) else {
+        return Ok(doc);
+    };
+    if tab_width == 0 {
+        // `Math.floor(size / 0)` is `Infinity`: Prettier never finishes this loop.
+        return bail("template alignment with tabWidth 0");
     }
     let mut aligned = doc;
     for _ in 0..size / tab_width {
         aligned = indent(aligned);
     }
     aligned = align((size % tab_width) as f64, aligned);
-    dedent_to_root(aligned)
+    Ok(dedent_to_root(aligned))
 }
 
 fn raw(q: &Value) -> &str {
@@ -63,7 +72,7 @@ fn is_styled_extend(tag: &Value) -> bool {
         && tag.field("property").and_then(|p| p.str_of("name")) == Some("extend")
 }
 
-fn is_embedded(p: &Printer<'_>) -> bool {
+pub fn is_embedded(p: &Printer<'_>) -> bool {
     let node = p.node();
     if node.list("quasis").iter().any(|q| {
         q.get("value")
@@ -211,7 +220,7 @@ pub fn print_template_literal(p: &mut Printer<'_>) -> R {
     let quasis = node.list("quasis");
     let expressions = node.list(exprs_key);
     let mut parts = vec![line_suffix_boundary(), s("`")];
-    let mut previous_indent = 0;
+    let mut previous_indent = Some(0);
     let printed_quasis = p.print_all("quasis")?;
     let mut expression_docs = expression_docs.into_iter();
     for (index, (quasi, printed)) in quasis.iter().zip(printed_quasis).enumerate() {
@@ -235,7 +244,7 @@ pub fn print_template_literal(p: &mut Printer<'_>) -> R {
         let next_start = quasis.get(index + 1).map_or(quasi.end(), |q| q.start());
         let mut has_newline = crate::text::has_newline_in_range(text, quasi.end(), next_start);
         if !has_newline {
-            let rendered = render_flat(p, &expression_doc)?;
+            let rendered = render_flat(p, &expression_doc, p.opts.end_of_line.as_str())?;
             if rendered.contains('\n') {
                 has_newline = true;
             } else {
@@ -263,10 +272,10 @@ pub fn print_template_literal(p: &mut Printer<'_>) -> R {
                 softline(),
             ]);
         }
-        let aligned = if indent_size == 0 && raw.ends_with('\n') {
+        let aligned = if indent_size == Some(0) && raw.ends_with('\n') {
             dedent_to_root(expression_doc)
         } else {
-            add_alignment_to_doc(expression_doc, indent_size, tab_width)
+            add_alignment_to_doc(expression_doc, indent_size, tab_width)?
         };
         parts.push(group(concat(vec![
             s("${"),
@@ -329,7 +338,7 @@ fn print_jest_each(p: &mut Printer<'_>) -> R<Option<Doc>> {
     p.in_jest_each = false;
     let mut stringified = Vec::new();
     for doc in expressions? {
-        stringified.push(format!("${{{}}}", render_flat(p, &doc)?));
+        stringified.push(format!("${{{}}}", render_flat(p, &doc, "\n")?));
     }
     struct Row {
         has_line_break: bool,

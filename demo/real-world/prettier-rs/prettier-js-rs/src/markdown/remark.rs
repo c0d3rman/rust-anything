@@ -27,7 +27,7 @@ pub struct Node {
     pub value: String,
     pub depth: usize,
     pub ordered: bool,
-    pub start_num: Option<u64>,
+    pub start_num: Option<f64>,
     pub spread: bool,
     pub checked: Option<bool>,
     pub lang: Option<String>,
@@ -1950,7 +1950,8 @@ impl Parser {
             if silent && queue != "1" {
                 return Ok(false);
             }
-            start = Some(queue.parse::<u64>().unwrap_or(u64::MAX));
+            // `parseInt(queue, 10)`: a double, rounded past 2^53 and Infinity past ~1e308.
+            start = Some(queue.parse::<f64>().unwrap_or(f64::INFINITY));
             marker = c;
         }
         index += 1;

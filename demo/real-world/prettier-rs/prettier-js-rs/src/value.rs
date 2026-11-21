@@ -343,3 +343,77 @@ impl<'de> Deserialize<'de> for Value {
         d.deserialize_any(ValueVisitor)
     }
 }
+
+/// What an overflowing number becomes in the JSON text before serde_json reads it.
+const INFINITY_MARK: &str = "\u{0}prettier-js-rs:Infinity";
+const INFINITY_MARK_JSON: &str = "\\u0000prettier-js-rs:Infinity";
+
+/// Reads oxc's ESTree JSON. oxc writes an overflowing number literal's value (`1e400`) as
+/// `1e+400`, which `JSON.parse` reads as `Infinity` but serde_json rejects; those tokens come
+/// back as `Number::F(±INFINITY)`, the value Prettier sees.
+pub fn from_estree_json(json: &str) -> Result<Value, serde_json::Error> {
+    let marked = json.contains("1e+400").then(|| mark_infinities(json));
+    let mut de = serde_json::Deserializer::from_str(marked.as_deref().unwrap_or(json));
+    de.disable_recursion_limit();
+    let mut value: Value = Deserialize::deserialize(&mut de)?;
+    if marked.is_some() {
+        restore_infinities(&mut value);
+    }
+    Ok(value)
+}
+
+/// Replaces `1e+400` and `-1e+400` number tokens (outside strings) with marker strings.
+fn mark_infinities(json: &str) -> String {
+    let b = json.as_bytes();
+    let mut out = String::with_capacity(json.len());
+    let (mut i, mut last) = (0, 0);
+    while i < b.len() {
+        match b[i] {
+            b'"' => {
+                i += 1;
+                while i < b.len() && b[i] != b'"' {
+                    i += if b[i] == b'\\' { 2 } else { 1 };
+                }
+                i += 1;
+            }
+            b'-' | b'1' if i > 0 && matches!(b[i - 1], b':' | b',' | b'[') => {
+                let neg = b[i] == b'-';
+                let after = i + usize::from(neg) + "1e+400".len();
+                if json[i + usize::from(neg)..].starts_with("1e+400")
+                    && matches!(b.get(after), Some(b',' | b'}' | b']'))
+                {
+                    out.push_str(&json[last..i]);
+                    out.push('"');
+                    if neg {
+                        out.push('-');
+                    }
+                    out.push_str(INFINITY_MARK_JSON);
+                    out.push('"');
+                    last = after;
+                    i = after;
+                } else {
+                    i += 1;
+                }
+            }
+            _ => i += 1,
+        }
+    }
+    out.push_str(&json[last..]);
+    out
+}
+
+fn restore_infinities(v: &mut Value) {
+    match v {
+        Value::String(s) if s.ends_with(INFINITY_MARK) => {
+            let inf = if s.starts_with('-') {
+                f64::NEG_INFINITY
+            } else {
+                f64::INFINITY
+            };
+            *v = Value::Number(Number::F(inf));
+        }
+        Value::Array(items) => items.iter_mut().for_each(restore_infinities),
+        Value::Object(map) => map.iter_mut().for_each(|(_, x)| restore_infinities(x)),
+        _ => {}
+    }
+}

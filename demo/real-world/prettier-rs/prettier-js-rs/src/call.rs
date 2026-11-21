@@ -18,6 +18,13 @@ pub fn print_call_expression(p: &mut Printer<'_>) -> R {
     let optional = print_optional_token(p);
     let args = call_arguments(node);
     let is_template_single = args.len() == 1 && is_template_on_its_own_line(args[0], p.text);
+    if p.opts.parser == crate::options::Parser::Typescript
+        && !is_template_single
+        && !is_commonjs_or_amd_module_definition(p)
+        && test_call_crashes(node)
+    {
+        return bail("Prettier crashes on an optional call in a test call");
+    }
     if is_template_single
         || is_commonjs_or_amd_module_definition(p)
         || is_test_call(node, p.parent())

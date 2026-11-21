@@ -52,7 +52,24 @@ pub enum Doc {
     Label(String, Box<Doc>),
     BreakParent,
     Shared(Rc<Doc>),
-    Invalid(String),
+    /// A value that is not a doc (only `from_value` builds one): the error Prettier throws on
+    /// reaching it, and whether the value is falsy in JS (`if (contents)` skips those).
+    Invalid(String, bool),
+}
+
+/// A conditional group's `contents` and `expandedStates`, with `contents` the same node as
+/// `states[0]` as `conditionalGroup` (and `mapDoc`) builds it: `states[0]` becomes a `Shared`
+/// node and `contents` another handle to it. Break propagation walks only the states, so a
+/// `contents` built any other way is not reached, as in Prettier.
+pub fn conditional_group_parts(mut states: Vec<Doc>) -> (Doc, Vec<Doc>) {
+    let Some(first) = states.first_mut() else {
+        return (invalid(None), states);
+    };
+    if !matches!(first, Doc::Shared(_) | Doc::Str(_)) {
+        let taken = std::mem::replace(first, Doc::Cursor);
+        *first = Doc::Shared(Rc::new(taken));
+    }
+    (states[0].clone(), states)
 }
 
 /// The `n` of an `align` doc.
@@ -82,50 +99,118 @@ pub struct Printed {
 
 /// Port of `printDocToString` (`src/document/printer.js:305`).
 pub fn print_doc_to_string(doc: Value, options: Value) -> Result<Value, String> {
-    let mut lone = false;
-    let doc = from_value(&doc, &mut lone);
+    let lone = Lone::scan(&doc);
+    let doc = from_value(&doc, &lone);
     let options = read_options(&options)?;
     propagate_breaks(&doc)?;
     let printed = print(&doc, &options)?;
     let mut out = Map::new();
     match printed.cursor {
         None => {
-            out.insert("formatted".into(), text_value(&printed.formatted, lone));
+            out.insert("formatted".into(), lone.text_value(&printed.formatted));
         }
         Some((before, around)) => {
-            let start = units_of(&before, lone).len();
-            out.insert("formatted".into(), text_value(&printed.formatted, lone));
+            let start = lone.units_of(&before).len();
+            out.insert("formatted".into(), lone.text_value(&printed.formatted));
             out.insert("cursorNodeStart".into(), Value::from(start));
-            out.insert("cursorNodeText".into(), text_value(&around, lone));
+            out.insert("cursorNodeText".into(), lone.text_value(&around));
         }
     }
     Ok(Value::Object(out))
 }
 
-const LONE_BASE: u32 = 0x10_F800;
-
-fn units_of(text: &str, lone: bool) -> Vec<u16> {
-    let mut units = Vec::with_capacity(text.len());
-    for c in text.chars() {
-        let cp = c as u32;
-        if lone && cp >= LONE_BASE {
-            units.push((cp - LONE_BASE + 0xD800) as u16);
-        } else {
-            let mut buf = [0u16; 2];
-            units.extend_from_slice(c.encode_utf16(&mut buf));
-        }
-    }
-    units
+/// How a doc's lone UTF-16 surrogates (`{"$utf16": [...]}` strings) are held in Rust strings.
+/// Each distinct lone unit gets a stand-in character that occurs nowhere else in the doc, taken
+/// from the private use areas (narrow, not part of any emoji sequence, so it measures 1 like a
+/// lone surrogate does in `getStringWidth`; the BMP ones are also one UTF-16 unit long). The
+/// printer only emits characters of the doc plus whitespace, so a stand-in in the output is
+/// always the lone unit it stands for. Native docs (Rust strings) never hold lone surrogates.
+#[derive(Clone, Debug, Default)]
+pub struct Lone {
+    units: Vec<(u16, char)>,
 }
 
-fn text_value(text: &str, lone: bool) -> Value {
-    if lone && text.chars().any(|c| c as u32 >= LONE_BASE) {
-        let units: Vec<Value> = units_of(text, true).into_iter().map(Value::from).collect();
-        let mut marker = Map::new();
-        marker.insert("$utf16".into(), Value::Array(units));
-        Value::Object(marker)
-    } else {
-        Value::String(text.to_string())
+impl Lone {
+    /// Picks stand-ins for every lone unit in `doc`'s `$utf16` strings.
+    pub fn scan(doc: &Value) -> Lone {
+        fn walk(v: &Value, used: &mut fx::FxHashSet<char>, lone: &mut Vec<u16>) {
+            match v {
+                Value::String(s) => used.extend(s.chars()),
+                Value::Array(items) => items.iter().for_each(|i| walk(i, used, lone)),
+                Value::Object(map) => {
+                    if let Some(units) = utf16_marker(v) {
+                        for r in char::decode_utf16(marker_units(units)) {
+                            match r {
+                                Ok(c) => {
+                                    used.insert(c);
+                                }
+                                Err(e) => lone.push(e.unpaired_surrogate()),
+                            }
+                        }
+                        return;
+                    }
+                    for (k, item) in map {
+                        used.extend(k.chars());
+                        walk(item, used, lone);
+                    }
+                }
+                _ => {}
+            }
+        }
+        let mut used = fx::FxHashSet::default();
+        let mut found = Vec::new();
+        walk(doc, &mut used, &mut found);
+        if found.is_empty() {
+            return Lone::default();
+        }
+        found.sort_unstable();
+        found.dedup();
+        let mut candidates = (0xE000u32..=0xF8FF)
+            .chain(0xF_0000..=0xF_FFFD)
+            .chain(0x10_0000..=0x10_FFFD)
+            .filter_map(char::from_u32)
+            .filter(|c| !used.contains(c));
+        let units = found
+            .into_iter()
+            .map(|u| (u, candidates.next().unwrap_or('\u{FFFD}')))
+            .collect();
+        Lone { units }
+    }
+
+    fn stand_in(&self, unit: u16) -> char {
+        self.units
+            .iter()
+            .find(|(u, _)| *u == unit)
+            .map_or('\u{FFFD}', |(_, c)| *c)
+    }
+
+    fn unit_of(&self, c: char) -> Option<u16> {
+        self.units.iter().find(|(_, s)| *s == c).map(|(u, _)| *u)
+    }
+
+    fn units_of(&self, text: &str) -> Vec<u16> {
+        let mut units = Vec::with_capacity(text.len());
+        for c in text.chars() {
+            match self.unit_of(c) {
+                Some(u) => units.push(u),
+                None => {
+                    let mut buf = [0u16; 2];
+                    units.extend_from_slice(c.encode_utf16(&mut buf));
+                }
+            }
+        }
+        units
+    }
+
+    fn text_value(&self, text: &str) -> Value {
+        if !self.units.is_empty() && text.chars().any(|c| self.unit_of(c).is_some()) {
+            let units: Vec<Value> = self.units_of(text).into_iter().map(Value::from).collect();
+            let mut marker = Map::new();
+            marker.insert("$utf16".into(), Value::Array(units));
+            Value::Object(marker)
+        } else {
+            Value::String(text.to_string())
+        }
     }
 }
 
@@ -193,20 +278,20 @@ fn number_marker(v: &Value) -> Option<f64> {
     }
 }
 
-fn decode_units(units: &[Value], lone: &mut bool) -> String {
-    let units: Vec<u16> = units
+fn marker_units(units: &[Value]) -> Vec<u16> {
+    units
         .iter()
         .map(|u| u.as_u64().unwrap_or(0) as u16)
-        .collect();
+        .collect()
+}
+
+fn decode_units(units: &[Value], lone: &Lone) -> String {
+    let units = marker_units(units);
     let mut out = String::with_capacity(units.len());
     for r in char::decode_utf16(units.iter().copied()) {
         match r {
             Ok(c) => out.push(c),
-            Err(e) => {
-                *lone = true;
-                let cp = u32::from(e.unpaired_surrogate()) - 0xD800 + LONE_BASE;
-                out.push(char::from_u32(cp).unwrap_or('\u{FFFD}'));
-            }
+            Err(e) => out.push(lone.stand_in(e.unpaired_surrogate())),
         }
     }
     out
@@ -239,7 +324,11 @@ fn invalid(v: Option<&Value>) -> Doc {
             )
         }
     };
-    Doc::Invalid(message)
+    let falsy = match v.and_then(number_marker) {
+        Some(n) => n == 0.0 || n.is_nan(),
+        None => !truthy(v) || v.is_some_and(undefined_marker),
+    };
+    Doc::Invalid(message, falsy)
 }
 
 fn group_id(v: Option<&Value>) -> Option<String> {
@@ -250,8 +339,8 @@ fn group_id(v: Option<&Value>) -> Option<String> {
 }
 
 /// Reads a doc from its JSON form (group ids as strings).
-pub fn from_value(v: &Value, lone: &mut bool) -> Doc {
-    let child = |key: &str, lone: &mut bool| -> Box<Doc> {
+pub fn from_value(v: &Value, lone: &Lone) -> Doc {
+    let child = |key: &str, lone: &Lone| -> Box<Doc> {
         Box::new(match v.get(key) {
             Some(c) => from_value(c, lone),
             None => invalid(None),
@@ -270,6 +359,9 @@ pub fn from_value(v: &Value, lone: &mut bool) -> Doc {
                 Some("align") => {
                     let n = match map.get("n") {
                         Some(Value::String(s)) if !s.is_empty() => Align::Text(s.clone()),
+                        Some(n) if utf16_marker(n).is_some_and(|u| !u.is_empty()) => {
+                            Align::Text(decode_units(utf16_marker(n).unwrap_or(&Vec::new()), lone))
+                        }
                         Some(Value::Number(n)) => Align::Width(n.as_f64().unwrap_or(f64::NAN)),
                         Some(n) if number_marker(n) == Some(f64::NEG_INFINITY) => {
                             Align::DedentToRoot
@@ -289,15 +381,28 @@ pub fn from_value(v: &Value, lone: &mut bool) -> Doc {
                     Doc::Align(n, child("contents", lone))
                 }
                 Some("trim") => Doc::Trim,
-                Some("group") => Doc::Group {
-                    contents: child("contents", lone),
-                    brk: Cell::new(truthy(map.get("break"))),
-                    expanded: map.get("expandedStates").and_then(|s| {
+                Some("group") => {
+                    let expanded: Option<Vec<Doc>> = map.get("expandedStates").and_then(|s| {
                         s.as_array()
                             .map(|states| states.iter().map(|d| from_value(d, lone)).collect())
-                    }),
-                    id: group_id(map.get("id")),
-                },
+                    });
+                    // `"cg": 1` marks a group whose `contents` is the same object as
+                    // `expandedStates[0]` (as `conditionalGroup` builds it); JSON alone cannot
+                    // say so.
+                    let (contents, expanded) = match expanded {
+                        Some(states) if truthy(map.get("cg")) => {
+                            let (contents, states) = conditional_group_parts(states);
+                            (Box::new(contents), Some(states))
+                        }
+                        other => (child("contents", lone), other),
+                    };
+                    Doc::Group {
+                        contents,
+                        brk: Cell::new(truthy(map.get("break"))),
+                        expanded,
+                        id: group_id(map.get("id")),
+                    }
+                }
                 Some("fill") => Doc::Fill(match map.get("parts") {
                     Some(Value::Array(parts)) => {
                         parts.iter().map(|p| from_value(p, lone)).collect()
@@ -381,7 +486,7 @@ fn propagate(doc: &Doc, shared: &mut fx::FxHashMap<*const Doc, bool>) -> Result<
     Ok(match doc {
         Doc::Str(_) | Doc::Cursor | Doc::Trim | Doc::LineSuffixBoundary | Doc::Line { .. } => false,
         Doc::BreakParent => true,
-        Doc::Invalid(message) => return Err(message.clone()),
+        Doc::Invalid(message, _) => return Err(message.clone()),
         Doc::Shared(inner) => {
             let key = Rc::as_ptr(inner);
             if let Some(&done) = shared.get(&key) {
@@ -410,11 +515,14 @@ fn propagate(doc: &Doc, shared: &mut fx::FxHashMap<*const Doc, bool>) -> Result<
             ..
         } => {
             match expanded {
+                // `traverseDoc(..., shouldTraverseConditionalGroups = true)` walks the states and
+                // not `contents`. The builders make `contents` the same object as `states[0]`
+                // (here: the same `Shared` node, see `conditional_group_parts`), so it is reached
+                // through the states; a `contents` that is a different object is never walked.
                 Some(states) => {
                     for state in states {
                         propagate(state, shared)?;
                     }
-                    let _ = propagate(contents, shared);
                 }
                 None => {
                     if propagate(contents, shared)? {
@@ -529,7 +637,9 @@ fn make_align(ind: &Rc<Ind>, n: &Align, options: &PrintOptions) -> Rc<Ind> {
     match n {
         Align::DedentToRoot => ind.root.clone().unwrap_or_default(),
         Align::Width(w) if *w < 0.0 => Rc::new(generate_ind(ind, None, options)),
+        // `if (!widthOrDoc) return ind;`: 0, NaN and "" are all falsy.
         Align::Width(w) if *w == 0.0 || w.is_nan() => ind.clone(),
+        Align::Text(s) if s.is_empty() => ind.clone(),
         Align::Root => Rc::new(Ind {
             root: Some(ind.clone()),
             ..(**ind).clone()
@@ -720,14 +830,15 @@ fn fits(
                     return false;
                 }
             }
-            Doc::Cursor | Doc::BreakParent | Doc::Invalid(_) => {}
+            Doc::Cursor | Doc::BreakParent | Doc::Invalid(..) => {}
         }
     }
     false
 }
 
+/// A doc JS treats as falsy: `""`, or a falsy non-doc (`null`, `undefined`, `0`, `false`, NaN).
 fn is_falsy(doc: &Doc) -> bool {
-    matches!(doc, Doc::Str(s) if s.is_empty())
+    matches!(doc, Doc::Str(s) if s.is_empty()) || matches!(doc, Doc::Invalid(_, true))
 }
 
 /// Prints a doc whose breaks were already propagated.
@@ -846,10 +957,13 @@ pub fn print(doc: &Doc, options: &PrintOptions) -> Result<Printed, String> {
                             node: Node::Doc(contents),
                         });
                     } else if let Some(states) = expanded {
-                        let Some(most_expanded) = states.last() else {
-                            return Err("Unexpected doc 'undefined', \nExpected it to be 'string' or 'object'.".into());
-                        };
+                        // `expandedStates.at(-1)` of `[]` is `undefined`: with `break` Prettier
+                        // pushes it and throws when it is popped; without, the loop never runs and
+                        // the group prints nothing.
                         if brk.get() {
+                            let Some(most_expanded) = states.last() else {
+                                return Err("Unexpected doc 'undefined', \nExpected it to be 'string' or 'object'.".into());
+                            };
                             cmds.push(Cmd {
                                 ind: ind.clone(),
                                 mode: Mode::Break,
@@ -861,7 +975,7 @@ pub fn print(doc: &Doc, options: &PrintOptions) -> Result<Printed, String> {
                                     cmds.push(Cmd {
                                         ind: ind.clone(),
                                         mode: Mode::Break,
-                                        node: Node::Doc(most_expanded),
+                                        node: Node::Doc(&states[i - 1]),
                                     });
                                     break;
                                 }
@@ -884,7 +998,12 @@ pub fn print(doc: &Doc, options: &PrintOptions) -> Result<Printed, String> {
                         });
                     }
                 }
-                if let (Some(id), Some(last)) = (id, cmds.last()) {
+                if let Some(id) = id {
+                    // `groupModeMap[doc.id] = cmds.at(-1).mode`: the stack is empty only after a
+                    // group with no expanded states.
+                    let Some(last) = cmds.last() else {
+                        return Err("Cannot read properties of undefined (reading 'mode')".into());
+                    };
                     group_modes.insert(id.clone(), last.mode);
                 }
             }
@@ -1012,7 +1131,7 @@ pub fn print(doc: &Doc, options: &PrintOptions) -> Result<Printed, String> {
                 node: Node::Doc(inner),
             }),
             Doc::BreakParent => {}
-            Doc::Invalid(message) => return Err(message.clone()),
+            Doc::Invalid(message, _) => return Err(message.clone()),
         }
         flush_suffix(&mut cmds, &mut line_suffix);
     }
@@ -1248,6 +1367,75 @@ mod tests {
         let doc = json!({"type": "group", "contents": ["[", {"type": "indent", "contents": [{"type": "line", "soft": true}, "aaaa", ",", {"type": "line"}, "bbbb"]}, {"type": "line", "soft": true}, "]"]});
         assert_eq!(run(doc.clone(), 80.0), "[aaaa, bbbb]");
         assert_eq!(run(doc, 6.0), "[\n  aaaa,\n  bbbb\n]");
+    }
+
+    #[test]
+    fn empty_string_align_is_a_no_op() {
+        // `align("")` is falsy in `makeAlign`; native printers build `Align::Text("")`.
+        let doc = Doc::Align(
+            Align::Text(String::new()),
+            Box::new(Doc::Array(vec![
+                Doc::Line {
+                    hard: true,
+                    soft: false,
+                    literal: false,
+                },
+                Doc::Str("e".into()),
+            ])),
+        );
+        let options = PrintOptions {
+            print_width: 80.0,
+            tab_width: 0.0,
+            use_tabs: false,
+            end_of_line: "\n",
+        };
+        assert_eq!(print(&doc, &options).unwrap().formatted, "\ne");
+    }
+
+    #[test]
+    fn conditional_group_contents_apart_from_states_is_not_propagated() {
+        let inner = json!({"type": "group", "contents": ["a", {"type": "break-parent"}, {"type": "line"}, "b"]});
+        let apart = json!({"type": "group", "contents": inner, "expandedStates": ["c"]});
+        assert_eq!(run(apart, 80.0), "a b");
+        let same = json!({"type": "group", "cg": 1, "contents": inner, "expandedStates": [inner]});
+        assert_eq!(run(same, 80.0), "a\nb");
+    }
+
+    #[test]
+    fn empty_expanded_states() {
+        assert_eq!(
+            run(
+                json!({"type": "group", "contents": "a", "expandedStates": []}),
+                0.0
+            ),
+            ""
+        );
+        let err = print_doc_to_string(
+            json!({"type": "group", "id": "A", "contents": "a", "expandedStates": []}),
+            json!({"printWidth": 0, "tabWidth": 2}),
+        )
+        .unwrap_err();
+        assert_eq!(err, "Cannot read properties of undefined (reading 'mode')");
+    }
+
+    #[test]
+    fn lone_surrogates_do_not_collide_with_real_characters() {
+        let out = print_doc_to_string(
+            json!([{"$utf16": [0xD800]}, "\u{10FC00}\u{E000}"]),
+            json!({"printWidth": 80, "tabWidth": 2}),
+        )
+        .unwrap();
+        assert_eq!(
+            out["formatted"],
+            json!({"$utf16": [0xD800, 0xDBFF, 0xDC00, 0xE000]})
+        );
+    }
+
+    #[test]
+    fn falsy_non_doc_branch_is_skipped() {
+        // `if (contents)`: a `null` branch of an if-break is skipped, not an error.
+        let doc = json!({"type": "group", "id": "A", "contents": {"type": "if-break", "groupId": "A", "breakContents": "a", "flatContents": null}, "expandedStates": []});
+        assert_eq!(run(doc, 0.0), "");
     }
 
     #[test]

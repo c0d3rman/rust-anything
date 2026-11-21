@@ -33,7 +33,13 @@ fn visit(node: &mut Value, text: &str, casts: &[usize], is_ts: bool) {
             }
             return;
         }
-        Value::Object(map) => {
+        Value::Object(_) => {
+            if is_ts && node.is("TSTypePredicate") {
+                predicate_annotation_range(node);
+            }
+            let Value::Object(map) = node else {
+                return;
+            };
             for (key, value) in map.iter_mut() {
                 if key != "extra" {
                     visit(value, text, casts, is_ts);
@@ -100,6 +106,32 @@ fn visit(node: &mut Value, text: &str, casts: &[usize], is_ts: bool) {
                 }
                 return;
             }
+            // Babel, Prettier's parser for JavaScript, reads `export * as x from "y"` as an
+            // `ExportNamedDeclaration` with an `ExportNamespaceSpecifier` spanning `* as x`, and
+            // comments attach to that specifier.
+            "ExportAllDeclaration" if !is_ts && node.field("exported").is_some() => {
+                let Some(star) =
+                    crate::text::next_non_space_non_comment_index(text, node.start() + 6)
+                        .filter(|&i| text.as_bytes().get(i) == Some(&b'*'))
+                else {
+                    return;
+                };
+                let Value::Object(map) = node else {
+                    return;
+                };
+                let Some(exported) = map.remove("exported") else {
+                    return;
+                };
+                let mut spec = Map::default();
+                spec.insert("type".into(), "ExportNamespaceSpecifier".into());
+                spec.insert("start".into(), Value::from(star));
+                spec.insert("end".into(), Value::from(exported.end()));
+                spec.insert("exported".into(), exported);
+                map.insert("type".into(), "ExportNamedDeclaration".into());
+                map.insert("declaration".into(), Value::Null);
+                map.insert("specifiers".into(), Value::Array(vec![Value::Object(spec)]));
+                return;
+            }
             "TSParenthesizedType" => {
                 let Some(inner) = node.get_mut("typeAnnotation").map(Value::take) else {
                     return;
@@ -117,6 +149,28 @@ fn visit(node: &mut Value, text: &str, casts: &[usize], is_ts: bool) {
             }
             _ => return,
         }
+    }
+}
+
+/// typescript-estree gives a type predicate's annotation the range of the type in it, with
+/// parentheses removed (`convertChild` of a `ParenthesizedType`). That is taken before Prettier's
+/// postprocess unwraps a one-member union, so it is set here, before the children are rewritten.
+fn predicate_annotation_range(node: &mut Value) {
+    let Some(mut t) = node
+        .field("typeAnnotation")
+        .and_then(|a| a.field("typeAnnotation"))
+    else {
+        return;
+    };
+    while t.is("TSParenthesizedType")
+        && let Some(inner) = t.field("typeAnnotation")
+    {
+        t = inner;
+    }
+    let (start, end) = (t.start(), t.end());
+    if let Some(Value::Object(map)) = node.get_mut("typeAnnotation") {
+        map.insert("start".into(), Value::from(start));
+        map.insert("end".into(), Value::from(end));
     }
 }
 

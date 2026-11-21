@@ -30,7 +30,8 @@ fn trim(s: &str) -> &str {
     s.trim_matches(js_ws)
 }
 
-fn parse_feature(string: &str) -> Vec<M> {
+/// `None` where postcss-media-query-parser throws: a `}` that leaves no mode to read.
+fn parse_feature(string: &str) -> Option<Vec<M>> {
     let chars: Vec<char> = string.chars().collect();
     let inner: Vec<char> =
         if chars.first() == Some(&'(') && chars.last() == Some(&')') && chars.len() >= 2 {
@@ -55,6 +56,7 @@ fn parse_feature(string: &str) -> Vec<M> {
             modes.push(("interpolation", None, true));
         } else if ch == '}' {
             modes.pop();
+            modes.last()?;
         }
         if modes.last().is_some_and(|t| t.0 == "normal") && ch == ':' {
             colon_value = Some(inner[i + 1..].iter().collect());
@@ -67,14 +69,14 @@ fn parse_feature(string: &str) -> Vec<M> {
         result.push(m("colon", ":"));
         result.push(m("value", trim(&v)));
     }
-    result
+    Some(result)
 }
 
 fn is_ws(c: char) -> bool {
     js_ws(c)
 }
 
-fn parse_query(string: &str) -> Vec<M> {
+fn parse_query(string: &str) -> Option<Vec<M>> {
     let chars: Vec<char> = string.chars().collect();
     let mut result: Vec<M> = Vec::new();
     let mut level = 0i64;
@@ -113,7 +115,7 @@ fn parse_query(string: &str) -> Vec<M> {
                 has_type = true;
             }
             if node.ty == "media-feature-expression" {
-                node.nodes = Some(parse_feature(&node.value));
+                node.nodes = Some(parse_feature(&node.value)?);
             }
             if !has_type {
                 node.ty.clear();
@@ -180,26 +182,25 @@ fn parse_query(string: &str) -> Vec<M> {
             }
         }
     }
-    result
+    Some(result)
 }
 
-/// `parseMedia(params)` with Prettier's missing types and `media-` prefixes.
-pub fn parse(string: &str) -> Option<M> {
+/// `parseMedia(params)` with Prettier's missing types and `media-` prefixes. `Ok(None)` where
+/// the parser throws (Prettier keeps the params as `selector-unknown`); `Err` where it never
+/// returns (an unclosed `url(`).
+pub fn parse(string: &str) -> Result<Option<M>, ()> {
     let mut result: Vec<M> = Vec::new();
     let mut interim = 0usize;
     let mut level = 0i64;
     let lw = lead_ws(string);
     let after_ws = &string[lw.len()..];
-    if after_ws.len() >= 3
-        && after_ws[..3].eq("url")
-        && after_ws[3..].trim_start_matches(js_ws).starts_with('(')
-    {
-        let open = string.find('(')?;
+    if after_ws.starts_with("url") && after_ws[3..].trim_start_matches(js_ws).starts_with('(') {
+        let open = string.find('(').ok_or(())?;
         let mut i = open + 1;
         let b = string.as_bytes();
         let mut lv = 1;
         while lv > 0 {
-            let ch = *b.get(i)?;
+            let ch = *b.get(i).ok_or(())?;
             if ch == b'(' {
                 lv += 1;
             }
@@ -212,28 +213,31 @@ pub fn parse(string: &str) -> Option<M> {
         interim = i;
     }
     let b = string.as_bytes();
+    let mut queries = Vec::new();
     let scan_start = interim;
     for i in scan_start..b.len() {
         match b[i] {
             b'(' => level += 1,
             b')' => level -= 1,
             b',' if level == 0 => {
-                let q = &string[interim..i];
-                let mut node = m("media-query", trim(q));
-                node.nodes = Some(parse_query(q));
-                result.push(node);
+                queries.push(&string[interim..i]);
                 interim = i + 1;
             }
             _ => {}
         }
     }
-    let q = &string[interim..];
-    let mut node = m("media-query", trim(q));
-    node.nodes = Some(parse_query(q));
-    result.push(node);
+    queries.push(&string[interim..]);
+    for q in queries {
+        let Some(nodes) = parse_query(q) else {
+            return Ok(None);
+        };
+        let mut node = m("media-query", trim(q));
+        node.nodes = Some(nodes);
+        result.push(node);
+    }
     let mut list = m("media-query-list", trim(string));
     list.nodes = Some(result);
-    Some(fix_types(list))
+    Ok(Some(fix_types(list)))
 }
 
 fn fix_types(mut n: M) -> M {
