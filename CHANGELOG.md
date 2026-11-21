@@ -4,7 +4,9 @@
 
 - Prettier demo: about 75 differences from Prettier 3.6.2 outside the recorded corpus, found by
   differential fuzzing, mutation testing and a Doc-level comparison, are fixed or handed to
-  Prettier. 355 new cases and the checks are in `demo/real-world/prettier-rs/equiv`.
+  Prettier. 355 new cases and the checks are in `demo/real-world/prettier-rs/equiv`. The
+  recorded corpus now runs 15,861 of 17,224 cases fully in Rust (7.9% fallback, was 15,837 and
+  8.1%).
 - `package` (CLI and MCP tool) lays out a gated port as packages end users install, and writes
   files only: PyO3 ports become a maturin project (an abi3 wheel importable under the original's
   module name), napi ports the napi-rs per-platform npm layout (a main package with

@@ -31,7 +31,7 @@ and every piece is checked against that recording before it moves on. It doesn't
 <sub><a href="#languages">Languages</a> · <a href="docs/how-it-works.md#how-it-works">How it works</a> · <a href="docs/whole-apps.md#port-a-whole-app">Whole apps</a> · <a href="#sponsors">Sponsors</a> · <a href="LICENSE">MIT</a></sub><br>
 Made in Türkiye 🇹🇷 by <a href="https://github.com/erkamyaman">erKam Yaman</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Sponsor me</a> · Sponsored by <a href="https://coderabbit.link/erkamyaman"><img src="docs/assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">New in 2.0: <a href="docs/real-world.md#prettier">Prettier, ported to Rust</a>. 19x faster · 15,837 of 17,224 recorded runs fully in Rust · every run byte-identical</p>
+<p align="center">New in 2.0: <a href="docs/real-world.md#prettier">Prettier, ported to Rust</a>. 19x faster · 15,861 of 17,224 recorded runs fully in Rust · every run byte-identical</p>
 
 <p align="center">
   <img src="docs/assets/prettier.gif" alt="Prettier and its Rust port format the same 59 real files, one process per file: Prettier takes 3.63 s, the Rust port 0.20 s, with the same output byte for byte." width="820">
@@ -80,7 +80,7 @@ and servers, or only the slow part, one hot path at a time:
 | json-server, from start to first response | 79 to 85 ms | **8 to 10 ms** |
 | [Fuse.js](docs/real-world.md#fusejs) search over 50,000 strings, per query | 91.2 ms | **2.8 ms: 32x faster** |
 
-Prettier: 15,837 of 17,224 recorded runs format fully in Rust across 10 languages (JavaScript,
+Prettier: 15,861 of 17,224 recorded runs format fully in Rust across 10 languages (JavaScript,
 TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), and all 17,224 match Prettier
 byte for byte, since anything not ported yet falls back to Prettier. json-server: 514/514
 recorded HTTP cases match on a pure Rust binary. Measured on an Apple M4, two runs each, every

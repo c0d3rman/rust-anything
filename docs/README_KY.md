@@ -31,7 +31,7 @@
 <sub><a href="#тилдер">Тилдер</a> · <a href="how-it-works.md#how-it-works">Кантип иштейт</a> · <a href="whole-apps.md#port-a-whole-app">Бүт колдонмолор</a> · <a href="../LICENSE">MIT</a></sub><br>
 Түркияда 🇹🇷 <a href="https://github.com/erkamyaman">erKam Yaman</a> жасаган · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Мага демөөрчү болуңуз</a> · Демөөрчү: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0 версиясындагы жаңылык: <a href="real-world.md#prettier">Prettier, Rust'ка порттолду</a>. 19x ылдамыраак · 17,224 жазылган иштетүүнүн 15,837си толугу менен Rust'та · баары байтка чейин бирдей</p>
+<p align="center">2.0 версиясындагы жаңылык: <a href="real-world.md#prettier">Prettier, Rust'ка порттолду</a>. 19x ылдамыраак · 17,224 жазылган иштетүүнүн 15,861си толугу менен Rust'та · баары байтка чейин бирдей</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier жана анын Rust порту ошол эле 59 чыныгы файлды форматтайт, ар бир файлга бир процесс: Prettier 3.63 s, Rust порту 0.20 s коротот, чыгышы байтма-байт бирдей." width="820">
@@ -78,7 +78,7 @@ Rust кодун сиздин коддоо агентиңиз (же өзүңүз)
 | json-server, иштетүүдөн биринчи жоопко чейин | 79 менен 85 ms аралыгы | **8 менен 10 ms аралыгы** |
 | [Fuse.js](real-world.md#fusejs) менен 50,000 сап боюнча издөө, бир суроого | 91.2 ms | **2.8 ms: 32x ылдамыраак** |
 
-Prettier: 17,224 жазылган иштетүүнүн ичинен 15,837 иштетүү 10 тилде (JavaScript, TypeScript, JSX,
+Prettier: 17,224 жазылган иштетүүнүн ичинен 15,861 иштетүү 10 тилде (JavaScript, TypeScript, JSX,
 JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less) толугу менен Rust ичинде форматталат, ал эми бардык
 17,224 иштетүү Prettier менен байтма-байт дал келет, анткени азырынча порттолбогон ар бир нерсе
 Prettier'ге кайтарылат (fallback). json-server: жазылган 514/514 HTTP кейс таза Rust бинардык

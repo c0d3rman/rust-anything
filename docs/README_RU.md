@@ -31,7 +31,7 @@
 <sub><a href="#поддерживаемые-языки">Языки</a> · <a href="how-it-works.md#how-it-works">Как это работает</a> · <a href="whole-apps.md#port-a-whole-app">Целые приложения</a> · <a href="../LICENSE">MIT</a></sub><br>
 Сделано в Турции 🇹🇷, автор: <a href="https://github.com/erkamyaman">erKam Yaman</a> · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Поддержать меня</a> · Спонсор: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">Новое в 2.0: <a href="real-world.md#prettier">Prettier, портированный на Rust</a>. В 19x быстрее · 15,837 из 17,224 записанных запусков полностью на Rust · все совпадают байт в байт</p>
+<p align="center">Новое в 2.0: <a href="real-world.md#prettier">Prettier, портированный на Rust</a>. В 19x быстрее · 15,861 из 17,224 записанных запусков полностью на Rust · все совпадают байт в байт</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier и его порт на Rust форматируют одни и те же 59 реальных файлов, по одному процессу на файл: Prettier тратит 3.63 s, порт на Rust 0.20 s, а вывод совпадает байт в байт." width="820">
@@ -72,7 +72,7 @@
 | json-server, от запуска до первого ответа | от 79 до 85 ms | **от 8 до 10 ms** |
 | Поиск [Fuse.js](real-world.md#fusejs) по 50,000 строк, на запрос | 91.2 ms | **2.8 ms: в 32x быстрее** |
 
-Prettier: 15,837 из 17,224 записанных запусков полностью форматируются на Rust на 10 языках (JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), и все 17,224 совпадают с Prettier байт в байт, поскольку всё, что ещё не портировано, откатывается на Prettier. json-server: 514/514 записанных HTTP-кейсов совпадают на бинарнике на чистом Rust. Замеры выполнены на Apple M4, по два прогона, каждый вывод сравнивается перед замером времени ([подробности](real-world.md)). Вызывать Rust по одному разу на каждую мелкую функцию обычно *медленнее*, чем JIT; rust-anything находит цикл, который действительно стоит перенести, и переносит его.
+Prettier: 15,861 из 17,224 записанных запусков полностью форматируются на Rust на 10 языках (JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), и все 17,224 совпадают с Prettier байт в байт, поскольку всё, что ещё не портировано, откатывается на Prettier. json-server: 514/514 записанных HTTP-кейсов совпадают на бинарнике на чистом Rust. Замеры выполнены на Apple M4, по два прогона, каждый вывод сравнивается перед замером времени ([подробности](real-world.md)). Вызывать Rust по одному разу на каждую мелкую функцию обычно *медленнее*, чем JIT; rust-anything находит цикл, который действительно стоит перенести, и переносит его.
 
 <p align="center">
   <img src="assets/json-server.gif" alt="json-server как Node-сервер и как один бинарник на Rust: память в простое 74 MB и 3.5 MB, от запуска до первого ответа от 79 до 85 ms и от 8 до 10 ms, и 514 из 514 записанных HTTP-кейсов совпадают." width="820">

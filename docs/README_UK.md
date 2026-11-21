@@ -31,7 +31,7 @@
 <sub><a href="#мови">Мови</a> · <a href="how-it-works.md#how-it-works">Як це працює</a> · <a href="whole-apps.md#port-a-whole-app">Цілі застосунки</a> · <a href="../LICENSE">MIT</a></sub><br>
 Зроблено в Туреччині 🇹🇷, автор: <a href="https://github.com/erkamyaman">erKam Yaman</a> · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Підтримати мене</a> · Спонсор: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">Нове у 2.0: <a href="real-world.md#prettier">Prettier, портований на Rust</a>. У 19x швидше · 15,837 із 17,224 записаних запусків повністю на Rust · усі збігаються байт у байт</p>
+<p align="center">Нове у 2.0: <a href="real-world.md#prettier">Prettier, портований на Rust</a>. У 19x швидше · 15,861 із 17,224 записаних запусків повністю на Rust · усі збігаються байт у байт</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier і його порт на Rust форматують ті самі 59 реальних файлів, один процес на файл: Prettier витрачає 3.63 s, порт на Rust 0.20 s, а вивід однаковий байт у байт." width="820">
@@ -77,7 +77,7 @@
 | json-server, від запуску до першої відповіді | від 79 до 85 ms | **від 8 до 10 ms** |
 | Пошук [Fuse.js](real-world.md#fusejs) по 50,000 рядків, на запит | 91.2 ms | **2.8 ms: у 32x швидше** |
 
-Prettier: 15,837 із 17,224 записаних запусків повністю форматуються на Rust у 10 мовах (JavaScript,
+Prettier: 15,861 із 17,224 записаних запусків повністю форматуються на Rust у 10 мовах (JavaScript,
 TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), і всі 17,224 збігаються з Prettier
 байт у байт, бо все, що ще не портовано, повертається до Prettier. json-server: 514/514
 записаних HTTP-випадків збігаються на бінарному файлі на чистому Rust. Виміряно на Apple M4, по два запуски,

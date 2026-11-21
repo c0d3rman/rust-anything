@@ -31,7 +31,7 @@ Kodu kendisi çevirmez: Rust'ı kodlama ajanınız (ya da siz) yazar, rust-anyth
 <sub><a href="#diller">Diller</a> · <a href="how-it-works.md#how-it-works">Nasıl çalışır</a> · <a href="whole-apps.md#port-a-whole-app">Tüm uygulamalar</a> · <a href="../LICENSE">MIT</a></sub><br>
 Türkiye'de 🇹🇷 <a href="https://github.com/erkamyaman">erKam Yaman</a> tarafından yapıldı · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Sponsor olun</a> · Sponsor: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0'da yeni: <a href="real-world.md#prettier">Prettier, Rust'a port edildi</a>. 19x daha hızlı · 17,224 kayıtlı çalıştırmanın 15,837'si tamamen Rust'ta · hepsi bayt bayt aynı</p>
+<p align="center">2.0'da yeni: <a href="real-world.md#prettier">Prettier, Rust'a port edildi</a>. 19x daha hızlı · 17,224 kayıtlı çalıştırmanın 15,861'si tamamen Rust'ta · hepsi bayt bayt aynı</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier ve Rust portu aynı 59 gerçek dosyayı, dosya başına bir süreçle biçimlendiriyor: Prettier 3.63 s, Rust portu 0.20 s sürüyor ve çıktı bayt bayt aynı." width="820">
@@ -78,7 +78,7 @@ yalnızca yavaş kısım, her seferinde bir hot path:
 | json-server, başlatmadan ilk yanıta | 79 ila 85 ms | **8 ila 10 ms** |
 | 50,000 string üzerinde [Fuse.js](real-world.md#fusejs) araması, sorgu başına | 91.2 ms | **2.8 ms: 32x daha hızlı** |
 
-Prettier: 17,224 kayıtlı çalıştırmanın 15,837'si 10 dilde (JavaScript, TypeScript, JSX, JSON,
+Prettier: 17,224 kayıtlı çalıştırmanın 15,861'si 10 dilde (JavaScript, TypeScript, JSX, JSON,
 GraphQL, YAML, Markdown, CSS, SCSS, Less) tamamen Rust'ta biçimlendirilir ve 17,224'ünün tamamı
 Prettier ile bayt bayt eşleşir; henüz port edilmemiş her şey Prettier'a geri düşer. json-server:
 kaydedilen 514/514 HTTP vakası saf bir Rust binary'si üzerinde eşleşir. Apple M4 üzerinde, her biri

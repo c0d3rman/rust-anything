@@ -31,7 +31,7 @@
 <sub><a href="#支持语言">支持语言</a> · <a href="how-it-works.md#how-it-works">工作原理</a> · <a href="whole-apps.md#port-a-whole-app">整应用迁移</a> · <a href="../LICENSE">MIT</a></sub><br>
 由 <a href="https://github.com/erkamyaman">erKam Yaman</a> 在土耳其 🇹🇷 打造 · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ 赞助我</a> · 赞助商：<a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0 新功能：<a href="real-world.md#prettier">Prettier 已移植到 Rust</a>。提速 19 倍 · 17,224 次录制运行中 15,837 次完全由 Rust 执行 · 全部逐字节一致</p>
+<p align="center">2.0 新功能：<a href="real-world.md#prettier">Prettier 已移植到 Rust</a>。提速 19 倍 · 17,224 次录制运行中 15,861 次完全由 Rust 执行 · 全部逐字节一致</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier 与其 Rust 移植版格式化同样的 59 个真实文件，每个文件一个进程：Prettier 耗时 3.63 s，Rust 移植版 0.20 s，输出逐字节一致。" width="820">
@@ -72,7 +72,7 @@
 | json-server，从启动到首次响应 | 79 至 85 ms | **8 至 10 ms** |
 | [Fuse.js](real-world.md#fusejs) 在 50,000 个字符串中搜索，每次查询 | 91.2 ms | **2.8 ms：提速 32 倍** |
 
-Prettier：在 17,224 次录制运行中，有 15,837 次完全由 Rust 完成格式化，覆盖 10 种语言（JavaScript、TypeScript、JSX、JSON、GraphQL、YAML、Markdown、CSS、SCSS、Less），并且全部 17,224 次都与 Prettier 逐字节一致，因为尚未移植的部分会回退到 Prettier。json-server：514/514 条录制的 HTTP 用例在纯 Rust 二进制文件上全部一致。以上数据在 Apple M4 上测得，每项运行两次，计时前先比对每一份输出（[详情](real-world.md)）。逐个小函数调用 Rust 通常比 JIT 更*慢*；rust-anything 会找出真正值得迁移的循环，再把整个循环搬过去。
+Prettier：在 17,224 次录制运行中，有 15,861 次完全由 Rust 完成格式化，覆盖 10 种语言（JavaScript、TypeScript、JSX、JSON、GraphQL、YAML、Markdown、CSS、SCSS、Less），并且全部 17,224 次都与 Prettier 逐字节一致，因为尚未移植的部分会回退到 Prettier。json-server：514/514 条录制的 HTTP 用例在纯 Rust 二进制文件上全部一致。以上数据在 Apple M4 上测得，每项运行两次，计时前先比对每一份输出（[详情](real-world.md)）。逐个小函数调用 Rust 通常比 JIT 更*慢*；rust-anything 会找出真正值得迁移的循环，再把整个循环搬过去。
 
 <p align="center">
   <img src="assets/json-server.gif" alt="json-server 作为 Node 服务端与作为单个 Rust 二进制文件对比：空闲内存 74 MB 与 3.5 MB，从启动到首次响应 79 至 85 ms 与 8 至 10 ms，514 条录制的 HTTP 用例全部一致。" width="820">

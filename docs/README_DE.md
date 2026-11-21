@@ -31,7 +31,7 @@ Es übersetzt keinen Code: Ihr Coding-Agent (oder Sie) schreibt das Rust, und ru
 <sub><a href="#sprachen">Sprachen</a> · <a href="how-it-works.md#how-it-works">So funktioniert es</a> · <a href="whole-apps.md#port-a-whole-app">Ganze Apps</a> · <a href="../LICENSE">MIT</a></sub><br>
 Gemacht in der Türkei 🇹🇷 von <a href="https://github.com/erkamyaman">erKam Yaman</a> · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Sponsere mich</a> · Gesponsert von <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">Neu in 2.0: <a href="real-world.md#prettier">Prettier, nach Rust portiert</a>. 19x schneller · 15,837 von 17,224 aufgezeichneten Läufen komplett in Rust · alle Byte für Byte gleich</p>
+<p align="center">Neu in 2.0: <a href="real-world.md#prettier">Prettier, nach Rust portiert</a>. 19x schneller · 15,861 von 17,224 aufgezeichneten Läufen komplett in Rust · alle Byte für Byte gleich</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier und seine Rust-Portierung formatieren dieselben 59 echten Dateien, ein Prozess pro Datei: Prettier braucht 3.63 s, die Rust-Portierung 0.20 s, mit Byte für Byte derselben Ausgabe." width="820">
@@ -78,7 +78,7 @@ der langsame Teil, ein Hot Path nach dem anderen:
 | json-server, vom Start bis zur ersten Antwort | 79 bis 85 ms | **8 bis 10 ms** |
 | [Fuse.js](real-world.md#fusejs)-Suche über 50,000 Strings, pro Anfrage | 91.2 ms | **2.8 ms: 32x schneller** |
 
-Prettier: 15,837 von 17,224 aufgezeichneten Läufen formatieren vollständig in Rust, über 10 Sprachen
+Prettier: 15,861 von 17,224 aufgezeichneten Läufen formatieren vollständig in Rust, über 10 Sprachen
 hinweg (JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), und alle 17,224
 stimmen Byte für Byte mit Prettier überein, da alles noch nicht Portierte auf Prettier zurückfällt.
 json-server: 514/514 aufgezeichnete HTTP-Fälle stimmen auf einer reinen Rust-Binärdatei überein.

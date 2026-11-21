@@ -31,7 +31,7 @@
 <sub><a href="#телләр">Телләр</a> · <a href="how-it-works.md#how-it-works">Ничек эшли</a> · <a href="whole-apps.md#port-a-whole-app">Бөтен кушымталар</a> · <a href="../LICENSE">MIT</a></sub><br>
 Төркиядә 🇹🇷 <a href="https://github.com/erkamyaman">erKam Yaman</a> ясаган · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Миңа спонсор булыгыз</a> · Спонсор: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0 версиясендә яңа: <a href="real-world.md#prettier">Prettier, Rust'ка күчерелде</a>. 19x тизрәк · язып алынган 17,224 җибәрүнең 15,837се тулысынча Rust'та · барысы да байтка байт туры килә</p>
+<p align="center">2.0 версиясендә яңа: <a href="real-world.md#prettier">Prettier, Rust'ка күчерелде</a>. 19x тизрәк · язып алынган 17,224 җибәрүнең 15,861се тулысынча Rust'та · барысы да байтка байт туры килә</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier һәм аның Rust порты шул ук 59 чын файлны форматлый, һәр файлга бер процесс: Prettier 3.63 s, Rust порты 0.20 s сарыф итә, нәтиҗә байтка-байт бертөрле." width="820">
@@ -77,7 +77,7 @@ Python, C, Go, Ruby яки Java кушымтагыз бүген нәрсә эш�
 | json-server, җибәрүдән беренче җавапка кадәр | 79 белән 85 ms арасы | **8 белән 10 ms арасы** |
 | [Fuse.js](real-world.md#fusejs) белән 50,000 юл буенча эзләү, бер сорауга | 91.2 ms | **2.8 ms: 32x тизрәк** |
 
-Prettier: язып алынган 17,224 җибәрүдән 15,837 җибәрү 10 телдә (JavaScript, TypeScript, JSX, JSON,
+Prettier: язып алынган 17,224 җибәрүдән 15,861 җибәрү 10 телдә (JavaScript, TypeScript, JSX, JSON,
 GraphQL, YAML, Markdown, CSS, SCSS, Less) тулысынча Rust'та форматлана, һәм бөтен 17,224 җибәрү дә
 Prettier белән байтка-байт туры килә, чөнки әле күчерелмәгән һәрнәрсә Prettier'га кире кайта (fallback).
 json-server: язып алынган 514/514 HTTP очрагы саф Rust бинар файлында туры килә. Apple M4'та үлчәнде,

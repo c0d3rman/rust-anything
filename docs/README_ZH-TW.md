@@ -31,7 +31,7 @@
 <sub><a href="#支援語言">支援語言</a> · <a href="how-it-works.md#how-it-works">運作原理</a> · <a href="whole-apps.md#port-a-whole-app">整個應用程式</a> · <a href="../LICENSE">MIT</a></sub><br>
 由 <a href="https://github.com/erkamyaman">erKam Yaman</a> 在土耳其 🇹🇷 打造 · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ 贊助我</a> · 贊助商：<a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0 新功能：<a href="real-world.md#prettier">Prettier 已移植到 Rust</a>。提速 19 倍 · 17,224 次錄製執行中 15,837 次完全由 Rust 執行 · 全部逐位元組一致</p>
+<p align="center">2.0 新功能：<a href="real-world.md#prettier">Prettier 已移植到 Rust</a>。提速 19 倍 · 17,224 次錄製執行中 15,861 次完全由 Rust 執行 · 全部逐位元組一致</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier 與它的 Rust 移植版格式化同樣的 59 個真實檔案，每個檔案一個行程：Prettier 耗時 3.63 s，Rust 移植版 0.20 s，輸出逐位元組相同。" width="820">
@@ -76,7 +76,7 @@ Rust 重寫程式碼對照該錄製紀錄進行驗證，確認無誤後再繼續
 | json-server，從啟動到第一個回應 | 79 至 85 ms | **8 至 10 ms** |
 | [Fuse.js](real-world.md#fusejs) 在 50,000 個字串中搜尋，每次查詢 | 91.2 ms | **2.8 ms：提速 32 倍** |
 
-Prettier：在 17,224 次錄製執行中，有 15,837 次完全由 Rust 完成格式化，涵蓋 10 種語言（JavaScript、
+Prettier：在 17,224 次錄製執行中，有 15,861 次完全由 Rust 完成格式化，涵蓋 10 種語言（JavaScript、
 TypeScript、JSX、JSON、GraphQL、YAML、Markdown、CSS、SCSS、Less），且全部 17,224 次都與 Prettier
 逐位元組相同，因為尚未移植的部分會回退給 Prettier 處理。json-server：514/514 筆錄製的 HTTP 案例
 在純 Rust 執行檔上全部吻合。以上數據在 Apple M4 上測得，每項執行兩次，計時前先比對每一份輸出

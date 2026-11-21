@@ -31,7 +31,7 @@
 <sub><a href="#تىللار">تىللار</a> · <a href="how-it-works.md#how-it-works">قانداق ئىشلەيدۇ</a> · <a href="whole-apps.md#port-a-whole-app">پۈتۈن ئەپلەر</a> · <a href="../LICENSE">MIT</a></sub><br>
 تۈركىيەدە 🇹🇷 <a href="https://github.com/erkamyaman">erKam Yaman</a> ياسىغان · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ ماڭا ھامىي بولۇڭ</a> · ھامىي: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0 دىكى يېڭىلىق: <a href="real-world.md#prettier">Prettier، Rust قا كۆچۈرۈلدى</a>. 19x تېز · خاتىرىلەنگەن 17,224 ئىجرانىڭ 15,837 تامامەن Rust دا · ھەممىسى بايتمۇ-بايت ئوخشاش</p>
+<p align="center">2.0 دىكى يېڭىلىق: <a href="real-world.md#prettier">Prettier، Rust قا كۆچۈرۈلدى</a>. 19x تېز · خاتىرىلەنگەن 17,224 ئىجرانىڭ 15,861 تامامەن Rust دا · ھەممىسى بايتمۇ-بايت ئوخشاش</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier ۋە ئۇنىڭ Rust كۆچۈرمىسى ئوخشاش 59 ھەقىقىي ھۆججەتنى فورماتلايدۇ، ھەر بىر ھۆججەتكە بىر جەريان: Prettier غا 3.63 s، Rust كۆچۈرمىسىگە 0.20 s كېتىدۇ، چىقىرىلمىسى بايتمۇبايت ئوخشاش." width="820">
@@ -77,7 +77,7 @@ Rust دا قايتا يېزىلغان ھەر بىر پارچىنى شۇ خاتى
 | json-server، قوزغىتىشتىن تۇنجى جاۋابقىچە | 79 دىن 85 ms غىچە | **8 دىن 10 ms غىچە** |
 | [Fuse.js](real-world.md#fusejs) دا 50,000 قۇر ئىچىدە ئىزدەش، ھەر سوئالغا | 91.2 ms | **2.8 ms: 32x تېز** |
 
-Prettier: خاتىرىلەنگەن 17,224 ئىجرانىڭ 15,837 سى 10 تىلدا (JavaScript، TypeScript، JSX، JSON، GraphQL،
+Prettier: خاتىرىلەنگەن 17,224 ئىجرانىڭ 15,861 سى 10 تىلدا (JavaScript، TypeScript، JSX، JSON، GraphQL،
 YAML، Markdown، CSS، SCSS، Less) تولۇق Rust دا فورماتلىنىدۇ، 17,224 نىڭ ھەممىسى Prettier بىلەن بايتمۇبايت
 ماس كېلىدۇ، چۈنكى تېخى كۆچۈرۈلمىگەن ھەر قانداق نەرسە Prettier غا قايتىدۇ (fallback). json-server: خاتىرىلەنگەن
 514/514 HTTP ئەھۋالى ساپ Rust ئىككىلىك ھۆججىتىدە ماس كېلىدۇ. Apple M4 دا ئۆلچەندى، ھەر بىرى ئىككى قېتىم ئىجرا

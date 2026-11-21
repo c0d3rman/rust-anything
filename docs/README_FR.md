@@ -31,7 +31,7 @@ Il ne traduit pas le code : votre agent de code (ou vous) écrit le Rust, et rus
 <sub><a href="#langages">Langages</a> · <a href="how-it-works.md#how-it-works">Fonctionnement</a> · <a href="whole-apps.md#port-a-whole-app">Applications complètes</a> · <a href="../LICENSE">MIT</a></sub><br>
 Fait en Turquie 🇹🇷 par <a href="https://github.com/erkamyaman">erKam Yaman</a> · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Me sponsoriser</a> · Sponsorisé par <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">Nouveau dans la 2.0 : <a href="real-world.md#prettier">Prettier, porté en Rust</a>. 19x plus rapide · 15,837 exécutions enregistrées sur 17,224 entièrement en Rust · toutes identiques octet pour octet</p>
+<p align="center">Nouveau dans la 2.0 : <a href="real-world.md#prettier">Prettier, porté en Rust</a>. 19x plus rapide · 15,861 exécutions enregistrées sur 17,224 entièrement en Rust · toutes identiques octet pour octet</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier et son portage Rust formatent les mêmes 59 fichiers réels, un processus par fichier : Prettier met 3.63 s, le portage Rust 0.20 s, avec la même sortie octet par octet." width="820">
@@ -78,7 +78,7 @@ serveurs entiers, ou seulement la partie lente, un chemin chaud à la fois :
 | json-server, du démarrage à la première réponse | 79 à 85 ms | **8 à 10 ms** |
 | Recherche [Fuse.js](real-world.md#fusejs) sur 50,000 chaînes, par requête | 91.2 ms | **2.8 ms : 32x plus rapide** |
 
-Prettier : 15,837 des 17,224 exécutions enregistrées sont formatées entièrement en Rust, sur 10 langages
+Prettier : 15,861 des 17,224 exécutions enregistrées sont formatées entièrement en Rust, sur 10 langages
 (JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), et les 17,224
 correspondent toutes à Prettier octet par octet, car tout ce qui n'est pas encore porté se rabat sur
 Prettier. json-server : 514/514 cas HTTP enregistrés correspondent sur un binaire entièrement en Rust.

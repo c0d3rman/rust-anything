@@ -31,7 +31,7 @@
 <sub><a href="#지원-언어">지원 언어</a> · <a href="how-it-works.md#how-it-works">작동 방식</a> · <a href="whole-apps.md#port-a-whole-app">전체 앱 포팅하기</a> · <a href="../LICENSE">MIT</a></sub><br>
 튀르키예 🇹🇷 에서 <a href="https://github.com/erkamyaman">erKam Yaman</a> 제작 · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ 후원하기</a> · 후원: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0의 새 기능: <a href="real-world.md#prettier">Prettier를 Rust로 포팅</a>. 19x 더 빠름 · 기록된 실행 17,224회 중 15,837회가 완전히 Rust · 모두 바이트 단위로 동일</p>
+<p align="center">2.0의 새 기능: <a href="real-world.md#prettier">Prettier를 Rust로 포팅</a>. 19x 더 빠름 · 기록된 실행 17,224회 중 15,861회가 완전히 Rust · 모두 바이트 단위로 동일</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier와 그 Rust 포팅 버전이 파일당 프로세스 하나로 같은 실제 파일 59개를 포맷하는 모습: Prettier는 3.63 s, Rust 포팅 버전은 0.20 s가 걸리며 출력은 바이트 단위로 동일합니다." width="820">
@@ -72,7 +72,7 @@
 | json-server, 시작부터 첫 응답까지 | 79~85 ms | **8~10 ms** |
 | 문자열 50,000개에 대한 [Fuse.js](real-world.md#fusejs) 검색, 쿼리당 | 91.2 ms | **2.8 ms: 32x 더 빠름** |
 
-Prettier: 기록된 실행 17,224회 중 15,837회가 10개 언어(JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less)에서 완전히 Rust로 포맷되며, 아직 포팅되지 않은 부분은 Prettier로 폴백하므로 17,224회 모두 Prettier와 바이트 단위로 일치합니다. json-server: 기록된 HTTP 케이스 514/514개가 순수 Rust 바이너리에서 일치합니다. Apple M4에서 각각 두 번 실행해 측정했으며, 시간을 재기 전에 모든 출력을 비교했습니다([자세히](real-world.md)). 작은 함수 하나를 호출할 때마다 Rust를 부르는 것은 보통 JIT보다 *더 느립니다*. rust-anything은 옮길 가치가 있는 루프를 찾아 그 루프 자체를 옮깁니다.
+Prettier: 기록된 실행 17,224회 중 15,861회가 10개 언어(JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less)에서 완전히 Rust로 포맷되며, 아직 포팅되지 않은 부분은 Prettier로 폴백하므로 17,224회 모두 Prettier와 바이트 단위로 일치합니다. json-server: 기록된 HTTP 케이스 514/514개가 순수 Rust 바이너리에서 일치합니다. Apple M4에서 각각 두 번 실행해 측정했으며, 시간을 재기 전에 모든 출력을 비교했습니다([자세히](real-world.md)). 작은 함수 하나를 호출할 때마다 Rust를 부르는 것은 보통 JIT보다 *더 느립니다*. rust-anything은 옮길 가치가 있는 루프를 찾아 그 루프 자체를 옮깁니다.
 
 <p align="center">
   <img src="assets/json-server.gif" alt="Node 서버로서의 json-server와 단일 Rust 바이너리로서의 json-server: 유휴 시 메모리 74 MB와 3.5 MB, 시작부터 첫 응답까지 79~85 ms와 8~10 ms, 기록된 HTTP 케이스 514개 중 514개 일치." width="820">

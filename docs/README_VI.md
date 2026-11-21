@@ -31,7 +31,7 @@ Công cụ không tự dịch code: agent lập trình của bạn (hoặc chín
 <sub><a href="#languages">Ngôn ngữ</a> · <a href="how-it-works.md#how-it-works">Cách hoạt động</a> · <a href="whole-apps.md#port-a-whole-app">Chuyển cả ứng dụng</a> · <a href="../LICENSE">MIT</a></sub><br>
 Làm tại Thổ Nhĩ Kỳ 🇹🇷 bởi <a href="https://github.com/erkamyaman">erKam Yaman</a> · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Tài trợ cho tôi</a> · Được tài trợ bởi <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">Mới trong 2.0: <a href="real-world.md#prettier">Prettier đã được port sang Rust</a>. Nhanh hơn 19x · 15,837 trên 17,224 lần chạy đã ghi chạy hoàn toàn bằng Rust · tất cả giống từng byte</p>
+<p align="center">Mới trong 2.0: <a href="real-world.md#prettier">Prettier đã được port sang Rust</a>. Nhanh hơn 19x · 15,861 trên 17,224 lần chạy đã ghi chạy hoàn toàn bằng Rust · tất cả giống từng byte</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier và bản port Rust định dạng cùng 59 file thực tế, mỗi file một tiến trình: Prettier mất 3.63 s, bản port Rust mất 0.20 s, đầu ra giống nhau đến từng byte." width="820">
@@ -72,7 +72,7 @@ Làm tại Thổ Nhĩ Kỳ 🇹🇷 bởi <a href="https://github.com/erkamyaman
 | json-server, từ lúc khởi động đến phản hồi đầu tiên | 79 đến 85 ms | **8 đến 10 ms** |
 | Tìm kiếm [Fuse.js](real-world.md#fusejs) trên 50,000 chuỗi, mỗi truy vấn | 91.2 ms | **2.8 ms: nhanh hơn 32x** |
 
-Prettier: 15,837 trong 17,224 lần chạy đã ghi được định dạng hoàn toàn bằng Rust trên 10 ngôn ngữ (JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), và cả 17,224 lần đều khớp với Prettier đến từng byte, vì phần nào chưa port sẽ fallback về Prettier. json-server: 514/514 ca HTTP đã ghi khớp trên một binary Rust thuần. Đo trên Apple M4, mỗi phép đo chạy hai lần, mọi đầu ra đều được so sánh trước khi đo thời gian ([chi tiết](real-world.md)). Gọi Rust riêng cho từng hàm nhỏ thường còn *chậm hơn* JIT; rust-anything tìm vòng lặp đáng chuyển rồi đưa vòng lặp đó sang Rust.
+Prettier: 15,861 trong 17,224 lần chạy đã ghi được định dạng hoàn toàn bằng Rust trên 10 ngôn ngữ (JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), và cả 17,224 lần đều khớp với Prettier đến từng byte, vì phần nào chưa port sẽ fallback về Prettier. json-server: 514/514 ca HTTP đã ghi khớp trên một binary Rust thuần. Đo trên Apple M4, mỗi phép đo chạy hai lần, mọi đầu ra đều được so sánh trước khi đo thời gian ([chi tiết](real-world.md)). Gọi Rust riêng cho từng hàm nhỏ thường còn *chậm hơn* JIT; rust-anything tìm vòng lặp đáng chuyển rồi đưa vòng lặp đó sang Rust.
 
 <p align="center">
   <img src="assets/json-server.gif" alt="json-server dưới dạng Node server và dưới dạng một binary Rust: bộ nhớ khi rảnh 74 MB và 3.5 MB, từ khởi động đến phản hồi đầu tiên 79 đến 85 ms và 8 đến 10 ms, 514 trên 514 ca HTTP đã ghi đều khớp." width="820">

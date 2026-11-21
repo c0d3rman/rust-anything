@@ -31,7 +31,7 @@ U kodni o'zi tarjima qilmaydi: Rust'ni kodlash agentingiz (yoki siz) yozadi, rus
 <sub><a href="#tillar">Tillar</a> · <a href="how-it-works.md#how-it-works">Qanday ishlaydi</a> · <a href="whole-apps.md#port-a-whole-app">Butun ilovalar</a> · <a href="../LICENSE">MIT</a></sub><br>
 Turkiyada 🇹🇷 <a href="https://github.com/erkamyaman">erKam Yaman</a> tomonidan yaratilgan · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Homiy bo'ling</a> · Homiy: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0'da yangi: <a href="real-world.md#prettier">Prettier Rust'ga port qilindi</a>. 19x tezroq · 17,224 ta yozib olingan ishga tushirishdan 15,837 tasi to'liq Rust'da · hammasi baytma-bayt bir xil</p>
+<p align="center">2.0'da yangi: <a href="real-world.md#prettier">Prettier Rust'ga port qilindi</a>. 19x tezroq · 17,224 ta yozib olingan ishga tushirishdan 15,861 tasi to'liq Rust'da · hammasi baytma-bayt bir xil</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier va uning Rust porti bir xil 59 ta haqiqiy faylni har bir fayl uchun bitta jarayon bilan formatlaydi: Prettier 3.63 s, Rust porti 0.20 s sarflaydi va natija baytma-bayt bir xil." width="820">
@@ -78,7 +78,7 @@ va serverlar yoki faqat sekin qism, bir vaqtda bitta hot path'dan:
 | json-server, ishga tushishdan birinchi javobgacha | 79 dan 85 ms gacha | **8 dan 10 ms gacha** |
 | 50,000 string ustida [Fuse.js](real-world.md#fusejs) qidiruvi, har so'rovga | 91.2 ms | **2.8 ms: 32x tezroq** |
 
-Prettier: 17,224 ta yozib olingan ishga tushirishdan 15,837 tasi 10 tilda (JavaScript, TypeScript,
+Prettier: 17,224 ta yozib olingan ishga tushirishdan 15,861 tasi 10 tilda (JavaScript, TypeScript,
 JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less) to'liq Rust'da formatlanadi va 17,224 tasining
 hammasi Prettier bilan baytma-bayt mos keladi, chunki hali port qilinmagan har qanday narsa
 Prettier'ga qaytadi. json-server: yozib olingan 514/514 HTTP holat toza Rust binary'sida mos keladi.

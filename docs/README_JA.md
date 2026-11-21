@@ -31,7 +31,7 @@
 <sub><a href="#対応言語">対応言語</a> · <a href="how-it-works.md#how-it-works">仕組み</a> · <a href="whole-apps.md#port-a-whole-app">アプリ全体の移植</a> · <a href="../LICENSE">MIT</a></sub><br>
 トルコ 🇹🇷 で <a href="https://github.com/erkamyaman">erKam Yaman</a> が開発 · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ スポンサーになる</a> · スポンサー: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0 の新機能: <a href="real-world.md#prettier">Prettier を Rust に移植</a>。19x 高速 · 記録済み実行 17,224 件中 15,837 件が完全に Rust · すべてバイト単位で一致</p>
+<p align="center">2.0 の新機能: <a href="real-world.md#prettier">Prettier を Rust に移植</a>。19x 高速 · 記録済み実行 17,224 件中 15,861 件が完全に Rust · すべてバイト単位で一致</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier とその Rust 移植版が、ファイルごとに 1 プロセスで同じ 59 個の実ファイルをフォーマット: Prettier は 3.63 s、Rust 移植版は 0.20 s で、出力はバイト単位で同一です。" width="820">
@@ -72,7 +72,7 @@
 | json-server、起動から最初のレスポンスまで | 79〜85 ms | **8〜10 ms** |
 | 50,000 文字列に対する [Fuse.js](real-world.md#fusejs) 検索、1 クエリあたり | 91.2 ms | **2.8 ms: 32x 高速** |
 
-Prettier: 17,224 件の記録済み実行のうち 15,837 件が 10 言語（JavaScript、TypeScript、JSX、JSON、GraphQL、YAML、Markdown、CSS、SCSS、Less）にわたって完全に Rust でフォーマットされ、17,224 件すべてが Prettier とバイト単位で一致します。まだ移植されていない部分は Prettier にフォールバックするためです。json-server: 記録した 514/514 件の HTTP ケースが純粋な Rust バイナリ上で一致します。Apple M4 で各 2 回実行して計測し、計測前にすべての出力を比較しています（[詳細](real-world.md)）。小さな関数ごとに毎回 Rust を呼び出すと、通常は JIT より*遅く*なります。rust-anything は移植する価値のあるループを見つけ出し、そのループごと移行します。
+Prettier: 17,224 件の記録済み実行のうち 15,861 件が 10 言語（JavaScript、TypeScript、JSX、JSON、GraphQL、YAML、Markdown、CSS、SCSS、Less）にわたって完全に Rust でフォーマットされ、17,224 件すべてが Prettier とバイト単位で一致します。まだ移植されていない部分は Prettier にフォールバックするためです。json-server: 記録した 514/514 件の HTTP ケースが純粋な Rust バイナリ上で一致します。Apple M4 で各 2 回実行して計測し、計測前にすべての出力を比較しています（[詳細](real-world.md)）。小さな関数ごとに毎回 Rust を呼び出すと、通常は JIT より*遅く*なります。rust-anything は移植する価値のあるループを見つけ出し、そのループごと移行します。
 
 <p align="center">
   <img src="assets/json-server.gif" alt="Node サーバーとしての json-server と単一の Rust バイナリとしての json-server: アイドル時のメモリは 74 MB と 3.5 MB、起動から最初のレスポンスまでは 79〜85 ms と 8〜10 ms、記録した 514 件中 514 件の HTTP ケースが一致します。" width="820">

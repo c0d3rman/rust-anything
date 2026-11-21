@@ -4,7 +4,7 @@ Goal: Prettier's CLI as a Rust binary, JS/TS first. Decisions: [DECISIONS.md](DE
 
 | Unit | State | Result |
 | --- | --- | --- |
-| front door (`rust/app`) | done | 17224/17224; fallback 8.1% with js-format wired |
+| front door (`rust/app`) | done | 17224/17224; fallback 7.9% with js-format wired |
 | CLI config resolution (`.prettierrc` JSON, `package.json`, overrides, `.editorconfig`, ignore files) | done | in the glue (`js_format/config.rs`); 46 of 63 config cases in Rust |
 | doc printer (`printDocToString`, `getStringWidth`) | done | gate passes, 2848/2848 cases; crate `doc-printer-rs` |
 | string/number/width utilities | done | inside the doc printer and `prettier-js-rs` |

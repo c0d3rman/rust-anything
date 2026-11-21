@@ -31,7 +31,7 @@ Kodu özü tərcümə etmir: Rust-u kodlaşdırma agentiniz (və ya siz) yazır,
 <sub><a href="#dillər">Dillər</a> · <a href="how-it-works.md#how-it-works">Necə işləyir</a> · <a href="whole-apps.md#port-a-whole-app">Bütöv tətbiqlər</a> · <a href="../LICENSE">MIT</a></sub><br>
 Türkiyədə 🇹🇷 <a href="https://github.com/erkamyaman">erKam Yaman</a> tərəfindən hazırlanıb · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Sponsor olun</a> · Sponsor: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0-da yeni: <a href="real-world.md#prettier">Prettier, Rust-a port edildi</a>. 19x daha sürətli · 17,224 qeydə alınmış icranın 15,837-si tamamilə Rust-da · hamısı bayt-bayt eyni</p>
+<p align="center">2.0-da yeni: <a href="real-world.md#prettier">Prettier, Rust-a port edildi</a>. 19x daha sürətli · 17,224 qeydə alınmış icranın 15,861-si tamamilə Rust-da · hamısı bayt-bayt eyni</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier və onun Rust portu eyni 59 real faylı, hər fayl üçün bir proses olmaqla formatlayır: Prettier 3.63 s, Rust portu 0.20 s çəkir və çıxış bayt-bayt eynidir." width="820">
@@ -78,7 +78,7 @@ yavaş hissə, hər dəfə bir hot path:
 | json-server, işə salınmadan ilk cavaba qədər | 79 ilə 85 ms arası | **8 ilə 10 ms arası** |
 | 50,000 string üzərində [Fuse.js](real-world.md#fusejs) axtarışı, sorğu başına | 91.2 ms | **2.8 ms: 32x daha sürətli** |
 
-Prettier: 17,224 qeydə alınmış icradan 15,837-si 10 dildə (JavaScript, TypeScript, JSX, JSON,
+Prettier: 17,224 qeydə alınmış icradan 15,861-si 10 dildə (JavaScript, TypeScript, JSX, JSON,
 GraphQL, YAML, Markdown, CSS, SCSS, Less) tamamilə Rust-da formatlanır və 17,224-ün hamısı Prettier
 ilə bayt-bayt uyğun gəlir, çünki hələ port edilməmiş hər şey Prettier-ə qayıdır. json-server: qeydə
 alınmış 514/514 HTTP halı təmiz Rust binary-si üzərində uyğun gəlir. Apple M4-də, hər biri iki dəfə

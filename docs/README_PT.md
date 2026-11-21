@@ -31,7 +31,7 @@ Não traduz código: o seu agente de programação (ou você) escreve o Rust, e 
 <sub><a href="#linguagens">Linguagens</a> · <a href="how-it-works.md#how-it-works">Como funciona</a> · <a href="whole-apps.md#port-a-whole-app">Aplicações completas</a> · <a href="../LICENSE">MIT</a></sub><br>
 Feito na Turquia 🇹🇷 por <a href="https://github.com/erkamyaman">erKam Yaman</a> · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Patrocine-me</a> · Patrocinado por <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">Novo na 2.0: <a href="real-world.md#prettier">Prettier, migrado para Rust</a>. 19x mais rápido · 15,837 de 17,224 execuções registadas inteiramente em Rust · todas idênticas byte a byte</p>
+<p align="center">Novo na 2.0: <a href="real-world.md#prettier">Prettier, migrado para Rust</a>. 19x mais rápido · 15,861 de 17,224 execuções registadas inteiramente em Rust · todas idênticas byte a byte</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="O Prettier e a sua migração para Rust formatam os mesmos 59 ficheiros reais, um processo por ficheiro: o Prettier demora 3.63 s, a migração para Rust 0.20 s, com a mesma saída byte a byte." width="820">
@@ -72,7 +72,7 @@ Feito na Turquia 🇹🇷 por <a href="https://github.com/erkamyaman">erKam Yama
 | json-server, do arranque à primeira resposta | 79 a 85 ms | **8 a 10 ms** |
 | Pesquisa [Fuse.js](real-world.md#fusejs) em 50,000 strings, por consulta | 91.2 ms | **2.8 ms: 32x mais rápido** |
 
-Prettier: 15,837 de 17,224 execuções registadas são formatadas totalmente em Rust, em 10 linguagens (JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), e todas as 17,224 coincidem com o Prettier byte a byte, já que tudo o que ainda não foi migrado recorre ao Prettier. json-server: 514/514 casos HTTP registados coincidem num binário em Rust puro. Medições num Apple M4, duas execuções cada, com cada saída comparada antes da medição de tempo ([detalhes](real-world.md)). Chamar Rust uma vez por cada pequena função costuma ser *mais lento* do que utilizar um JIT; o rust-anything identifica o ciclo que realmente vale a pena migrar e transfere-o.
+Prettier: 15,861 de 17,224 execuções registadas são formatadas totalmente em Rust, em 10 linguagens (JavaScript, TypeScript, JSX, JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less), e todas as 17,224 coincidem com o Prettier byte a byte, já que tudo o que ainda não foi migrado recorre ao Prettier. json-server: 514/514 casos HTTP registados coincidem num binário em Rust puro. Medições num Apple M4, duas execuções cada, com cada saída comparada antes da medição de tempo ([detalhes](real-world.md)). Chamar Rust uma vez por cada pequena função costuma ser *mais lento* do que utilizar um JIT; o rust-anything identifica o ciclo que realmente vale a pena migrar e transfere-o.
 
 <p align="center">
   <img src="assets/json-server.gif" alt="json-server como servidor Node e como um único binário Rust: memória em repouso 74 MB e 3.5 MB, do arranque à primeira resposta 79 a 85 ms e 8 a 10 ms, e 514 de 514 casos HTTP registados coincidem." width="820">

@@ -31,7 +31,7 @@
 <sub><a href="#тілдер">Тілдер</a> · <a href="how-it-works.md#how-it-works">Қалай жұмыс істейді</a> · <a href="whole-apps.md#port-a-whole-app">Бүкіл қолданбалар</a> · <a href="../LICENSE">MIT</a></sub><br>
 Түркияда 🇹🇷 <a href="https://github.com/erkamyaman">erKam Yaman</a> жасаған · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Маған демеуші болыңыз</a> · Демеуші: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0 нұсқасындағы жаңалық: <a href="real-world.md#prettier">Prettier, Rust-қа портталды</a>. 19x жылдамырақ · 17,224 жазылған іске қосудың 15,837-сі толығымен Rust-та · барлығы байтпа-байт бірдей</p>
+<p align="center">2.0 нұсқасындағы жаңалық: <a href="real-world.md#prettier">Prettier, Rust-қа портталды</a>. 19x жылдамырақ · 17,224 жазылған іске қосудың 15,861-сі толығымен Rust-та · барлығы байтпа-байт бірдей</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier мен оның Rust порты бірдей 59 нақты файлды пішімдейді, әр файлға бір процесс: Prettier 3.63 s, Rust порты 0.20 s алады, шығысы байтпа-байт бірдей." width="820">
@@ -78,7 +78,7 @@
 | json-server, іске қосудан бірінші жауапқа дейін | 79 бен 85 ms аралығы | **8 бен 10 ms аралығы** |
 | [Fuse.js](real-world.md#fusejs) арқылы 50,000 жол бойынша іздеу, бір сұранысқа | 91.2 ms | **2.8 ms: 32x жылдамырақ** |
 
-Prettier: 17,224 жазылған іске қосудың ішінен 15,837 іске қосу 10 тілде (JavaScript, TypeScript, JSX,
+Prettier: 17,224 жазылған іске қосудың ішінен 15,861 іске қосу 10 тілде (JavaScript, TypeScript, JSX,
 JSON, GraphQL, YAML, Markdown, CSS, SCSS, Less) толығымен Rust ішінде пішімделеді, ал барлық 17,224
 іске қосу Prettier-мен байтпа-байт сәйкес келеді, өйткені әлі портталмаған кез келген нәрсе Prettier-ге
 қайтарылады (fallback). json-server: жазылған 514/514 HTTP кейсі таза Rust бинарлық файлында сәйкес

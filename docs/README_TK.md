@@ -31,7 +31,7 @@ Ol kody özi terjime etmeýär: Rust-y kodlaýyş agentiňiz (ýa-da siz) ýazý
 <sub><a href="#diller">Diller</a> · <a href="how-it-works.md#how-it-works">Nähili işleýär</a> · <a href="whole-apps.md#port-a-whole-app">Tutuş programmalar</a> · <a href="../LICENSE">MIT</a></sub><br>
 Türkiýede 🇹🇷 <a href="https://github.com/erkamyaman">erKam Yaman</a> tarapyndan döredildi · <a href="../LICENSE">MIT</a> · <a href="https://github.com/sponsors/erkamyaman">❤️ Hemaýatkär boluň</a> · Hemaýatkär: <a href="https://coderabbit.link/erkamyaman"><img src="assets/brands/coderabbit.png" width="22" height="22" align="absmiddle" alt=""> <b>CodeRabbit</b></a></p>
 
-<p align="center">2.0-da täze: <a href="real-world.md#prettier">Prettier Rust-a geçirildi</a>. 19x has çalt · ýazga alnan 17,224 işletmäniň 15,837-si doly Rust-da · hemmesi baýtma-baýt deň</p>
+<p align="center">2.0-da täze: <a href="real-world.md#prettier">Prettier Rust-a geçirildi</a>. 19x has çalt · ýazga alnan 17,224 işletmäniň 15,861-si doly Rust-da · hemmesi baýtma-baýt deň</p>
 
 <p align="center">
   <img src="assets/prettier.gif" alt="Prettier we onuň Rust porty şol bir 59 hakyky faýly her faýl üçin bir proses bilen formatlaýar: Prettier 3.63 s, Rust porty 0.20 s sarp edýär, çykyş bolsa baýtma-baýt birmeňzeş." width="820">
@@ -78,7 +78,7 @@ we serwerler ýa-da diňe haýal bölegi, bir gezekde bir hot path:
 | json-server, başlangyçdan ilkinji jogaba çenli | 79 bilen 85 ms aralygy | **8 bilen 10 ms aralygy** |
 | 50,000 setirde [Fuse.js](real-world.md#fusejs) gözlegi, bir soraga | 91.2 ms | **2.8 ms: 32x has çalt** |
 
-Prettier: ýazga alnan 17,224 işletmäniň 15,837-si 10 dilde (JavaScript, TypeScript, JSX, JSON,
+Prettier: ýazga alnan 17,224 işletmäniň 15,861-si 10 dilde (JavaScript, TypeScript, JSX, JSON,
 GraphQL, YAML, Markdown, CSS, SCSS, Less) doly Rust-da formatlanýar we 17,224-üň hemmesi Prettier
 bilen baýtma-baýt gabat gelýär, sebäbi entek geçirilmedik islendik zat Prettier-e gaýdýar.
 json-server: ýazga alnan 514/514 HTTP ýagdaýy arassa Rust binar faýlynda gabat gelýär. Apple M4-de,

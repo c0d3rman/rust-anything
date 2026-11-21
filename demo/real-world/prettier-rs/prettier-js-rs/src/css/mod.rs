@@ -104,7 +104,8 @@ fn directive(value: &str, word: &str) -> Option<(usize, String)> {
 }
 
 /// The index of the text a postcss tree was parsed from, and the original text Prettier slices
-/// (`options.originalText`); they differ under front matter and in custom-property blocks.
+/// (`options.originalText`, the text after front matter is blanked); they differ in custom-property
+/// blocks.
 #[derive(Clone, Copy)]
 struct Src<'t> {
     idx: &'t Idx,
@@ -2131,7 +2132,6 @@ fn replace_directive(raw: &str, word: &str) -> String {
 
 /// Prettier's `css` parser and printer: the doc for `text`.
 pub fn print(text: &str, opts: &Options) -> R {
-    let orig = text;
     let fm = crate::markdown::remark::parse_front_matter(text);
     let content: String;
     let text = match &fm {
@@ -2150,11 +2150,10 @@ pub fn print(text: &str, opts: &Options) -> R {
         return bail("css parse error");
     };
     let idx = Idx::new(text);
-    let oidx = Idx::new(orig);
     let src = Src {
         idx: &idx,
-        orig,
-        oidx: &oidx,
+        orig: text,
+        oidx: &idx,
     };
     let root = process(root, src, opts.parser)?;
     let fm_doc = match &fm {
@@ -2186,8 +2185,8 @@ pub fn print(text: &str, opts: &Options) -> R {
         Some(f) => Some(concat(vec![s(f.raw.clone()), hardline()])),
     };
     let pr = Pr {
-        text: orig,
-        idx: &oidx,
+        text,
+        idx: &idx,
         opts,
     };
     if let Some(fd) = fm_doc {
@@ -2209,4 +2208,34 @@ pub fn print(text: &str, opts: &Options) -> R {
         variable: false,
     };
     pr.print_css(&root, top, &root, &[], 0)
+}
+
+#[cfg(test)]
+mod tests {
+    fn format(text: &str, path: &str) -> String {
+        let args = ["--stdin-filepath".to_string(), path.to_string()];
+        let opts = crate::Options::from_cli(&args).unwrap();
+        crate::format(text, &opts).unwrap()
+    }
+
+    #[test]
+    fn front_matter_with_non_bmp_chars() {
+        for (fm, path) in [
+            ("+++\nx = \"😀\"\n+++", "a.css"),
+            ("---\nx: \"😀\"\n---", "a.css"),
+            ("---\nx: \"😀\"\n---", "a.scss"),
+            ("---\nx: \"😀\"\n---", "a.less"),
+        ] {
+            let text = format!("{fm}\n/*keep*/\na{{}}");
+            let expected = format!("{fm}\n\n/*keep*/\na {{\n}}\n");
+            assert_eq!(format(&text, path), expected, "{path} {fm}");
+        }
+        assert_eq!(
+            format(
+                "---\nx: \"😀\"\n---\n:root{--x:{/*c*/color:red}}\n/*keep*/\na{}",
+                "a.css"
+            ),
+            "---\nx: \"😀\"\n---\n\n:root {\n  --x: {\n    /*c*/\n    color: red;\n  };\n}\n/*keep*/\na {\n}\n"
+        );
+    }
 }
