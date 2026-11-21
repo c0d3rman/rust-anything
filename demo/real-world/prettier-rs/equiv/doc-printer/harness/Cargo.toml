@@ -1,0 +1,25 @@
+[package]
+name = "doc-printer-equiv"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "napi harness exposing the doc-printer-rs port to the equivalence checks"
+
+[workspace]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+doc-printer-rs = { path = "../../../doc-printer-rs" }
+napi = "3"
+napi-derive = "3"
+serde = "1"
+serde_json = { version = "1", features = ["preserve_order", "float_roundtrip", "unbounded_depth"] }
+
+[build-dependencies]
+napi-build = "2"
+
+[profile.release]
+lto = true
+debug = false

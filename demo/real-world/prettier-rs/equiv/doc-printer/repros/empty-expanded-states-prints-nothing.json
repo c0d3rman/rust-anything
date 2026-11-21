@@ -1,0 +1,25 @@
+{
+ "kind": "output",
+ "doc": {
+  "type": "group",
+  "contents": "a",
+  "expandedStates": []
+ },
+ "options": {
+  "printWidth": 0,
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf"
+ },
+ "prettier": [
+  "ok",
+  "",
+  null,
+  null
+ ],
+ "rust": [
+  "err",
+  "Unexpected doc 'undefined', \nExpected it to be 'string' or 'object'."
+ ],
+ "note": "Prettier printer.js: for a group with expandedStates [] that does not fit and has no break, the loop `for (i = 1; i < expandedStates.length + 1; ...)` never runs, so nothing is pushed and the group prints nothing. port.rs print(): `let Some(most_expanded) = states.last() else { return Err(...) }` errors before checking break. Prettier is the reference, so the port deviates. Not reachable from prettier_js_rs::format: its conditional_group() indexes states[0] and every call site passes a non-empty literal vec."
+}

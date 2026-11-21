@@ -1,0 +1,41 @@
+{
+ "kind": "output",
+ "doc": {
+  "type": "group",
+  "contents": {
+   "type": "group",
+   "contents": [
+    "a",
+    {
+     "type": "break-parent"
+    },
+    {
+     "type": "line"
+    },
+    "b"
+   ]
+  },
+  "expandedStates": [
+   "c"
+  ]
+ },
+ "options": {
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf"
+ },
+ "prettier": [
+  "ok",
+  "a b",
+  null,
+  null
+ ],
+ "rust": [
+  "ok",
+  "a\nb",
+  null,
+  null
+ ],
+ "note": "A group whose contents is not the same object as expandedStates[0] (possible via group(contents, {expandedStates}) or stripTrailingHardline on a conditionalGroup). Prettier propagateBreaks walks only expandedStates of such a group (traverse-doc.js, shouldTraverseConditionalGroups), so the inner group in contents keeps break:false and prints flat; port.rs propagate() also walks contents (`let _ = propagate(contents, shared)`) and breaks it. Prettier is the reference, so the port is wrong here."
+}

@@ -1,0 +1,355 @@
+{"name": "mutant-eol-auto-crlf-css", "args": ["--stdin-filepath", "m002.css", "--end-of-line", "auto"], "stdin": "a {\r\n  color: red;\r\n}\r\n"}
+{"name": "mutant-js-arrow-body-ternary-postfix-update", "args": ["--stdin-filepath", "m075.js"], "stdin": "const f = () => a++ ? b : c;\n"}
+{"name": "mutant-js-test-call-new-async-wrapper", "args": ["--stdin-filepath", "m076.js"], "stdin": "it(\"does something really long that makes the line wrap around past the limit\", new async(() => { x; }));\n"}
+{"name": "mutant-md-cjk-ideographic-space-tight-count", "args": ["--stdin-filepath", "m044.md", "--prose-wrap", "never"], "stdin": "中\na 中 b x　y中\n"}
+{"name": "mutant-md-ordered-list-aligned-indented", "args": ["--stdin-filepath", "m046.md"], "stdin": " 1. a\n 2. b\n"}
+{"name": "mutant-md-emphasis-empty-link", "args": ["--stdin-filepath", "m047.md"], "stdin": "_[](x)_\n"}
+{"name": "mutant-md-html-comment-unterminated-trailing-space", "args": ["--stdin-filepath", "m049.md"], "stdin": "<!-- a  \nb --> c\n"}
+{"name": "mutant-md-autolink-backslash-underscore-word", "args": ["--stdin-filepath", "m051.md"], "stdin": "http://a.com\\_b_\n"}
+{"name": "mutant-md-email-autolink-emphasis-escaped-underscore", "args": ["--stdin-filepath", "m052.md"], "stdin": "a@b.com*\\_x*\n"}
+{"name": "mutant-md-cjk-latin-newline-spaced-majority", "args": ["--stdin-filepath", "m054.md", "--prose-wrap", "never"], "stdin": "中\na 中 b\n"}
+{"name": "mutant-md-list-item-tab-indent-min", "args": ["--stdin-filepath", "m124.md"], "stdin": "   10.  a\n\n\t\tb\n\n          c\n"}
+{"name": "mutant-md-math-block-closing-trailing-space", "args": ["--stdin-filepath", "m127.md"], "stdin": "$$\na\n$$ \n\nb\n"}
+{"name": "mutant-md-math-block-indented-closing", "args": ["--stdin-filepath", "m129.md"], "stdin": "$$\na\n $$\n"}
+{"name": "mutant-md-footnote-def-space-tab-indent", "args": ["--stdin-filepath", "m131.md"], "stdin": "[^1]: a\n\n \tb\n"}
+{"name": "mutant-md-definition-multiline-title-single-quote", "args": ["--stdin-filepath", "m132.md"], "stdin": "[a]: /u 'b\nc'\n"}
+{"name": "mutant-md-list-lazy-line-starting-dot", "args": ["--stdin-filepath", "m134.md"], "stdin": "- a\n. b\n"}
+{"name": "mutant-md-list-tab-after-marker-sibling", "args": ["--stdin-filepath", "m135.md"], "stdin": "-\ta\n - b\n"}
+{"name": "mutant-md-list-wide-marker-4-space-after-blank", "args": ["--stdin-filepath", "m137.md"], "stdin": "10.  a\n\n    b\n"}
+{"name": "mutant-md-lone-lt-at-end", "args": ["--stdin-filepath", "m139.md"], "stdin": "a <\n"}
+{"name": "mutant-md-angle-scheme-colon-no-slash", "args": ["--stdin-filepath", "m140.md"], "stdin": "<x:y/z>\n"}
+{"name": "mutant-md-autolink-with-emphasis-chars", "args": ["--stdin-filepath", "m141.md"], "stdin": "<x://*y*>\n"}
+{"name": "mutant-md-literal-url-with-emphasis-chars", "args": ["--stdin-filepath", "url1.md"], "stdin": "http://a.com/*b*\n"}
+{"name": "mutant-md-literal-url-unbalanced-paren-mid", "args": ["--stdin-filepath", "url2.md"], "stdin": "http://a.com/)*b*\n"}
+{"name": "mutant-md-literal-url-extra-open-paren", "args": ["--stdin-filepath", "url3.md"], "stdin": "http://a.com/((*a*)\n"}
+{"name": "mutant-md-literal-url-trailing-multichar-entity", "args": ["--stdin-filepath", "url4.md"], "stdin": "http://a.com/&NotEqualTilde;\n"}
+{"name": "mutant-md-literal-url-semicolon-after-letters", "args": ["--stdin-filepath", "url5.md"], "stdin": "http://a.com/*x;*\n"}
+{"name": "mutant-md-literal-email-underscore-local", "args": ["--stdin-filepath", "email1.md"], "stdin": "__a__@b.c\n"}
+{"name": "mutant-md-inline-html-anchor-disables-url", "args": ["--stdin-filepath", "m152.md"], "stdin": "x <a href=\"y\">http://a.com/*b*</a>\n"}
+{"name": "mutant-md-link-text-double-backtick", "args": ["--stdin-filepath", "m153.md"], "stdin": "[a``b](c)\n"}
+{"name": "mutant-md-link-nested-brackets-angle-url", "args": ["--stdin-filepath", "m154.md"], "stdin": "[a[b]c](<d>)\n"}
+{"name": "mutant-md-footnote-ref-label-with-stars", "args": ["--stdin-filepath", "fn1.md"], "stdin": "a[^*x*]\n"}
+{"name": "mutant-md-inline-code-only-spaces", "args": ["--stdin-filepath", "m160.md"], "stdin": "a `   ` b\n"}
+{"name": "mutant-md-inline-math-with-emphasis-chars", "args": ["--stdin-filepath", "m161.md"], "stdin": "$*a*$\n"}
+{"name": "mutant-md-inline-math-followed-by-dollar-span", "args": ["--stdin-filepath", "m162.md"], "stdin": "$a$*b*$\n"}
+{"name": "mutant-md-cjk-literal-email-tight-count", "args": ["--stdin-filepath", "m164.md", "--prose-wrap", "never"], "stdin": "中\na 中a@b.c\n"}
+{"name": "mutant-less-extend-call-single-char-arg", "args": ["--stdin-filepath", "m012.less"], "stdin": "a {\n  b: c extend(d);\n}\n"}
+{"name": "mutant-scss-selector-comment-multibyte-end", "args": ["--stdin-filepath", "m013.scss"], "stdin": "a /*€*/ b {\n  c: d;\n}\n"}
+{"name": "mutant-scss-include-var-multibyte", "args": ["--stdin-filepath", "m015.scss"], "stdin": "a {\n  @include x($aé);\n}\n"}
+{"name": "mutant-scss-tag-after-nesting-number", "args": ["--stdin-filepath", "m017.scss"], "stdin": ".a {\n  &1E3 {\n    b: c;\n  }\n}\n"}
+{"name": "mutant-css-utility-word-then-slash", "args": ["--stdin-filepath", "m018.css"], "stdin": "@utility tab-* {\n  a: b / c;\n}\n"}
+{"name": "mutant-css-url-two-quoted-args", "args": ["--stdin-filepath", "m019.css"], "stdin": "a {\n  b: url(\"a\", \"b\");\n}\n"}
+{"name": "mutant-scss-between-comment-paren-value", "args": ["--stdin-filepath", "m020.scss"], "stdin": "a {\n  b: /* // */ (c);\n}\n"}
+{"name": "mutant-graphql-string-unicode-escape-uppercase-hex", "args": ["--stdin-filepath", "m026.graphql"], "stdin": "{\n  a(b: \"\\u00C9\")\n}\n"}
+{"name": "mutant-graphql-bom-mid-document", "args": ["--stdin-filepath", "m028.graphql"], "stdin": "{﻿a}\n"}
+{"name": "mutant-graphql-comment-at-eof-no-newline", "args": ["--stdin-filepath", "m029.graphql"], "stdin": "{ a } # c"}
+{"name": "mutant-graphql-string-braced-unicode-escape", "args": ["--stdin-filepath", "m031.graphql"], "stdin": "{\n  a(b: \"\\u{41}\")\n}\n"}
+{"name": "mutant-graphql-string-surrogate-pair-escape", "args": ["--stdin-filepath", "m033.graphql"], "stdin": "{\n  a(b: \"\\uD83D\\uDE00\")\n}\n"}
+{"name": "mutant-css-media-feature-brace-string", "args": ["--stdin-filepath", "m085.css"], "stdin": "@media ({\"a\"}: 1.0) {\n}\n"}
+{"name": "mutant-css-media-not-number-type", "args": ["--stdin-filepath", "m086.css"], "stdin": "@media not 1.0 {\n}\n"}
+{"name": "mutant-css-media-type-then-quoted-keyword", "args": ["--stdin-filepath", "m087.css"], "stdin": "@media not screen 'x' (a: b) {\n}\n"}
+{"name": "mutant-css-media-two-unknown-words", "args": ["--stdin-filepath", "m088.css"], "stdin": "@media a b {\n}\n"}
+{"name": "mutant-css-media-three-unknown-words", "args": ["--stdin-filepath", "m089.css"], "stdin": "@media a 1.0 c {\n}\n"}
+{"name": "mutant-css-media-url-nested-paren", "args": ["--stdin-filepath", "m091.css"], "stdin": "@media url(a(b)) {\n}\n"}
+{"name": "mutant-css-double-backslash-before-semicolon", "args": ["--stdin-filepath", "m092.css"], "stdin": "a {\n  b: c\\\\;\n  d: e;\n}\n"}
+{"name": "mutant-css-selector-escaped-space", "args": ["--stdin-filepath", "m093.css"], "stdin": ".a\\ {\n}\n"}
+{"name": "mutant-scss-inline-comment-at-eof", "args": ["--stdin-filepath", "m095.scss"], "stdin": "a {\n}\n// c"}
+{"name": "mutant-css-word-at-eof-no-newline", "args": ["--stdin-filepath", "m096.css"], "stdin": "@import \"a\" screen"}
+{"name": "mutant-scss-nested-interpolation", "args": ["--stdin-filepath", "m097a.scss"], "stdin": "a {\n  b: #{#{c}};\n}\n"}
+{"name": "mutant-scss-selector-colon-in-parens", "args": ["--stdin-filepath", "m099.scss"], "stdin": ".a(\"b\": 1) {\n}\n"}
+{"name": "mutant-scss-ignored-nested-decl-leading-bracket", "args": ["--stdin-filepath", "m101.scss"], "stdin": "a {\n  // prettier-ignore\n  [x]a: 1px {\n    b: c;\n  }\n}\n"}
+{"name": "mutant-scss-nested-decl-bang-space-important", "args": ["--stdin-filepath", "m102.scss"], "stdin": "a {\n  b: 1 c! important {\n    c: d;\n  }\n}\n"}
+{"name": "mutant-less-mixin-call-space-before-paren", "args": ["--stdin-filepath", "m103b.less"], "stdin": "a {\n  .m (\"a\");\n}\n"}
+{"name": "mutant-less-mixin-call-bang-space-important", "args": ["--stdin-filepath", "m104.less"], "stdin": "a {\n  .n() ! important;\n}\n"}
+{"name": "mutant-css-decl-bare-important-word", "args": ["--stdin-filepath", "m106.css"], "stdin": "a {\n  b: c important;\n}\n"}
+{"name": "mutant-css-atrule-paren-brace-unbalanced", "args": ["--stdin-filepath", "m107.css"], "stdin": "a {\n  @b ({ \"\" ) });\n}\n"}
+{"name": "mutant-less-variable-colon-colon-value", "args": ["--stdin-filepath", "m108.less"], "stdin": "@a: :b;\n"}
+{"name": "mutant-css-selector-double-backslash-combinator", "args": ["--stdin-filepath", "m109.css"], "stdin": ".a\\\\>b {\n}\n"}
+{"name": "mutant-css-selector-slash-after-combinator", "args": ["--stdin-filepath", "m110.css"], "stdin": "a>/b {\n}\n"}
+{"name": "mutant-css-selector-namespace-with-slash", "args": ["--stdin-filepath", "m112.css"], "stdin": "a/b|c {\n}\n"}
+{"name": "mutant-css-selector-stray-close-paren", "args": ["--stdin-filepath", "m113.css"], "stdin": "a) {\n}\n"}
+{"name": "mutant-css-url-then-double-slash", "args": ["--stdin-filepath", "m116.css"], "stdin": "a {\n  b: url(x) //c;\n}\n"}
+{"name": "mutant-scss-map-blank-line-after-slash", "args": ["--stdin-filepath", "m121.scss"], "stdin": "$map: (\n  a: b /,\n\n  c: d,\n);\n"}
+{"name": "mutant-scss-map-blank-line-after-hash", "args": ["--stdin-filepath", "m120.scss"], "stdin": "$map: (\n  a: b #,\n\n  c: d,\n);\n"}
+{"name": "mutant-css-value-hash-then-fraction", "args": ["--stdin-filepath", "m122.css"], "stdin": "a {\n  b: #.5;\n}\n"}
+{"name": "mutant-css-double-dash-before-placeholder", "args": ["--stdin-filepath", "m123.css"], "stdin": "a {\n  b: --@prettier-placeholder-0;\n}\n"}
+{"name": "mutant-less-slash-slash-star-after-unmasked-quote", "args": ["--stdin-filepath", "x.less"], "stdin": "@a: \"\\\n\";\n//**/ a {}\n"}
+{"name": "mutant-js-call-last-arg-single-number-array", "args": ["--stdin-filepath", "m001.js"], "stdin": "foo(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, [1]);\n"}
+{"name": "mutant-js-comments-two-blocks-before-newline-in-call", "args": ["--stdin-filepath", "m007.js"], "stdin": "foo(/* x */ /* y */\n  b);\n"}
+{"name": "mutant-js-comments-nestled-jsdoc-then-plain-block", "args": ["--stdin-filepath", "m006.js"], "stdin": "/**\n * a\n *//* b */\nx;\n"}
+{"name": "mutant-js-exp-ternary-u2028-comment-before-nested-cond", "args": ["--stdin-filepath", "m008e.js", "--experimental-ternaries"], "stdin": "x = a ? b // c\n: d ? e : f;\n"}
+{"name": "mutant-js-decorated-fn-call-two-args", "args": ["--stdin-filepath", "m024.js"], "stdin": "const x = foo(bar)(a, (aaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbb, cccccccccccccccccccccccc) => {\n  return 1;\n});\n"}
+{"name": "mutant-js-decorated-fn-module-non-exports", "args": ["--stdin-filepath", "m025.js"], "stdin": "module.foo = bar(baz)((aaaaaaaaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbbbbbbbb, cccccccccccccccccccccccc) => {\n  return 1;\n});\n"}
+{"name": "mutant-jsx-ws-expr-then-soft-single-char-word", "args": ["--stdin-filepath", "m039.jsx"], "stdin": "const a = <div>\n  aaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbb ccccccccccccccccc ddddddddddddddddd{\" \"}\n  b eeeeeeeeeeeeee\n</div>;\n"}
+{"name": "mutant-js-no-semi-asi-flattened-binary-left", "args": ["--stdin-filepath", "m059.js", "--no-semi"], "stdin": "a + b + c\n"}
+{"name": "mutant-jsx-style-without-jsx-attr-template", "args": ["--stdin-filepath", "m064.jsx"], "stdin": "x = <style global>{`a{color:red}`}</style>;\n"}
+{"name": "mutant-js-member-call-tagged-template-not-styled", "args": ["--stdin-filepath", "m065.js"], "stdin": "x = foo.bar(baz)`a`;\n"}
+{"name": "mutant-js-styled-call-tag-embedded-css", "args": ["--stdin-filepath", "m066.js"], "stdin": "x = styled(Foo)`color:red;`;\n"}
+{"name": "mutant-js-ternary-inline-block-comment-no-break", "args": ["--stdin-filepath", "m069.js"], "stdin": "x = a ? /* c */ b : d;\n"}
+{"name": "mutant-jsx-ternary-regex-consequent-wrapped", "args": ["--stdin-filepath", "m068.jsx"], "stdin": "x = cond ? /aaaaaaaaaaaaaaaaaaaaaaa/ : <div className=\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\" />;\n"}
+{"name": "mutant-ts-ternary-chain-through-as-no-extra-indent", "args": ["--stdin-filepath", "m067.ts"], "stdin": "const x = ((someCondition ? aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa : bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb).foo as any).bar;\n"}
+{"name": "mutant-ts-computed-member-long-as-cast", "args": ["--stdin-filepath", "m072.ts"], "stdin": "const value = someObjectWithAVeryLongName[someKeyExpressionThatIsLongAndEvenLongerStillLongerYes as unknown as keyof Foo];\n"}
+{"name": "mutant-yaml-mapping-key-group-id-reuse", "args": ["--stdin-filepath", "m083.yaml", "--prose-wrap", "always"], "stdin": "aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa aaaa z: x y\nbb b: cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc cccc d\n"}
+{"name": "mutant-yaml-empty-explicit-key-trailing-comment", "args": ["--stdin-filepath", "m165.yaml"], "stdin": "? # comment\n: value\n"}
+{"name": "mutant-yaml-flow-seq-implicit-key-1024", "args": ["--stdin-filepath", "m170.yaml"], "stdin": "[ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: b ]\n"}
+{"name": "mutant-yaml-plain-trailing-spaces-at-eof", "args": ["--stdin-filepath", "m171.yaml", "--prose-wrap", "always"], "stdin": "key: vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv   "}
+{"name": "mutant-yaml-plain-ws-before-fold-dup-key", "args": ["--stdin-filepath", "m172.yaml"], "stdin": "a   b: 1\n? a  \n  b\n: 2\n"}
+{"name": "mutant-yaml-double-quoted-escape-v", "args": ["--stdin-filepath", "m173.yaml"], "stdin": "a: \"\\v\"\n"}
+{"name": "mutant-yaml-double-quoted-hex-escape-space", "args": ["--stdin-filepath", "m174.yaml", "--prose-wrap", "always"], "stdin": "key: \"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\\x20\"\n"}
+{"name": "mutant-yaml-single-quote-escape-vs-plain-key", "args": ["--stdin-filepath", "m175.yaml"], "stdin": "'a''b': 1\na''b: 2\n"}
+{"name": "mutant-yaml-bool-tag-key-vs-quoted-string", "args": ["--stdin-filepath", "m176.yaml"], "stdin": "!!bool true: 1\n\"true\": 2\n"}
+{"name": "mutant-yaml-block-keep-key-vs-quoted", "args": ["--stdin-filepath", "m177.yaml"], "stdin": "? |+\n  x\n\n: 1\n\"x\\n\": 2\n"}
+{"name": "mutant-yaml-block-key-reads-past-end", "args": ["--stdin-filepath", "m178.yaml"], "stdin": "? |+\n  x\n\n: 3\n\"x\\n\\n: 3\\n\": 4\n"}
+{"name": "mutant-yaml-folded-consecutive-more-indented-key", "args": ["--stdin-filepath", "m180.yaml"], "stdin": "? >\n  a\n   b\n   c\n  d\n: 1\n\"a\\n b\\n\\n c\\nd\\n\": 2\n"}
+{"name": "mutant-yaml-literal-block-key-folded", "args": ["--stdin-filepath", "m181.yaml"], "stdin": "? |\n  a\n  b\n: 1\n\"a b\\n\": 2\n"}
+{"name": "mutant-yaml-negative-float-key", "args": ["--stdin-filepath", "m182.yaml"], "stdin": "-1.5: a\nb: c\n"}
+{"name": "mutant-yaml-float-exponent-key-vs-int", "args": ["--stdin-filepath", "m183.yaml"], "stdin": "1.5e2: a\n105: b\n"}
+{"name": "mutant-yaml-doc-comment-before-inline-next-doc", "args": ["--stdin-filepath", "m184.yaml"], "stdin": "a: 1\n# c\n--- b\n"}
+{"name": "mutant-yaml-plain-trailing-nbsp", "args": ["--stdin-filepath", "m185.yaml"], "stdin": "a: b \n"}
+{"name": "mutant-yaml-tag-date-like-comma", "args": ["--stdin-filepath", "m188.yaml"], "stdin": "a: !foo.bar,2000/x baz\n"}
+{"name": "mutant-yaml-tag-date-like-slash-digits", "args": ["--stdin-filepath", "m190.yaml"], "stdin": "a: !foo.bar,2000/12 baz\n"}
+{"name": "mutant-yaml-tag-date-like-slash-space", "args": ["--stdin-filepath", "m191.yaml"], "stdin": "a: !foo.bar,2000/ baz\n"}
+{"name": "mutant-yaml-underindented-comment-blank-then-indented", "args": ["--stdin-filepath", "m202.yaml"], "stdin": "a:\n  b: 1\n # c\n\n  d: 2\n"}
+{"name": "mutant-graphql-invalid-unicode-escape-error", "args": ["--stdin-filepath", "x.graphql"], "stdin": "{ a(b: \"\\uZZ00\") }\n"}
+{"name": "mutant-graphql-lone-dot-spread-error", "args": ["--stdin-filepath", "x.graphql"], "stdin": "{ a { .a.Foo } }\n"}
+{"name": "mutant-yaml-verbatim-tag-bang-bang-error", "args": ["--stdin-filepath", "x.yaml"], "stdin": "- !<!!> foo\n"}
+{"name": "mutant-yaml-seq-tag-on-scalar-error", "args": ["--stdin-filepath", "x.yaml"], "stdin": "x: !!seq foo\n"}
+{"name": "mutant-yaml-yaml-directive-no-version-error", "args": ["--stdin-filepath", "x.yaml"], "stdin": "%YAML\n---\na: 1\n"}
+{"name": "mutant-yaml-flow-map-unclosed-colon-error", "args": ["--stdin-filepath", "x.yaml"], "stdin": "{:\n"}
+{"name": "mutant-yaml-flow-map-under-indented-close-error", "args": ["--stdin-filepath", "x.yaml"], "stdin": "a:\n  b: {\n    x: 1\n}\n"}
+{"name": "fuzz-css-attribute-selector-empty-with-parens", "args": ["--stdin-filepath", "fuzz.css"], "stdin": "[](){}"}
+{"name": "fuzz-css-custom-property-block-comment-non-ascii", "args": ["--stdin-filepath", "css/case/case.css"], "stdin": "R{e:\"→\";--:{/**/}}"}
+{"name": "fuzz-css-custom-selector-namespace-non-ascii-hang", "args": ["--stdin-filepath", "fuzz.css"], "stdin": "@custom-selector t|姓名||:--veryre\nf"}
+{"name": "fuzz-css-media-unbalanced-paren-doubled", "args": ["--stdin-filepath", "fuzz.css"], "stdin": "@media(}"}
+{"name": "fuzz-css-media-unclosed-paren-non-ascii-panic", "args": ["--stdin-filepath", "fuzz.css"], "stdin": "@media(数"}
+{"name": "fuzz-css-while-hash-parens-prettier-crash", "args": ["--stdin-filepath", "fuzz.css"], "stdin": "@while(#() {)"}
+{"name": "fuzz-js-assignment-comment-optional-chain", "args": ["--stdin-filepath", "tests/format/js/multiparser-css/colons-after-substitutions.js"], "stdin": "n=\n//\nd.d()?.o()"}
+{"name": "fuzz-js-break-outside-loop-accepted", "args": ["--stdin-filepath", "fuzz.js"], "stdin": "{break}"}
+{"name": "fuzz-js-comment-after-method-params", "args": ["--stdin-filepath", "tests/format/js/classes/keyword-property/set.js"], "stdin": "class A{f(v)//\n{}}"}
+{"name": "fuzz-js-comment-class-extends-optional-call", "args": ["--stdin-filepath", "tests/format/js/class-comment/superclass.js"], "stdin": "(class c1\n//2\nextends e?.(o) {})(class A6 extends (f(++a))\n{})(class/* */ extends (e[\n{\nr:ry(function() {\n (\n  <div>\n <InlineBlock>\n   <img />  </InlineBlock>   </div>\n )}\n    )\n  }\n]) {});\nclass C2\n{  foo(){} }\n"}
+{"name": "fuzz-js-comment-computed-method-key", "args": ["--stdin-filepath", "tests/format/js/comments-closure-typecast/satisfies.js"], "stdin": "s = {\n  async *[/**/\n  b]() {},\n};\n"}
+{"name": "fuzz-js-comment-decorator-optional-chain", "args": ["--stdin-filepath", "tests/format/js/decorators/member-expression.js"], "stdin": "[class{@/**/(d?.t)t}]"}
+{"name": "fuzz-js-comment-empty-method-params", "args": ["--stdin-filepath", "tests/format/js/classes-private-fields/with_comments.js"], "stdin": "class A{h(\n//\n){}}"}
+{"name": "fuzz-js-comment-export-namespace", "args": ["--stdin-filepath", "tests/format/js/import-attributes/bracket-spacing/empty.js"], "stdin": "export//\n*as b from\"\"with{}"}
+{"name": "fuzz-js-comment-function-id-params", "args": ["--stdin-filepath", "tests/format/js/directives/test.js"], "stdin": "function f() {}\nfunction f() //\n{\n  \"\";\n}\n"}
+{"name": "fuzz-js-comment-getter-key", "args": ["--stdin-filepath", "tests/format/js/classes/ternary.js"], "stdin": "/**/ ({\n  get /**/\n  x() {},\n});\n"}
+{"name": "fuzz-js-comment-jsx-container-optional-call", "args": ["--stdin-filepath", "tests/format/jsx/comments/eslint-disable.js"], "stdin": "(<div>{/**/x?.()\n/**/}</div>)"}
+{"name": "fuzz-js-comment-method-key-before-params", "args": ["--stdin-filepath", "tests/format/js/class-comment/misc.js"], "stdin": "class A{f\n/**/(v){}}"}
+{"name": "fuzz-js-comment-method-params-start", "args": ["--stdin-filepath", "tests/format/js/no-semi/private-field.js"], "stdin": "class C{f(/**/\nn){}}"}
+{"name": "fuzz-js-comment-object-method-key-newline", "args": ["--stdin-filepath", "tests/format/js/objects/bigint-key.js"], "stdin": "a={g/**/\n(){}}"}
+{"name": "fuzz-js-continue-unknown-label-accepted", "args": ["--stdin-filepath", "fuzz.js"], "stdin": "l2:for(;;)continue l/**/"}
+{"name": "fuzz-js-decorator-literal-expression-accepted", "args": ["--stdin-filepath", "tests/format/js/ignore/decorator.js"], "stdin": "@''class{}"}
+{"name": "fuzz-js-decorator-new-expression-accepted", "args": ["--stdin-filepath", "tests/format/js/ignore/decorator.js"], "stdin": "@new i\nclass{}"}
+{"name": "fuzz-js-decorator-this-accepted", "args": ["--stdin-filepath", "tests/format/js/ignore/decorator.js"], "stdin": "@this.t\nclass A{}"}
+{"name": "fuzz-js-embedded-css-jsx-attribute-prettier-ignore", "args": ["--stdin-filepath", "tests/format/js/template-literals/css-prop.js"], "stdin": "function t(){(<div c={<SomethingElse></SomethingElse>}><div r=\"\"></div></div>)}\n ({  })  ( <div css={`r:` // prettier-ignore\n}>\n</div>\n)"}
+{"name": "fuzz-js-flow-comment-type-accepted", "args": ["--stdin-filepath", "tests/format/js/directives/newline.js"], "stdin": "/*@flow*/import a/*:*/from\"\""}
+{"name": "fuzz-js-import-meta-comment-prettier-crash", "args": ["--stdin-filepath", "tests/format/js/import-meta/import_meta.js"], "stdin": "import//line\n.meta"}
+{"name": "fuzz-js-jsx-element-call-on-next-line", "args": ["--stdin-filepath", "tests/format/jsx/jsx/regex.js"], "stdin": "<a></a>\n('')"}
+{"name": "fuzz-js-line-comment-first-param", "args": ["--stdin-filepath", "tests/format/js/classes/keyword-property/computed.js"], "stdin": "class C{f(//\ns){}}"}
+{"name": "fuzz-js-line-comment-object-method-key", "args": ["--stdin-filepath", "tests/format/js/objects/getter-setter.js"], "stdin": "({e//\n(){}})"}
+{"name": "fuzz-js-new-callee-optional-call-tagged-template", "args": ["--stdin-filepath", "tests/format/js/es6modules/export_default_new_expression.js"], "stdin": "export default new(a?.())``()"}
+{"name": "fuzz-js-new-callee-optional-chain-member", "args": ["--stdin-filepath", "tests/format/js/explicit-resource-management/valid-using-as-identifier-for-await-of.js"], "stdin": "for await(u of f)new((t()?.b).c)"}
+{"name": "fuzz-js-parenthesized-await-comment-script", "args": ["--stdin-filepath", "tests/format/js/top-level-await/test.cjs"], "stdin": "(/**/await x)"}
+{"name": "fuzz-js-prettier-ignore-export-namespace", "args": ["--stdin-filepath", "tests/format/js/export-star/export-star-as-reserved-word.js"], "stdin": "export*as\nm//prettier-ignore\nfrom''"}
+{"name": "fuzz-js-template-interpolation-end-of-line-cr", "args": ["--stdin-filepath", "tests/format/js/template-align/indent.js", "--end-of-line", "cr"], "stdin": "`\n\t${()=>{a}}`"}
+{"name": "fuzz-js-template-tab-width-0-panic", "args": ["--stdin-filepath", "tests/format/js/binary-expressions/if.js", "--tab-width", "0"], "stdin": "if(`\n\t${(s)(p?'':'')}`(\"\").e){}"}
+{"name": "fuzz-js-two-comments-empty-params", "args": ["--stdin-filepath", "tests/format/js/classes/multiple-static.js"], "stdin": "class C {\n  a(/**/\n  /**/) {}\n}\n"}
+{"name": "fuzz-js-unary-comment-parenthesized-optional-chain", "args": ["--stdin-filepath", "tests/format/js/sequence-expression/ignore.js"], "stdin": "+//\n(j?.r)"}
+{"name": "fuzz-less-comment-astral-prettier-utf16", "args": ["--stdin-filepath", "fuzz.less"], "stdin": "@:'' /**/'🐶'//"}
+{"name": "fuzz-less-comment-astral-variable", "args": ["--stdin-filepath", "fuzz.less"], "stdin": "@:/*✨*///"}
+{"name": "fuzz-less-custom-property-nested-block-non-ascii", "args": ["--stdin-filepath", "fuzz.less"], "stdin": "қ{--:{t{:{}}:{}}}"}
+{"name": "fuzz-less-default-flag-newline-dropped", "args": ["--stdin-filepath", "fuzz.less"], "stdin": "@:\"\"!default\n@"}
+{"name": "fuzz-less-inline-comment-non-ascii", "args": ["--stdin-filepath", "fuzz.less"], "stdin": "s:(\"\n\"\"\"('')\n//↪100,\n\"\")"}
+{"name": "fuzz-markdown-embedded-json5-unassigned-identifier-accepted", "args": ["--stdin-filepath", "fuzz.md"], "stdin": "```\n```\n```json\n{s:[{d:'',֋:'',d:''}]}"}
+{"name": "fuzz-markdown-embedded-ts-invalid-template-type-accepted", "args": ["--stdin-filepath", "fuzz.md"], "stdin": "```ts\ntype O=`${''''}`;(v)"}
+{"name": "fuzz-markdown-ordered-list-number-precision", "args": ["--stdin-filepath", "fuzz.md"], "stdin": "9999999999999999."}
+{"name": "fuzz-scss-attribute-selector-at-sign", "args": ["--stdin-filepath", "fuzz.scss"], "stdin": "[@]{}"}
+{"name": "fuzz-scss-attribute-selector-double-pipe", "args": ["--stdin-filepath", "fuzz.scss"], "stdin": "[||]{}"}
+{"name": "fuzz-scss-backslash-non-ascii-panic", "args": ["--stdin-filepath", "fuzz.scss"], "stdin": "\\ě{}"}
+{"name": "fuzz-scss-comment-quotes-in-property-name", "args": ["--stdin-filepath", "fuzz.scss"], "stdin": "/{e/*''*/:/**/{}}"}
+{"name": "fuzz-scss-forward-comment-non-ascii", "args": ["--stdin-filepath", "fuzz.scss"], "stdin": "@forward\"\n\"\n//–\n\"\""}
+{"name": "fuzz-scss-parens-default-flag-newline", "args": ["--stdin-filepath", "fuzz.scss"], "stdin": "p:(!default\n)"}
+{"name": "fuzz-scss-unbalanced-parens-accepted", "args": ["--stdin-filepath", "fuzz.scss"], "stdin": "@m;p:(()!default)\n)"}
+{"name": "fuzz-ts-arrow-body-decorated-class-accepted", "args": ["--stdin-filepath", "tests/format/typescript/arrow/comments.ts"], "stdin": "()=>@d\nclass{r(){}}"}
+{"name": "fuzz-ts-await-in-enum-initializer", "args": ["--stdin-filepath", "tests/format/typescript/enum/enum.ts"], "stdin": "const enum E{B=(await(n()).f(\"\"))satisfies m}"}
+{"name": "fuzz-ts-class-extends-object-nonnull-accepted", "args": ["--stdin-filepath", "tests/format/typescript/typeof-this/decorators.ts"], "stdin": "class a extends{}!//\n{/**/}"}
+{"name": "fuzz-ts-comment-before-comma-prettier-crash", "args": ["--stdin-filepath", "tests/format/typescript/test-declarations/test_declarations.ts"], "stdin": "test(\"\"//\n,b?.())"}
+{"name": "fuzz-ts-comment-method-type-params", "args": ["--stdin-filepath", "tests/format/typescript/custom/module/global.ts"], "stdin": "class o{d<U/**/>(){}}"}
+{"name": "fuzz-ts-comment-side-effect-import", "args": ["--stdin-filepath", "tests/format/typescript/import-export/empty-import.ts"], "stdin": "/**/import//from\n''"}
+{"name": "fuzz-ts-decorator-optional-chain-prettier-crash", "args": ["--stdin-filepath", "tests/format/typescript/angular-component-examples/15934-computed.component.ts"], "stdin": "@(a?.c).o()export class m{}"}
+{"name": "fuzz-ts-embedded-css-angular-styles-not-refused", "args": ["--stdin-filepath", "tests/format/typescript/angular-component-examples/test.component.ts"], "stdin": "@Component({styles:[//prettier-ignore\n`\n`]})class T{}"}
+{"name": "fuzz-ts-embedded-html-template-not-refused", "args": ["--stdin-filepath", "tests/format/typescript/as/as-const-embedded.ts"], "stdin": "T=/* HTML */`\n`as//prettier-ignore\nconst"}
+{"name": "fuzz-ts-experimental-ternaries-conditional-type-comment-duplicated", "args": ["--stdin-filepath", "tests/format/typescript/conformance/types/interfaceDeclaration/interfaceDeclaration.ts", "--experimental-ternaries"], "stdin": "interface t{():((0 extends 1?2:3))extends 4?5:[//\n]}"}
+{"name": "fuzz-ts-export-type-newline-accepted", "args": ["--stdin-filepath", "tests/format/typescript/type-alias/issue-9874.ts"], "stdin": "export type\nR=L"}
+{"name": "fuzz-ts-legacy-octal-like-decimal-accepted", "args": ["--stdin-filepath", "fuzz.ts"], "stdin": "[09]"}
+{"name": "fuzz-ts-legacy-octal-literal-accepted", "args": ["--stdin-filepath", "fuzz.ts"], "stdin": "s=>{switch(e){case'':00}}"}
+{"name": "fuzz-ts-line-comment-method-type-param-constraint", "args": ["--stdin-filepath", "tests/format/typescript/type-params/const.ts"], "stdin": "class _{d<T extends(//\nB)>(){}}"}
+{"name": "fuzz-ts-line-comment-object-method-type-params", "args": ["--stdin-filepath", "tests/format/typescript/generic/object-method.ts"], "stdin": "export default{d//\n<T>(){}}"}
+{"name": "fuzz-ts-member-dot-newline-as-accepted", "args": ["--stdin-filepath", "tests/format/typescript/rest/rest.ts"], "stdin": "(s.//\nt as e)"}
+{"name": "fuzz-ts-parameter-decorator-in-overload-accepted", "args": ["--stdin-filepath", "tests/format/typescript/conformance/types/indexedAccesType/indexedAccesType.ts"], "stdin": "s['']=class{d(@D{}:T)}"}
+{"name": "fuzz-ts-parameter-property-in-overload-accepted", "args": ["--stdin-filepath", "tests/format/typescript/conformance/classes/constructorDeclarations/constructorParameters/declarationEmitReadonly.ts"], "stdin": "class C{constructor(public z)}"}
+{"name": "fuzz-ts-parenthesized-then-block-accepted", "args": ["--stdin-filepath", "tests/format/typescript/arrow/16067.ts"], "stdin": "(m=1())\n{}"}
+{"name": "fuzz-ts-prettier-duplicates-after-top-level-await", "args": ["--stdin-filepath", "tests/format/typescript/conformance/classes/classDeclarations/classAbstractKeyword/classAbstractAssignabilityConstructorFunction.ts"], "stdin": "((await\nt((0)).t).h);A"}
+{"name": "fuzz-ts-type-assertion-generic-union-accepted", "args": ["--stdin-filepath", "fuzz.ts"], "stdin": "function y(){const s=<I<>|d>e=[\"\",\"\"]}"}
+{"name": "fuzz-ts-type-assertion-line-comment-accepted", "args": ["--stdin-filepath", "tests/format/typescript/type-arguments-bit-shift-left-like/1.ts"], "stdin": "f<<(T>//\nx)"}
+{"name": "fuzz-ts-type-params-trailing-comma-es5", "args": ["--stdin-filepath", "tests/format/typescript/arrows/type_params.ts", "--print-width", "0", "--trailing-comma", "es5"], "stdin": "<T>()=>{}"}
+{"name": "fuzz-tsx-closing-tag-space-accepted", "args": ["--stdin-filepath", "tests/format/typescript/comments/jsx.tsx"], "stdin": "<div>< /div>"}
+{"name": "fuzz-tsx-type-params-line-comment-accepted", "args": ["--stdin-filepath", "tests/format/typescript/trailing-comma/arrow-functions.tsx"], "stdin": "f=<//\nT,>()=>1"}
+{"name": "fuzz-yaml-block-scalar-tab-width-0", "args": ["--stdin-filepath", "prettier-repo/.gitpod.yml", "--tab-width", "0"], "stdin": "- t: |\n   e"}
+{"name": "docdiff-js-template-eol-cr-js", "args": ["--stdin-filepath", "js-template-eol-cr.js", "--end-of-line", "cr"], "stdin": "if (a) {\n  x = `a ${foo(function () { return 1; })} b`;\n}\n"}
+{"name": "docdiff-md-embed-group-id-collision-md", "args": ["--stdin-filepath", "md-embed-group-id-collision.md"], "stdin": "```ts\nclass A extends BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB implements CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC {\n  x = 1;\n}\n```\n\n```ts\nclass A extends B implements CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC {\n  x = 1;\n}\n```\n"}
+{"name": "js-comment-computed-member-optional-chain", "args": ["--stdin-filepath", "tests/format/js/comments/array-and-object.js"], "stdin": "(a[/**/b\n/**/\n?.c])"}
+{"name": "js-prettier-ignore-class-extends-optional-call-duplicated", "args": ["--stdin-filepath", "tests/format/js/arrow-call/class-property.js"], "stdin": "()=>class extends//prettier-ignore\no?.(){}"}
+{"name": "js-prettier-ignore-jsx-call-next-line", "args": ["--stdin-filepath", "tests/format/js/regex/multiple-flags.js"], "stdin": "//prettier-ignore\n<B/>\n('')"}
+{"name": "js-comment-jsx-spread-optional-chain", "args": ["--stdin-filepath", "tests/format/js/ignore/ignore-2.js"], "stdin": "function d(){}<v{.../*prettier-ignore*/(b?.c)}/>"}
+{"name": "ts-optional-chain-private-name-accepted", "args": ["--stdin-filepath", "tests/format/typescript/class/standard_private_fields.ts"], "stdin": "class q{r(){}s(){o?.#s}}"}
+{"name": "ts-generic-arrow-in-type-args-accepted", "args": ["--stdin-filepath", "tests/format/typescript/type-arguments-bit-shift-left-like/3.ts"], "stdin": "//prettier-ignore\n(class extends f<<T>(v:()=>{})=>d>{})"}
+{"name": "ts-conditional-type-in-function-type-rest-param-accepted", "args": ["--stdin-filepath", "tests/format/typescript/conditional-types/infer-type.ts"], "stdin": "type d<T>=T extends(...a:r extends K?v:K)=>i?U:T"}
+{"name": "tsx-closing-tag-comment-accepted", "args": ["--stdin-filepath", "tests/format/typescript/comments/jsx.tsx"], "stdin": "<div></**//div>"}
+{"name": "ts-type-predicate-line-comment", "args": ["--stdin-filepath", "tests/format/typescript/predicate-types/predicate-types.ts"], "stdin": "class o{z=():t is(//\n2)=>{}}"}
+{"name": "ts-prettier-duplicates-after-top-level-await", "args": ["--stdin-filepath", "tests/format/typescript/type-arguments-bit-shift-left-like/1.ts"], "stdin": "f<await{}.r"}
+{"name": "ts-type-assertion-line-comment-accepted", "args": ["--stdin-filepath", "x.ts"], "stdin": "f << (<T>//\n  x);\n"}
+{"name": "ts-await-object-call-as-accepted", "args": ["--stdin-filepath", "tests/format/typescript/assignment/issue-2322.ts"], "stdin": "r*(((await{t:g()}(\"\"))as e))"}
+{"name": "ts-shift-then-type-assertion-accepted", "args": ["--stdin-filepath", "tests/format/typescript/type-arguments-bit-shift-left-like/1.ts"], "stdin": "f<</**/<(D)[]>(x)"}
+{"name": "ts-parenthesized-param-type-default-accepted", "args": ["--stdin-filepath", "tests/format/typescript/declare/declare_var.ts"], "stdin": "o=<S>(f:(T)=S)=><U>(g:/**/l):|(b)=>(x)"}
+{"name": "tsx-jsx-type-args-generic-arrow-accepted", "args": ["--stdin-filepath", "tests/format/typescript/type-arguments-bit-shift-left-like/5.tsx"], "stdin": "//prettier-ignore\n<t<<T>()=>d>/>"}
+{"name": "js-jsx-element-line-comment-call-next-line", "args": ["--stdin-filepath", "tests/format/js/destructuring/issue-5988.js"], "stdin": "<div></div>//prettier-ignore\n(\"\")"}
+{"name": "ts-type-args-conditional-then-newline-block-accepted", "args": ["--stdin-filepath", "tests/format/typescript/template-literals/expressions.ts"], "stdin": "g<(a?b:c)>\n{}"}
+{"name": "ts-function-type-in-intersection-accepted", "args": ["--stdin-filepath", "tests/format/typescript/last-argument-expansion/edge_case.ts"], "stdin": "((t:t):&(b)=>(({})).e)"}
+{"name": "ts-definite-assignment-after-newline-accepted", "args": ["--stdin-filepath", "tests/format/typescript/definite/definite.ts"], "stdin": "class t{o\n!:r}"}
+{"name": "js-comments-call-argument-optional-chain", "args": ["--stdin-filepath", "tests/format/js/chain-expression/issue-15912.js"], "stdin": "(o)()\n2/**/(g\n/**/\n?.e)"}
+{"name": "ts-shift-then-parenthesized-comparison-accepted", "args": ["--stdin-filepath", "tests/format/typescript/type-arguments-bit-shift-left-like/1.ts"], "stdin": "f<<(r>(i))"}
+{"name": "less-mixin-important-parens-duplicated-char", "args": ["--stdin-filepath", "fuzz.less"], "stdin": ".t!((()))G"}
+{"name": "scss-include-escaped-slash-spacing", "args": ["--stdin-filepath", "fuzz.scss"], "stdin": "@include(((\\\\/;)))"}
+{"name": "tsx-closing-tag-line-comment-accepted", "args": ["--stdin-filepath", "tests/format/typescript/tsx/react.tsx"], "stdin": "<ul><//\n/ul>"}
+{"name": "ts-function-type-in-union-accepted", "args": ["--stdin-filepath", "tests/format/typescript/function-type/type-annotation.ts"], "stdin": "():|/**/(b)=>l"}
+{"name": "ts-optional-chain-non-null-private-name-accepted", "args": ["--stdin-filepath", "tests/format/typescript/class/standard_private_fields.ts"], "stdin": "class e{r(){a?.b!.#s;if(((a?.()))){}}s(){}}"}
+{"name": "ts-prettier-ignore-comment-optional-chain-argument-prettier-crash", "args": ["--stdin-filepath", "x.ts"], "stdin": "export function d(){[](//prettier-ignore\n//\na?.b)}"}
+{"name": "rerun-cjs-html-comment-before-else", "args": ["--stdin-filepath", "rerun-r006.cjs"], "stdin": "if (a) b;\n<!-- c\nelse d;\n"}
+{"name": "rerun-cli-inline-flag-value", "args": ["--stdin-filepath", "rerun-r042.js", "--print-width=5"], "stdin": "a = {b:1}\n"}
+{"name": "rerun-css-bang-glued-after-parens-important", "args": ["--stdin-filepath", "r096.css"], "stdin": "a {\n  b: x(y)! important;\n}\n"}
+{"name": "rerun-css-custom-selector-comment-after-name", "args": ["--stdin-filepath", "r089.css"], "stdin": "@custom-selector :--h/*c*/ h1;\n"}
+{"name": "rerun-css-media-four-word-query", "args": ["--stdin-filepath", "r080.css"], "stdin": "@media 'a' b c (color) {\n}\n"}
+{"name": "rerun-css-media-keyword-after-feature-expr", "args": ["--stdin-filepath", "r076.css"], "stdin": "@media (color) 'x' {\n}\n"}
+{"name": "rerun-css-media-lone-quoted-type", "args": ["--stdin-filepath", "r077.css"], "stdin": "@media 'print' {\n}\n"}
+{"name": "rerun-css-media-type-before-and-keyword", "args": ["--stdin-filepath", "r078.css"], "stdin": "@media 'screen' and foo {\n}\n"}
+{"name": "rerun-css-media-type-word-feature", "args": ["--stdin-filepath", "r079.css"], "stdin": "@media screen 'x' (color) {\n}\n"}
+{"name": "rerun-css-media-word-after-and-feature", "args": ["--stdin-filepath", "r075.css"], "stdin": "@media screen and foo 'bar' {\n}\n"}
+{"name": "rerun-css-media-word-ending-url-number", "args": ["--stdin-filepath", "r074b.css"], "stdin": "@media xurl(1.50) {\n}\n"}
+{"name": "rerun-css-missed-semicolon-refused", "args": ["--stdin-filepath", "r097.css"], "stdin": "a {\n  b: c d: e;\n}\n"}
+{"name": "rerun-css-prettier-ignore-brace-closed-atrule", "args": ["--stdin-filepath", "r099.css"], "stdin": "a {\n  /* prettier-ignore */\n  @foo   bar\n}\n"}
+{"name": "rerun-css-prettier-ignore-empty-selector-rule", "args": ["--stdin-filepath", "r088c.css"], "stdin": "/* prettier-ignore */\n{\n}\n"}
+{"name": "rerun-css-selector-attr-leading-eq", "args": ["--stdin-filepath", "css-attr-leading-eq.css"], "stdin": "[=a]{}\n"}
+{"name": "rerun-css-selector-leading-escape-combinator", "args": ["--stdin-filepath", "css-leading-escape-combinator.css"], "stdin": "\\>a{}\n"}
+{"name": "rerun-css-string-with-hash-brace", "args": ["--stdin-filepath", "r081.css"], "stdin": "a {\n  content: \"#{\";\n}\nb {\n  c: \"}\";\n}\n"}
+{"name": "rerun-css-uppercase-url-empty-parens", "args": ["--stdin-filepath", "r022.css"], "stdin": "a { b: URL(); }\n"}
+{"name": "rerun-css-value-brace-word-blank-line", "args": ["--stdin-filepath", "css-value-brace-word-blank-line.scss"], "stdin": "$map: (aaaaaaaaaa: 1,\n  k: {,\n\n  j: 2\n);\n"}
+{"name": "rerun-css-value-dashdash-word-blank-line", "args": ["--stdin-filepath", "css-value-dashdash-word-blank-line.scss"], "stdin": "$map: (k --abc,\n\n  j: 2);\n"}
+{"name": "rerun-css-value-hex-5-digit", "args": ["--stdin-filepath", "css-value-hex-5-digit.css"], "stdin": "a {\n  color: #ABCDE;\n}\n"}
+{"name": "rerun-css-value-multiline-comment", "args": ["--stdin-filepath", "css-value-multiline-comment.css"], "stdin": "a {\n  b: c /* x\n  yy */ d;\n}\n"}
+{"name": "rerun-css-value-string-blank-line", "args": ["--stdin-filepath", "css-value-string-blank-line.scss"], "stdin": "$map: (k \"a\",\n\n  j: 2);\n"}
+{"name": "rerun-graphql-column0-comment-after-trailing-comment", "args": ["--stdin-filepath", "rerun-r021.graphql"], "stdin": "type A {\n  a: Int #c1\n#c2\n\n  b: Int\n}\n"}
+{"name": "rerun-graphql-number-followed-by-name", "args": ["--stdin-filepath", "rerun-r019.graphql"], "stdin": "{ a(x: 1y: 2) }\n"}
+{"name": "rerun-graphql-unexpected-fullwidth-char", "args": ["--stdin-filepath", "rerun-r018.graphql"], "stdin": "{ a！ }\n"}
+{"name": "rerun-js-assign-lone-short-template-arg", "args": ["--stdin-filepath", "r067.js"], "stdin": "const someVeryLongVariableNameForTheTest = someObject.someMethodName(`abcdefghij`);\n"}
+{"name": "rerun-js-comment-before-arrow", "args": ["--stdin-filepath", "rerun-r008.js"], "stdin": "f = () /* c */ => a;\n"}
+{"name": "rerun-js-comment-before-function-value", "args": ["--stdin-filepath", "rerun-r001.js"], "stdin": "x = { a: /* c */ function () {} };\n"}
+{"name": "rerun-js-decorator-call-function-expression-arg", "args": ["--stdin-filepath", "rerun-r017.js"], "stdin": "const Counter = decorator(\"my-counter\")(function (aaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbbbbbb, cccccccc) {\n  a();\n});\n"}
+{"name": "rerun-js-flow-colon-comment-no-pragma", "args": ["--stdin-filepath", "rerun-r050.js"], "stdin": "a /*: b */;\n"}
+{"name": "rerun-js-graphql-member-tag-not-embedded", "args": ["--stdin-filepath", "rerun-r056.js"], "stdin": "x = graphql.foo`a`;\n"}
+{"name": "rerun-js-line-comment-graphql-not-language-comment", "args": ["--stdin-filepath", "t01.js"], "stdin": "const q = // GraphQL \n`\n  { a }\n`;\n"}
+{"name": "rerun-js-not-prefix-increment", "args": ["--stdin-filepath", "rerun-r045.js"], "stdin": "!++a;\n"}
+{"name": "rerun-js-switch-case-comment-before-block", "args": ["--stdin-filepath", "rerun-r009.js"], "stdin": "switch (a) {\n  case 1: // c\n  {\n    b();\n  }\n}\n"}
+{"name": "rerun-json-bad-hex-escape", "args": ["--stdin-filepath", "rerun-r025.json"], "stdin": "{\"a\": \"\\x4\"}\n"}
+{"name": "rerun-jsx-name-new-unicode-char", "args": ["--stdin-filepath", "rerun-r051.jsx"], "stdin": "x = <a֋ />;\n"}
+{"name": "rerun-jsx-single-quote-attribute", "args": ["--stdin-filepath", "r064.jsx", "--jsx-single-quote"], "stdin": "const a = <div className=\"x\" />;\n"}
+{"name": "rerun-less-mixin-double-space-before-paren", "args": ["--stdin-filepath", "r082b.less"], "stdin": ".a {\n  .m  ('a') foo bar;\n}\n"}
+{"name": "rerun-less-mixin-hex-escape-space-before-paren", "args": ["--stdin-filepath", "r083c.less"], "stdin": ".a {\n  .m\\31 ('a') foo bar;\n}\n"}
+{"name": "rerun-less-variable-colon-params-two-spaces", "args": ["--stdin-filepath", "r100b.less"], "stdin": "@a: :  b;\n"}
+{"name": "rerun-md-autolink-email-emphasis-chars", "args": ["--stdin-filepath", "md-autolink-email-emphasis-chars.md"], "stdin": "<*a@b*>\n"}
+{"name": "rerun-md-blockquote-backslash-text-two-lines", "args": ["--stdin-filepath", "rerun-r029.md"], "stdin": "> \\a\n> b\n"}
+{"name": "rerun-md-cjk-tight-count-line-break", "args": ["--stdin-filepath", "rerun-r028.md", "--prose-wrap", "never"], "stdin": "a 中a\n中\n"}
+{"name": "rerun-md-definition-label-trailing-backslash", "args": ["--stdin-filepath", "md-definition-label-trailing-backslash.md"], "stdin": "[a\\"}
+{"name": "rerun-md-delete-vs-emphasis", "args": ["--stdin-filepath", "md-delete-vs-emphasis.md"], "stdin": "~~a*~~b*\n"}
+{"name": "rerun-md-email-no-dot-in-emphasis", "args": ["--stdin-filepath", "md-email-no-dot-in-emphasis.md"], "stdin": "*a@bc*\n"}
+{"name": "rerun-md-indented-footnote-def", "args": ["--stdin-filepath", "md-indented-footnote-def.md"], "stdin": " [^1]:\n    a\n"}
+{"name": "rerun-md-link-title-eof", "args": ["--stdin-filepath", "md-link-title-eof.md"], "stdin": "[a](b \"c\""}
+{"name": "rerun-md-link-title-trailing-backslash", "args": ["--stdin-filepath", "md-link-title-trailing-backslash.md"], "stdin": "[a](b \"\\"}
+{"name": "rerun-md-link-url-numeric-entity", "args": ["--stdin-filepath", "md-link-url-numeric-entity.md"], "stdin": "[a](&#65;)\n"}
+{"name": "rerun-md-list-tab-blockquote-newline-text", "args": ["--stdin-filepath", "md-list-tab-blockquote-newline-text.md"], "stdin": "- > a\n\t> *b*\n"}
+{"name": "rerun-md-literal-autolink-later-word-underscore", "args": ["--stdin-filepath", "r049.md"], "stdin": "http://x.com a _b\n"}
+{"name": "rerun-md-math-empty-first-line", "args": ["--stdin-filepath", "md-math-empty-first-line.md"], "stdin": "$$\n\n$$\n"}
+{"name": "rerun-md-math-open-eof", "args": ["--stdin-filepath", "md-math-open-eof.md"], "stdin": "$$"}
+{"name": "rerun-md-reference-nested-bracket-angle-link", "args": ["--stdin-filepath", "md-reference-nested-bracket-angle-link.md"], "stdin": "[a[b](<u>)][d]\n"}
+{"name": "rerun-md-single-item-list-leading-zero-aligned", "args": ["--stdin-filepath", "r043.md"], "stdin": "01. a\n"}
+{"name": "rerun-md-strong-trailing-backslash", "args": ["--stdin-filepath", "md-strong-trailing-backslash.md"], "stdin": "**a\\"}
+{"name": "rerun-md-table-cell-escape", "args": ["--stdin-filepath", "md-table-cell-escape.md"], "stdin": "a|b\n-|-\n\\*x|c\n"}
+{"name": "rerun-md-table-row-leading-pipe-only", "args": ["--stdin-filepath", "md-table-row-leading-pipe-only.md"], "stdin": "a|b\n-|-\n|c\n"}
+{"name": "rerun-md-text-atext-before-at", "args": ["--stdin-filepath", "md-text-atext-before-at.md"], "stdin": "ab@c\n"}
+{"name": "rerun-md-two-prettier-ignore-ranges", "args": ["--stdin-filepath", "r052.md"], "stdin": "<!-- prettier-ignore-start -->\na\n<!-- prettier-ignore-end -->\n\n<!-- prettier-ignore-start -->\n\n*  b\n\n<!-- prettier-ignore-end -->\n"}
+{"name": "rerun-md-url-literal-emphasis-path", "args": ["--stdin-filepath", "md-url-literal-emphasis-path.md"], "stdin": "http://ab.cd/*x*\n"}
+{"name": "rerun-md-url-literal-unbalanced-paren", "args": ["--stdin-filepath", "md-url-literal-unbalanced-paren.md"], "stdin": "http://a.b/x)\n"}
+{"name": "rerun-parser-css-flag", "args": ["--stdin-filepath", "r066.scss", "--parser", "css"], "stdin": "a{color:red}\n"}
+{"name": "rerun-scss-atword-glued-interpolation", "args": ["--stdin-filepath", "r087.scss"], "stdin": "@foo#{$x} {\n}\n"}
+{"name": "rerun-scss-interpolated-prop-hash-keeps-case", "args": ["--stdin-filepath", "r013.scss"], "stdin": "a {\n  #{Foo}-Bar: 1;\n}\n"}
+{"name": "rerun-scss-nested-decl-bare-important", "args": ["--stdin-filepath", "r092.scss"], "stdin": "a {\n  font: !important {\n    b: c;\n  }\n}\n"}
+{"name": "rerun-scss-nested-decl-space-before-colon", "args": ["--stdin-filepath", "r090.scss"], "stdin": "a {\n  font : 12px {\n    family: x;\n  }\n}\n"}
+{"name": "rerun-scss-nested-decl-spaced-important", "args": ["--stdin-filepath", "r093.scss"], "stdin": "a {\n  font: 1px ! important {\n    b: c;\n  }\n}\n"}
+{"name": "rerun-scss-nested-interpolation", "args": ["--stdin-filepath", "r085.scss"], "stdin": "a {\n  b: #{a#{b}c};\n}\n"}
+{"name": "rerun-scss-selector-attr-double-slash-newline", "args": ["--stdin-filepath", "t05c.scss"], "stdin": "a[x='//']\nb {\n  c: d;\n}\n"}
+{"name": "rerun-ts-class-extends-empty-object", "args": ["--stdin-filepath", "rerun-r053.ts"], "stdin": "class A extends {} {}\n"}
+{"name": "rerun-ts-enum-await-identifier", "args": ["--stdin-filepath", "rerun-r054.ts"], "stdin": "enum E { A = await x }\n"}
+{"name": "rerun-ts-fn-single-typeparam-group-params", "args": ["--stdin-filepath", "r063.ts"], "stdin": "function foo<T>(someVeryLongParameterName: SomeVeryLongTypeName<T>): { a: string; b: number } {}\n"}
+{"name": "rerun-ts-nested-conditional-type-comment-after-u2028", "args": ["--stdin-filepath", "r010b.ts", "--experimental-ternaries"], "stdin": "type A = B extends C ? D : /* c */ E extends F ? G : H;\n"}
+{"name": "rerun-ts-non-component-decorator-template", "args": ["--stdin-filepath", "rerun-r057.ts"], "stdin": "@Foo({ template: `a` })\nclass A {}\n"}
+{"name": "rerun-ts-octal-escape-string", "args": ["--stdin-filepath", "rerun-r055.ts"], "stdin": "x = \"\\1\";\n"}
+{"name": "rerun-ts-optional-test-call-no-crash", "args": ["--stdin-filepath", "r068.ts"], "stdin": "beforeEach?.(b?.());\n"}
+{"name": "rerun-ts-quote-props-consistent-number-key", "args": ["--stdin-filepath", "rerun-r049.ts", "--quote-props", "consistent"], "stdin": "x = { \"a-b\": 1, 1: 2 };\n"}
+{"name": "rerun-ts-type-assertion-ternary-init", "args": ["--stdin-filepath", "rerun-r058.ts"], "stdin": "const x = <T>(aaaaaaaaaaaaaaaaaaaaaaaaaa ? bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb : ccccccccccccccccccccccccccc);\n"}
+{"name": "rerun-ts-union-line-comment-before-semicolon", "args": ["--stdin-filepath", "rerun-r005.ts"], "stdin": "type D = B | C // c\n;\n"}
+{"name": "rerun-yaml-alias-with-anchor", "args": ["--stdin-filepath", "x.yaml"], "stdin": "a: &x b\nc: &y *x\n"}
+{"name": "rerun-yaml-bare-doc-marker-at-eof", "args": ["--stdin-filepath", "r072.yaml"], "stdin": "---"}
+{"name": "rerun-yaml-block-implicit-key-too-long", "args": ["--stdin-filepath", "x.yaml"], "stdin": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: b\n"}
+{"name": "rerun-yaml-comment-then-indented-dashes-plain", "args": ["--stdin-filepath", "r178i.yaml"], "stdin": "# c\n  --- x\n"}
+{"name": "rerun-yaml-comment-without-space-after-quoted", "args": ["--stdin-filepath", "x.yaml"], "stdin": "a: \"b\"#c\n"}
+{"name": "rerun-yaml-compact-nested-mapping", "args": ["--stdin-filepath", "x.yaml"], "stdin": "a: b: c\n"}
+{"name": "rerun-yaml-double-quoted-escape-P", "args": ["--stdin-filepath", "r164.yaml"], "stdin": "a: \"x\\Py\"\n"}
+{"name": "rerun-yaml-float-key-trailing-dot", "args": ["--stdin-filepath", "r173.yaml"], "stdin": "1.: a\n"}
+{"name": "rerun-yaml-flow-alias-verbatim-name-with-comma", "args": ["--stdin-filepath", "r184.yaml"], "stdin": "[&<a,b> x, *<a,b>]\n"}
+{"name": "rerun-yaml-flow-blank-line-then-indented-item", "args": ["--stdin-filepath", "r187.yaml"], "stdin": "a: [b,\n\n  c]\n"}
+{"name": "rerun-yaml-flow-json-key-comment-then-adjacent-colon", "args": ["--stdin-filepath", "r186.yaml"], "stdin": "{ \"a\"\n  # c\n  :b }\n"}
+{"name": "rerun-yaml-folded-key-blank-before-more-indented", "args": ["--stdin-filepath", "r171.yaml"], "stdin": "? >\n  a\n\n   b\n: 1\n\"a\\n b\\n\": 2\n"}
+{"name": "rerun-yaml-folded-key-last-line-more-indented", "args": ["--stdin-filepath", "r168.yaml"], "stdin": "? >\n  x\n   y\n: 1\n\"x  y\\n\": 2\n"}
+{"name": "rerun-yaml-folded-key-plain-lines-not-folded", "args": ["--stdin-filepath", "r170.yaml"], "stdin": "? >\n  a\n  b\n: 1\n\"a\\nb\\n\": 2\n"}
+{"name": "rerun-yaml-hex-int-key", "args": ["--stdin-filepath", "r174.yaml"], "stdin": "0x1: a\nb: c\n"}
+{"name": "rerun-yaml-literal-key-indent-stripped", "args": ["--stdin-filepath", "r169.yaml"], "stdin": "? |\n  x\n: 1\n\"  x\\n\": 2\n"}
+{"name": "rerun-yaml-percent-encoded-set-tag", "args": ["--stdin-filepath", "r167.yaml"], "stdin": "--- !!s%65t\n? a\n? b\n"}
+{"name": "rerun-yaml-quoted-continuation-underindented", "args": ["--stdin-filepath", "x.yaml"], "stdin": "a: \"b\nc\"\n"}
+{"name": "rerun-yaml-quoted-key-inner-space-vs-plain", "args": ["--stdin-filepath", "r166.yaml"], "stdin": "\"a b\": 1\nab: 2\n"}
+{"name": "rerun-yaml-quoted-multibyte-keys", "args": ["--stdin-filepath", "r165.yaml"], "stdin": "\"é\": 1\n\"ü\": 2\n"}
+{"name": "rerun-yaml-seq-item-map-anchor-line-before-dash-key", "args": ["--stdin-filepath", "r194d.yaml"], "stdin": "- a: 1\n  &x\n  -b: 2\n"}
+{"name": "rerun-yaml-tab-only-line-in-map", "args": ["--stdin-filepath", "r192.yaml"], "stdin": "a: 1\n\t\nb: 2\n"}
+{"name": "rerun-yaml-tag-date-like-short-month", "args": ["--stdin-filepath", "r180.yaml"], "stdin": "- !foo.bar,2000-1x/y z\n"}
+{"name": "rerun-yaml-two-anchors-on-node", "args": ["--stdin-filepath", "x.yaml"], "stdin": "a: &x &y b\n"}
+{"name": "dup-proto-accepted", "args": ["--stdin-filepath", "input.js"], "stdin": "x = {__proto__: 1, __proto__: 2};\n"}
+{"name": "dup-proto-accepted-0", "args": ["--stdin-filepath", "x.ts"], "stdin": "x = {__proto__: 1, __proto__: 2};"}
+{"name": "dup-proto-accepted-1", "args": ["--stdin-filepath", "x.json"], "stdin": "{\"__proto__\": 1, \"__proto__\": 2}"}
+{"name": "dup-proto-accepted-2", "args": ["--stdin-filepath", "x.json5"], "stdin": "{\"__proto__\": 1, \"__proto__\": 2}"}
+{"name": "dup-proto-accepted-3", "args": ["--stdin-filepath", "x.jsonc"], "stdin": "{\"__proto__\": 1, \"__proto__\": 2}"}
+{"name": "dup-proto-accepted-4", "args": ["--stdin-filepath", "x.js"], "stdin": "({__proto__: a, __proto__: b} = c);"}
+{"name": "dup-proto-accepted-5", "args": ["--stdin-filepath", "x.js"], "stdin": "x = {__proto__, __proto__: 2, \"__proto__\": 3};"}
+{"name": "js-huge-number-literal-refused", "args": ["--stdin-filepath", "input.js"], "stdin": "a = 1e400;\n"}
+{"name": "js-huge-number-literal-refused-0", "args": ["--stdin-filepath", "x.ts"], "stdin": "type T = 1e999;"}
+{"name": "js-huge-number-literal-refused-1", "args": ["--stdin-filepath", "x.json"], "stdin": "{\"a\": 1e400}"}
+{"name": "js-huge-number-literal-refused-2", "args": ["--stdin-filepath", "x.js"], "stdin": "x = {1e400: 1};"}
+{"name": "js-huge-number-literal-refused-3", "args": ["--stdin-filepath", "package.json"], "stdin": "{\"a\": [1e400, -1e400]}"}
+{"name": "yaml-scalar-tag-on-collection-formatted", "args": ["--stdin-filepath", "x.yaml"], "stdin": "!!str\n- a\n"}
+{"name": "yaml-str-tag-on-block-map", "args": ["--stdin-filepath", "x.yaml"], "stdin": "!!str\na: 1\n"}
+{"name": "yaml-str-tag-on-flow-seq", "args": ["--stdin-filepath", "x.yaml"], "stdin": "!!str [a]\n"}
+{"name": "yaml-int-tag-on-flow-map", "args": ["--stdin-filepath", "x.yaml"], "stdin": "!!int {a: 1}\n"}
+{"name": "yaml-str-tag-on-nested-seq", "args": ["--stdin-filepath", "x.yaml"], "stdin": "- !!str\n  - c\n"}
+{"name": "yaml-null-tag-on-empty-flow-map", "args": ["--stdin-filepath", "x.yaml"], "stdin": "k: !!null {}\n"}
+{"name": "yaml-verbatim-str-tag-on-seq", "args": ["--stdin-filepath", "x.yaml"], "stdin": "!<tag:yaml.org,2002:str>\n- a\n"}
+{"name": "yaml-tag-directive-bool-on-map", "args": ["--stdin-filepath", "x.yaml"], "stdin": "%TAG !e! tag:yaml.org,2002:\n---\n!e!bool\na: 1\n"}
+{"name": "yaml-percent-encoded-str-tag-on-seq", "args": ["--stdin-filepath", "x.yaml"], "stdin": "!!st%72 [a]\n"}
+{"name": "yaml-float-tag-flow-key", "args": ["--stdin-filepath", "x.yaml"], "stdin": "? !!float [a]\n: v\n"}

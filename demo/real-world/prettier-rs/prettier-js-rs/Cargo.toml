@@ -17,3 +17,11 @@ serde_json = { version = "1", features = ["preserve_order", "float_roundtrip", "
 
 [profile.release]
 lto = true
+
+# Fast-building profile for mutation testing (equiv/mutants): each mutant rebuilds this crate.
+[profile.mutants]
+inherits = "release"
+lto = false
+opt-level = 1
+codegen-units = 256
+incremental = true

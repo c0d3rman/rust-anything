@@ -1,0 +1,7 @@
+{
+ "kind": "output",
+ "doc": ["\ud800", "􏰀"],
+ "docWire": [{"$utf16": [55296]}, "􏰀"],
+ "options": {"printWidth": 80, "tabWidth": 2, "useTabs": false, "endOfLine": "lf"},
+ "note": "Prettier prints the 3 UTF-16 units D800 DBFF DC00 (a lone surrogate, then U+10FC00). The port prints D800 DC00: once a doc holds a lone surrogate it encodes lone units as U+10F800+(unit-0xD800) (LONE_BASE in port.rs) and decodes every char >= U+10F800 back as one lone unit, so a real U+10F800..U+10FFFF char is corrupted."
+}

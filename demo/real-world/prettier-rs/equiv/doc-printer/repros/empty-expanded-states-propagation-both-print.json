@@ -1,0 +1,42 @@
+{
+ "kind": "output",
+ "doc": {
+  "type": "group",
+  "contents": {
+   "type": "group",
+   "contents": {
+    "type": "fill",
+    "parts": [
+     {
+      "type": "break-parent"
+     },
+     {
+      "type": "line"
+     }
+    ]
+   },
+   "break": false
+  },
+  "break": false,
+  "expandedStates": []
+ },
+ "options": {
+  "printWidth": 0,
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf"
+ },
+ "prettier": [
+  "ok",
+  "",
+  null,
+  null
+ ],
+ "rust": [
+  "ok",
+  " ",
+  null,
+  null
+ ],
+ "note": "Both print, differently. Two causes together: Prettier does not propagate breaks into contents of a group that has expandedStates (so the inner group stays flat, contents does not fit at width 0, and the empty expandedStates loop pushes nothing → \"\"); the port propagates into contents, the inner group breaks, fits() stops at the first break-mode line → contents printed → \" \". Smallest found at size 5."
+}

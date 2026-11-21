@@ -1,0 +1,15 @@
+[package]
+name = "equiv-fuzz"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "Differential fuzz driver: prettier-js-rs against Prettier 3.6.2"
+
+[dependencies]
+prettier-js-rs = { path = "../../../prettier-js-rs" }
+serde_json = { version = "1", features = ["preserve_order", "unbounded_depth"] }
+
+[profile.release]
+debug = 1
+
+[workspace]

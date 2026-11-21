@@ -1,0 +1,17 @@
+[package]
+name = "doc-diff-rs"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "Serves the port's Doc (Prettier wire JSON, shared subtrees as $def/$ref) and formatted text, one JSON request per line"
+
+[dependencies]
+prettier-js-rs = { path = "../../../prettier-js-rs" }
+doc-printer-rs = { path = "../../../doc-printer-rs" }
+serde = "1"
+serde_json = { version = "1", features = ["preserve_order", "float_roundtrip", "unbounded_depth"] }
+
+[profile.release]
+lto = true
+
+[workspace]

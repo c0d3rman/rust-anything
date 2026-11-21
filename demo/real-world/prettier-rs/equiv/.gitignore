@@ -1,0 +1,5 @@
+out/
+*.node
+*.dylib
+target/
+mutants/parts/

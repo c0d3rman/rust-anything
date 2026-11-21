@@ -1,0 +1,24 @@
+{
+ "kind": "errmsg",
+ "doc": {
+  "type": "group",
+  "id": "A",
+  "contents": "a",
+  "expandedStates": []
+ },
+ "options": {
+  "printWidth": 0,
+  "tabWidth": 2,
+  "useTabs": false,
+  "endOfLine": "lf"
+ },
+ "prettier": [
+  "err",
+  "Cannot read properties of undefined (reading 'mode')"
+ ],
+ "rust": [
+  "err",
+  "Unexpected doc 'undefined', \nExpected it to be 'string' or 'object'."
+ ],
+ "note": "Both throw, different messages: Prettier reaches `groupModeMap[doc.id] = cmds.at(-1).mode` with an empty stack (TypeError); the port errors earlier with the InvalidDocError text. Same root cause and reachability as empty-expanded-states-prints-nothing.json."
+}
