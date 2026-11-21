@@ -1,0 +1,267 @@
+onCodePathStart s1 program Program 0-277
+onCodePathSegmentStart s1_1 Program 0-277
+enter Program 0-277
+enter ForStatement 0-62
+enter VariableDeclaration 5-14
+enter VariableDeclarator 9-14
+enter Identifier 9-10
+exit Identifier 9-10
+enter Literal 13-14
+exit Literal 13-14
+exit VariableDeclarator 9-14
+exit VariableDeclaration 5-14
+onCodePathSegmentEnd s1_1 BinaryExpression 16-21
+onCodePathSegmentStart s1_2 BinaryExpression 16-21
+enter BinaryExpression 16-21
+enter Identifier 16-17
+exit Identifier 16-17
+enter Identifier 20-21
+exit Identifier 20-21
+exit BinaryExpression 16-21
+onCodePathSegmentEnd s1_2 UpdateExpression 23-26
+onCodePathSegmentStart s1_4 UpdateExpression 23-26
+enter UpdateExpression 23-26
+enter Identifier 23-24
+exit Identifier 23-24
+exit UpdateExpression 23-26
+onCodePathSegmentLoop s1_4 s1_2 BlockStatement 28-62
+onCodePathSegmentEnd s1_4 BlockStatement 28-62
+onCodePathSegmentStart s1_3 BlockStatement 28-62
+enter BlockStatement 28-62
+enter IfStatement 30-46
+enter Identifier 34-35
+exit Identifier 34-35
+onCodePathSegmentEnd s1_3 ContinueStatement 37-46
+onCodePathSegmentStart s1_5 ContinueStatement 37-46
+enter ContinueStatement 37-46
+onCodePathSegmentLoop s1_5 s1_4 ContinueStatement 37-46
+exit ContinueStatement 37-46
+onCodePathSegmentEnd s1_5 IfStatement 30-46
+onCodePathSegmentStart s1_7 IfStatement 30-46
+exit IfStatement 30-46
+enter IfStatement 47-60
+enter Identifier 51-52
+exit Identifier 51-52
+onCodePathSegmentEnd s1_7 BreakStatement 54-60
+onCodePathSegmentStart s1_8 BreakStatement 54-60
+enter BreakStatement 54-60
+exit BreakStatement 54-60
+onCodePathSegmentEnd s1_8 IfStatement 47-60
+onCodePathSegmentStart s1_10 IfStatement 47-60
+exit IfStatement 47-60
+exit BlockStatement 28-62
+onCodePathSegmentLoop s1_10 s1_4 ForStatement 0-62
+onCodePathSegmentEnd s1_10 ForStatement 0-62
+onCodePathSegmentStart s1_11 ForStatement 0-62
+exit ForStatement 0-62
+enter ForStatement 63-89
+onCodePathSegmentEnd s1_11 BlockStatement 72-89
+onCodePathSegmentStart s1_12 BlockStatement 72-89
+enter BlockStatement 72-89
+enter IfStatement 74-87
+enter Identifier 78-79
+exit Identifier 78-79
+onCodePathSegmentEnd s1_12 BreakStatement 81-87
+onCodePathSegmentStart s1_13 BreakStatement 81-87
+enter BreakStatement 81-87
+exit BreakStatement 81-87
+onCodePathSegmentEnd s1_13 IfStatement 74-87
+onCodePathSegmentStart s1_15 IfStatement 74-87
+exit IfStatement 74-87
+exit BlockStatement 72-89
+onCodePathSegmentLoop s1_15 s1_12 ForStatement 63-89
+onCodePathSegmentEnd s1_15 ForStatement 63-89
+onCodePathSegmentStart s1_16 ForStatement 63-89
+exit ForStatement 63-89
+enter WhileStatement 90-122
+onCodePathSegmentEnd s1_16 Identifier 97-98
+onCodePathSegmentStart s1_17 Identifier 97-98
+enter Identifier 97-98
+exit Identifier 97-98
+onCodePathSegmentEnd s1_17 BlockStatement 100-122
+onCodePathSegmentStart s1_18 BlockStatement 100-122
+enter BlockStatement 100-122
+enter IfStatement 102-115
+enter Identifier 106-107
+exit Identifier 106-107
+onCodePathSegmentEnd s1_18 BreakStatement 109-115
+onCodePathSegmentStart s1_19 BreakStatement 109-115
+enter BreakStatement 109-115
+exit BreakStatement 109-115
+onCodePathSegmentEnd s1_19 IfStatement 102-115
+onCodePathSegmentStart s1_21 IfStatement 102-115
+exit IfStatement 102-115
+enter ExpressionStatement 116-120
+enter CallExpression 116-119
+enter Identifier 116-117
+exit Identifier 116-117
+exit CallExpression 116-119
+exit ExpressionStatement 116-120
+exit BlockStatement 100-122
+onCodePathSegmentLoop s1_21 s1_17 WhileStatement 90-122
+onCodePathSegmentEnd s1_21 WhileStatement 90-122
+onCodePathSegmentStart s1_22 WhileStatement 90-122
+exit WhileStatement 90-122
+enter DoWhileStatement 123-157
+onCodePathSegmentEnd s1_22 BlockStatement 126-146
+onCodePathSegmentStart s1_23 BlockStatement 126-146
+enter BlockStatement 126-146
+enter IfStatement 128-144
+enter Identifier 132-133
+exit Identifier 132-133
+onCodePathSegmentEnd s1_23 ContinueStatement 135-144
+onCodePathSegmentStart s1_24 ContinueStatement 135-144
+enter ContinueStatement 135-144
+exit ContinueStatement 135-144
+onCodePathSegmentEnd s1_24 IfStatement 128-144
+onCodePathSegmentStart s1_26 IfStatement 128-144
+exit IfStatement 128-144
+exit BlockStatement 126-146
+onCodePathSegmentEnd s1_26 Identifier 154-155
+onCodePathSegmentStart s1_27 Identifier 154-155
+enter Identifier 154-155
+exit Identifier 154-155
+onCodePathSegmentLoop s1_27 s1_23 DoWhileStatement 123-157
+onCodePathSegmentEnd s1_27 DoWhileStatement 123-157
+onCodePathSegmentStart s1_28 DoWhileStatement 123-157
+exit DoWhileStatement 123-157
+enter LabeledStatement 158-253
+enter Identifier 158-163
+exit Identifier 158-163
+enter ForOfStatement 165-253
+onCodePathSegmentEnd s1_28 VariableDeclaration 170-177
+onCodePathSegmentStart s1_29 VariableDeclaration 170-177
+enter VariableDeclaration 170-177
+enter VariableDeclarator 176-177
+enter Identifier 176-177
+exit Identifier 176-177
+exit VariableDeclarator 176-177
+exit VariableDeclaration 170-177
+onCodePathSegmentEnd s1_29 Identifier 181-182
+onCodePathSegmentStart s1_30 Identifier 181-182
+enter Identifier 181-182
+exit Identifier 181-182
+onCodePathSegmentLoop s1_30 s1_29 BlockStatement 184-253
+onCodePathSegmentEnd s1_30 BlockStatement 184-253
+onCodePathSegmentStart s1_31 BlockStatement 184-253
+enter BlockStatement 184-253
+enter ForInStatement 186-251
+onCodePathSegmentEnd s1_31 VariableDeclaration 191-198
+onCodePathSegmentStart s1_32 VariableDeclaration 191-198
+enter VariableDeclaration 191-198
+enter VariableDeclarator 197-198
+enter Identifier 197-198
+exit Identifier 197-198
+exit VariableDeclarator 197-198
+exit VariableDeclaration 191-198
+onCodePathSegmentEnd s1_32 Identifier 202-203
+onCodePathSegmentStart s1_33 Identifier 202-203
+enter Identifier 202-203
+exit Identifier 202-203
+onCodePathSegmentLoop s1_33 s1_32 BlockStatement 205-251
+onCodePathSegmentEnd s1_33 BlockStatement 205-251
+onCodePathSegmentStart s1_34 BlockStatement 205-251
+enter BlockStatement 205-251
+enter IfStatement 207-229
+enter Identifier 211-212
+exit Identifier 211-212
+onCodePathSegmentEnd s1_34 ContinueStatement 214-229
+onCodePathSegmentStart s1_35 ContinueStatement 214-229
+enter ContinueStatement 214-229
+enter Identifier 223-228
+exit Identifier 223-228
+onCodePathSegmentLoop s1_35 s1_29 ContinueStatement 214-229
+exit ContinueStatement 214-229
+onCodePathSegmentEnd s1_35 IfStatement 207-229
+onCodePathSegmentStart s1_37 IfStatement 207-229
+exit IfStatement 207-229
+enter IfStatement 230-249
+enter Identifier 234-235
+exit Identifier 234-235
+onCodePathSegmentEnd s1_37 BreakStatement 237-249
+onCodePathSegmentStart s1_38 BreakStatement 237-249
+enter BreakStatement 237-249
+enter Identifier 243-248
+exit Identifier 243-248
+exit BreakStatement 237-249
+onCodePathSegmentEnd s1_38 IfStatement 230-249
+onCodePathSegmentStart s1_40 IfStatement 230-249
+exit IfStatement 230-249
+exit BlockStatement 205-251
+onCodePathSegmentLoop s1_40 s1_32 ForInStatement 186-251
+onCodePathSegmentEnd s1_40 ForInStatement 186-251
+onCodePathSegmentStart s1_41 ForInStatement 186-251
+exit ForInStatement 186-251
+exit BlockStatement 184-253
+onCodePathSegmentLoop s1_41 s1_29 ForOfStatement 165-253
+onCodePathSegmentEnd s1_41 ForOfStatement 165-253
+onCodePathSegmentStart s1_42 ForOfStatement 165-253
+exit ForOfStatement 165-253
+exit LabeledStatement 158-253
+enter WhileStatement 254-269
+onCodePathSegmentEnd s1_42 Literal 261-265
+onCodePathSegmentStart s1_43 Literal 261-265
+enter Literal 261-265
+exit Literal 261-265
+onCodePathSegmentEnd s1_43 BlockStatement 267-269
+onCodePathSegmentStart s1_44 BlockStatement 267-269
+enter BlockStatement 267-269
+exit BlockStatement 267-269
+onCodePathSegmentLoop s1_44 s1_43 WhileStatement 254-269
+onCodePathSegmentEnd s1_44 WhileStatement 254-269
+onUnreachableCodePathSegmentStart s1_45 WhileStatement 254-269
+exit WhileStatement 254-269
+enter ExpressionStatement 270-276
+enter CallExpression 270-275
+enter Identifier 270-273
+exit Identifier 270-273
+exit CallExpression 270-275
+exit ExpressionStatement 270-276
+exit Program 0-277
+onUnreachableCodePathSegmentEnd s1_45 Program 0-277
+onCodePathEnd s1 Program 0-277 initial=s1_1 final=[] returned=[] thrown=[]
+  seg s1_1 reachable=true prev=[] next=[s1_2] allPrev=[] allNext=[s1_2] looped=[]
+  seg s1_2 reachable=true prev=[s1_1,s1_4] next=[s1_3,s1_11] allPrev=[s1_1,s1_4] allNext=[s1_3,s1_11] looped=[s1_4]
+  seg s1_3 reachable=true prev=[s1_2] next=[s1_5,s1_7] allPrev=[s1_2] allNext=[s1_5,s1_7] looped=[]
+  seg s1_4 reachable=true prev=[s1_5,s1_10] next=[s1_2] allPrev=[s1_5,s1_10] allNext=[s1_2] looped=[s1_10]
+  seg s1_5 reachable=true prev=[s1_3] next=[s1_4] allPrev=[s1_3] allNext=[s1_4,s1_6] looped=[]
+  seg s1_6 reachable=false prev=[s1_5] next=[s1_7] allPrev=[s1_5] allNext=[s1_7] looped=[]
+  seg s1_7 reachable=true prev=[s1_3] next=[s1_8,s1_10] allPrev=[s1_6,s1_3] allNext=[s1_8,s1_10] looped=[]
+  seg s1_8 reachable=true prev=[s1_7] next=[s1_11] allPrev=[s1_7] allNext=[s1_9,s1_11] looped=[]
+  seg s1_9 reachable=false prev=[s1_8] next=[s1_10] allPrev=[s1_8] allNext=[s1_10] looped=[]
+  seg s1_10 reachable=true prev=[s1_7] next=[s1_4] allPrev=[s1_9,s1_7] allNext=[s1_4] looped=[]
+  seg s1_11 reachable=true prev=[s1_2,s1_8] next=[s1_12] allPrev=[s1_2,s1_8] allNext=[s1_12] looped=[]
+  seg s1_12 reachable=true prev=[s1_11,s1_15] next=[s1_13,s1_15] allPrev=[s1_11,s1_15] allNext=[s1_13,s1_15] looped=[s1_15]
+  seg s1_13 reachable=true prev=[s1_12] next=[s1_16] allPrev=[s1_12] allNext=[s1_14,s1_16] looped=[]
+  seg s1_14 reachable=false prev=[s1_13] next=[s1_15] allPrev=[s1_13] allNext=[s1_15] looped=[]
+  seg s1_15 reachable=true prev=[s1_12] next=[s1_12] allPrev=[s1_14,s1_12] allNext=[s1_12] looped=[]
+  seg s1_16 reachable=true prev=[s1_13] next=[s1_17] allPrev=[s1_13] allNext=[s1_17] looped=[]
+  seg s1_17 reachable=true prev=[s1_16,s1_21] next=[s1_18,s1_22] allPrev=[s1_16,s1_21] allNext=[s1_18,s1_22] looped=[s1_21]
+  seg s1_18 reachable=true prev=[s1_17] next=[s1_19,s1_21] allPrev=[s1_17] allNext=[s1_19,s1_21] looped=[]
+  seg s1_19 reachable=true prev=[s1_18] next=[s1_22] allPrev=[s1_18] allNext=[s1_20,s1_22] looped=[]
+  seg s1_20 reachable=false prev=[s1_19] next=[s1_21] allPrev=[s1_19] allNext=[s1_21] looped=[]
+  seg s1_21 reachable=true prev=[s1_18] next=[s1_17] allPrev=[s1_20,s1_18] allNext=[s1_17] looped=[]
+  seg s1_22 reachable=true prev=[s1_17,s1_19] next=[s1_23] allPrev=[s1_17,s1_19] allNext=[s1_23] looped=[]
+  seg s1_23 reachable=true prev=[s1_22,s1_27] next=[s1_24,s1_26] allPrev=[s1_22,s1_27] allNext=[s1_24,s1_26] looped=[s1_27]
+  seg s1_24 reachable=true prev=[s1_23] next=[s1_27] allPrev=[s1_23] allNext=[s1_25,s1_27] looped=[]
+  seg s1_25 reachable=false prev=[s1_24] next=[s1_26] allPrev=[s1_24] allNext=[s1_26] looped=[]
+  seg s1_26 reachable=true prev=[s1_23] next=[s1_27] allPrev=[s1_25,s1_23] allNext=[s1_27] looped=[]
+  seg s1_27 reachable=true prev=[s1_24,s1_26] next=[s1_23,s1_28] allPrev=[s1_24,s1_26] allNext=[s1_23,s1_28] looped=[]
+  seg s1_28 reachable=true prev=[s1_27] next=[s1_30] allPrev=[s1_27] allNext=[s1_30] looped=[]
+  seg s1_29 reachable=true prev=[s1_30,s1_35,s1_41] next=[s1_31] allPrev=[s1_30,s1_35,s1_41] allNext=[s1_31] looped=[s1_35,s1_41]
+  seg s1_30 reachable=true prev=[s1_28] next=[s1_29,s1_42] allPrev=[s1_28] allNext=[s1_29,s1_42] looped=[]
+  seg s1_31 reachable=true prev=[s1_29] next=[s1_33] allPrev=[s1_29] allNext=[s1_33] looped=[]
+  seg s1_32 reachable=true prev=[s1_33,s1_40] next=[s1_34] allPrev=[s1_33,s1_40] allNext=[s1_34] looped=[s1_40]
+  seg s1_33 reachable=true prev=[s1_31] next=[s1_32,s1_41] allPrev=[s1_31] allNext=[s1_32,s1_41] looped=[]
+  seg s1_34 reachable=true prev=[s1_32] next=[s1_35,s1_37] allPrev=[s1_32] allNext=[s1_35,s1_37] looped=[]
+  seg s1_35 reachable=true prev=[s1_34] next=[s1_29,s1_42] allPrev=[s1_34] allNext=[s1_29,s1_36,s1_42] looped=[]
+  seg s1_36 reachable=false prev=[s1_35] next=[s1_37] allPrev=[s1_35] allNext=[s1_37] looped=[]
+  seg s1_37 reachable=true prev=[s1_34] next=[s1_38,s1_40] allPrev=[s1_36,s1_34] allNext=[s1_38,s1_40] looped=[]
+  seg s1_38 reachable=true prev=[s1_37] next=[s1_42] allPrev=[s1_37] allNext=[s1_39,s1_42] looped=[]
+  seg s1_39 reachable=false prev=[s1_38] next=[s1_40] allPrev=[s1_38] allNext=[s1_40] looped=[]
+  seg s1_40 reachable=true prev=[s1_37] next=[s1_32,s1_41] allPrev=[s1_39,s1_37] allNext=[s1_32,s1_41] looped=[]
+  seg s1_41 reachable=true prev=[s1_33,s1_40] next=[s1_29,s1_42] allPrev=[s1_33,s1_40] allNext=[s1_29,s1_42] looped=[]
+  seg s1_42 reachable=true prev=[s1_30,s1_35,s1_38,s1_41] next=[s1_43] allPrev=[s1_30,s1_35,s1_38,s1_41] allNext=[s1_43] looped=[]
+  seg s1_43 reachable=true prev=[s1_42,s1_44] next=[s1_44] allPrev=[s1_42,s1_44] allNext=[s1_44] looped=[s1_44]
+  seg s1_44 reachable=true prev=[s1_43] next=[s1_43] allPrev=[s1_43] allNext=[s1_43,s1_45] looped=[]
+  seg s1_45 reachable=false prev=[s1_44] next=[] allPrev=[s1_44] allNext=[] looped=[]

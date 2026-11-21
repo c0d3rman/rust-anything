@@ -79,6 +79,16 @@
   `"remove"` files of the snapshot before it runs. `--fresh` alone no longer implies `--http`.
 - Front doors built by rust-anything find the original when `rust/` is a symlink to a folder
   outside the repository (`RUST_ANYTHING_REPO` is set at build time).
+- Case study: ESLint 10.15.0 behind a Rust front door, 90 rules (`eslint:recommended` and 26
+  more), 10,585/10,585 recorded CLI runs at 3.6% fallback, gate passes on `eslint-stdin-rs`
+  (`demo/real-world/eslint-rs`, `docs/real-world.md#eslint`).
+- `bridge` and `analyze` read CommonJS exports: `module.exports = { a, b: c }`,
+  `module.exports.a = a` and `exports.a = a`, for functions declared in the file. ESLint (and
+  most Node code before ESM) exports this way, so its units showed no functions to bridge.
+- The `timestamps` normalizer also matches JavaScript's `Date#toString()`
+  (`Sat Nov 21 2026 01:30:12 GMT+0300 (...)`). ESLint's HTML report stamps its time that way:
+  the two recording runs differed only in the seconds, so only the seconds became a wildcard and a
+  replay ten minutes later failed.
 - Case study: ffmpeg's libavutil (n7.1), 10 units, 135,773/135,773 recorded calls, gate passes
   on each (`demo/real-world/ffmpeg-rs`, `docs/real-world.md#ffmpeg`).
 - C bridge: pointer parameters cross it with the original signatures. A `const` byte pointer
@@ -109,6 +119,13 @@
   port does their work too.
 - C `char` parameters are `c_char` in generated code (signed or unsigned as the platform's C
   `char`), not `c_schar`.
+- `doctor` on Windows: a missing `cargo` gets the C++ Build Tools, then
+  `winget install Rustlang.Rustup`, instead of the `sh.rustup.rs` script, which needs a Unix shell.
+  The Build Tools come first because winget runs `rustup-init -y`, which skips them with a warning.
+  The Build Tools fix also adds the C++ workload (and the ARM64 tools on Windows on ARM): without
+  `--add`, winget installs them with no compiler, linker or Windows SDK. Since winget adds nothing
+  to Build Tools already installed, the fix also says how to add the workload by hand. A fix of
+  several commands prints one per line.
 
 ## 2.1.0 (2026-11-20)
 

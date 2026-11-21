@@ -11,7 +11,7 @@ front door); units cannot be bridged yet.
 
 | Language | Status | Last real run | Result |
 | --- | --- | --- | --- |
-| TypeScript/JavaScript | Verified | [Prettier](real-world.md#prettier) (2026-11-18), [json-server](real-world.md#json-server) (2026-11-18), [Fuse.js](real-world.md#fusejs) (2026-11-18), [vercel/ms](real-world.md#vercelms) (2026-11-18), x18n's `packages/core` | Prettier: `doc-printer-rs` 2,848/2,848 and `js-format-rs` 15,753/15,753, gate passes on both; json-server: six units, 3,399 cases, gate passes on each; Fuse.js, vercel/ms, x18n: 3,414/3,414, 975/975 and 7,925 cases match |
+| TypeScript/JavaScript | Verified | [ESLint](real-world.md#eslint) (2026-11-21), [Prettier](real-world.md#prettier) (2026-11-18), [json-server](real-world.md#json-server) (2026-11-18), [Fuse.js](real-world.md#fusejs) (2026-11-18), [vercel/ms](real-world.md#vercelms) (2026-11-18), x18n's `packages/core` | ESLint: `eslint-stdin-rs` 10,192/10,192, gate passes, front door replay 10,585/10,585 at 3.6% fallback (CommonJS module bridged); Prettier: `doc-printer-rs` 2,848/2,848 and `js-format-rs` 15,753/15,753, gate passes on both; json-server: six units, 3,399 cases, gate passes on each; Fuse.js, vercel/ms, x18n: 3,414/3,414, 975/975 and 7,925 cases match |
 | Python | Verified | `colorsys.py` from CPython 3.13 (2026-11-16) | 2,400/2,400; gate passes |
 | Go | Verified | `path` from Go 1.24 (2026-11-16) | 2,642/2,642; gate passes |
 | Ruby | Verified | `shellwords.rb` from Ruby 3.3 (2026-11-16) | 1,617/1,617; gate passes |

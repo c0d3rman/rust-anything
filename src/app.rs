@@ -29,7 +29,7 @@ pub(crate) const MAX_TRAPS: usize = 300;
 pub(crate) const FRESH_DIR: &str = "files";
 const REMOVED_EXT: &str = "removed";
 const MAX_INPUT_FILE: u64 = 1 << 20;
-const TIMESTAMP: &str = r"\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2}(?:[.,]\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?|\b\d{2}:\d{2}:\d{2}(?:[.,]\d+)?\b";
+const TIMESTAMP: &str = r"\b(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{2} \d{4} \d{2}:\d{2}:\d{2} GMT[+-]\d{4}(?: \([^)\n]*\))?|\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2}(?:[.,]\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?|\b\d{2}:\d{2}:\d{2}(?:[.,]\d+)?\b";
 const UUID: &str =
     r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b";
 
@@ -2756,6 +2756,19 @@ mod tests {
         assert!(compare(&norm, e, b"y=2\nx=2\n", false, true).is_some());
         assert!(compare(&norm, e, b"x=1\n", false, true).is_some());
         assert!(compare(&norm, e, b"y=2\nx=1\n", false, false).is_some());
+    }
+
+    #[test]
+    fn timestamps_cover_javascript_date_strings() {
+        let re = Regex::new(TIMESTAMP).unwrap();
+        let line = "Generated on Sat Nov 21 2026 01:30:12 GMT+0300 (Türkiye Standard Time) - ok";
+        assert_eq!(re.replace_all(line, "[..]"), "Generated on [..] - ok");
+        assert_eq!(
+            re.replace_all("Mon Jan 05 2026 09:00:00 GMT-0800", "[..]"),
+            "[..]"
+        );
+        assert_eq!(re.replace_all("at 2026-11-16T10:00:00Z", "[..]"), "at [..]");
+        assert_eq!(re.replace_all("Saturday 12", "[..]"), "Saturday 12");
     }
 
     #[test]

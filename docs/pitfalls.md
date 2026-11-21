@@ -139,6 +139,18 @@ timed run covered as many files as the list it was given.
 `config-` to leave out the config cases, and four real files (`vitest.config.ts`, ...) went with
 them. Match the exact prefix you mean, and check a group's total against the corpus.
 
+**A harvester dropped whole rules.** ESLint's tests for no-unused-vars, prefer-const and
+no-useless-assignment give their `RuleTester` a test-only plugin, and the script that turned
+RuleTester cases into CLI runs skipped every case of a tester with plugins: 715 cases of three
+of the most used rules were missing, and the rules showed "0 cases" instead of an error. Skip
+only the cases that use what you cannot express, and check every unit's case count after
+harvesting.
+
+**A copy of a crate built into the same target folder replaced it.** A scratch copy of the port,
+with the same package name and version, was built with the same `CARGO_TARGET_DIR`; cargo gave
+both the same artifact name, and examples of the real crate linked the copy's library and
+reported stale numbers. Give a copy its own package name or its own target folder.
+
 **A grep hid the bug it was meant to show.** Filtering diffs with a pattern that drops comment-like
 lines removed the one line that differed (`/* name */ value`). Write the expected and actual
 output to files and diff them whole.

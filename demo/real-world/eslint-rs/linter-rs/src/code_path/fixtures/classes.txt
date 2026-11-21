@@ -1,0 +1,129 @@
+onCodePathStart s1 program Program 0-148
+onCodePathSegmentStart s1_1 Program 0-148
+enter Program 0-148
+enter ClassDeclaration 0-147
+enter Identifier 6-7
+exit Identifier 6-7
+enter Identifier 16-17
+exit Identifier 16-17
+enter ClassBody 18-147
+enter PropertyDefinition 24-36
+enter Identifier 24-25
+exit Identifier 24-25
+onCodePathStart s2 class-field-initializer ArrowFunctionExpression 28-35
+onCodePathSegmentStart s2_1 ArrowFunctionExpression 28-35
+onCodePathStart s3 function ArrowFunctionExpression 28-35
+onCodePathSegmentStart s3_1 ArrowFunctionExpression 28-35
+enter ArrowFunctionExpression 28-35
+enter Literal 34-35
+exit Literal 34-35
+exit ArrowFunctionExpression 28-35
+onCodePathSegmentEnd s3_1 ArrowFunctionExpression 28-35
+onCodePathEnd s3 ArrowFunctionExpression 28-35 initial=s3_1 final=[s3_1] returned=[s3_1] thrown=[]
+  seg s3_1 reachable=true prev=[] next=[] allPrev=[] allNext=[] looped=[]
+onCodePathSegmentEnd s2_1 ArrowFunctionExpression 28-35
+onCodePathEnd s2 ArrowFunctionExpression 28-35 initial=s2_1 final=[s2_1] returned=[s2_1] thrown=[]
+  seg s2_1 reachable=true prev=[] next=[] allPrev=[] allNext=[] looped=[]
+exit PropertyDefinition 24-36
+enter PropertyDefinition 41-52
+enter Identifier 41-42
+exit Identifier 41-42
+onCodePathStart s4 class-field-initializer MemberExpression 45-51
+onCodePathSegmentStart s4_1 MemberExpression 45-51
+enter MemberExpression 45-51
+enter ThisExpression 45-49
+exit ThisExpression 45-49
+enter Identifier 50-51
+exit Identifier 50-51
+exit MemberExpression 45-51
+onCodePathSegmentEnd s4_1 MemberExpression 45-51
+onCodePathEnd s4 MemberExpression 45-51 initial=s4_1 final=[s4_1] returned=[s4_1] thrown=[]
+  seg s4_1 reachable=true prev=[] next=[] allPrev=[] allNext=[] looped=[]
+exit PropertyDefinition 41-52
+onCodePathStart s5 class-static-block StaticBlock 57-79
+onCodePathSegmentStart s5_1 StaticBlock 57-79
+enter StaticBlock 57-79
+enter IfStatement 66-77
+enter Identifier 70-71
+exit Identifier 70-71
+onCodePathSegmentEnd s5_1 ExpressionStatement 73-77
+onCodePathSegmentStart s5_2 ExpressionStatement 73-77
+enter ExpressionStatement 73-77
+enter CallExpression 73-76
+enter Identifier 73-74
+exit Identifier 73-74
+exit CallExpression 73-76
+exit ExpressionStatement 73-77
+onCodePathSegmentEnd s5_2 IfStatement 66-77
+onCodePathSegmentStart s5_3 IfStatement 66-77
+exit IfStatement 66-77
+exit StaticBlock 57-79
+onCodePathSegmentEnd s5_3 StaticBlock 57-79
+onCodePathEnd s5 StaticBlock 57-79 initial=s5_1 final=[s5_3] returned=[s5_3] thrown=[]
+  seg s5_1 reachable=true prev=[] next=[s5_2,s5_3] allPrev=[] allNext=[s5_2,s5_3] looped=[]
+  seg s5_2 reachable=true prev=[s5_1] next=[s5_3] allPrev=[s5_1] allNext=[s5_3] looped=[]
+  seg s5_3 reachable=true prev=[s5_2,s5_1] next=[] allPrev=[s5_2,s5_1] allNext=[] looped=[]
+enter MethodDefinition 84-115
+enter Identifier 84-95
+exit Identifier 84-95
+onCodePathStart s6 function FunctionExpression 95-115
+onCodePathSegmentStart s6_1 FunctionExpression 95-115
+enter FunctionExpression 95-115
+enter AssignmentPattern 96-101
+enter Identifier 96-97
+exit Identifier 96-97
+onCodePathSegmentEnd s6_1 Literal 100-101
+onCodePathSegmentStart s6_2 Literal 100-101
+enter Literal 100-101
+exit Literal 100-101
+onCodePathSegmentEnd s6_2 AssignmentPattern 96-101
+onCodePathSegmentStart s6_3 AssignmentPattern 96-101
+exit AssignmentPattern 96-101
+enter BlockStatement 103-115
+enter ExpressionStatement 105-113
+enter CallExpression 105-112
+enter Super 105-110
+exit Super 105-110
+exit CallExpression 105-112
+exit ExpressionStatement 105-113
+exit BlockStatement 103-115
+exit FunctionExpression 95-115
+onCodePathSegmentEnd s6_3 FunctionExpression 95-115
+onCodePathEnd s6 FunctionExpression 95-115 initial=s6_1 final=[s6_3] returned=[s6_3] thrown=[]
+  seg s6_1 reachable=true prev=[] next=[s6_2,s6_3] allPrev=[] allNext=[s6_2,s6_3] looped=[]
+  seg s6_2 reachable=true prev=[s6_1] next=[s6_3] allPrev=[s6_1] allNext=[s6_3] looped=[]
+  seg s6_3 reachable=true prev=[s6_1,s6_2] next=[] allPrev=[s6_1,s6_2] allNext=[] looped=[]
+exit MethodDefinition 84-115
+enter MethodDefinition 120-145
+enter Identifier 121-122
+exit Identifier 121-122
+onCodePathStart s7 function FunctionExpression 122-145
+onCodePathSegmentStart s7_1 FunctionExpression 122-145
+enter FunctionExpression 122-145
+enter BlockStatement 125-145
+enter ExpressionStatement 127-135
+enter YieldExpression 127-134
+enter Literal 133-134
+exit Literal 133-134
+onCodePathSegmentEnd s7_1 YieldExpression 127-134
+onCodePathSegmentStart s7_2 YieldExpression 127-134
+exit YieldExpression 127-134
+exit ExpressionStatement 127-135
+enter ReturnStatement 136-143
+exit ReturnStatement 136-143
+onCodePathSegmentEnd s7_2 BlockStatement 125-145
+onUnreachableCodePathSegmentStart s7_3 BlockStatement 125-145
+exit BlockStatement 125-145
+exit FunctionExpression 122-145
+onUnreachableCodePathSegmentEnd s7_3 FunctionExpression 122-145
+onCodePathEnd s7 FunctionExpression 122-145 initial=s7_1 final=[s7_1,s7_2] returned=[s7_1,s7_2] thrown=[s7_1]
+  seg s7_1 reachable=true prev=[] next=[s7_2] allPrev=[] allNext=[s7_2] looped=[]
+  seg s7_2 reachable=true prev=[s7_1] next=[] allPrev=[s7_1] allNext=[s7_3] looped=[]
+  seg s7_3 reachable=false prev=[s7_2] next=[] allPrev=[s7_2] allNext=[] looped=[]
+exit MethodDefinition 120-145
+exit ClassBody 18-147
+exit ClassDeclaration 0-147
+exit Program 0-148
+onCodePathSegmentEnd s1_1 Program 0-148
+onCodePathEnd s1 Program 0-148 initial=s1_1 final=[s1_1] returned=[s1_1] thrown=[]
+  seg s1_1 reachable=true prev=[] next=[] allPrev=[] allNext=[] looped=[]

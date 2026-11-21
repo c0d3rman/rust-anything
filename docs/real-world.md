@@ -474,7 +474,8 @@ the utility library under every codec, and ported its pure C units one at a time
 against recordings of the real ffmpeg functions. Everything is in
 [`demo/real-world/ffmpeg-rs`](../demo/real-world/ffmpeg-rs): the crates (LGPL, like the code
 they port; `adler32-rs` keeps zlib's license), and the scripts that clone ffmpeg, assemble the
-tree, record, verify and bench. No ffmpeg source or recorded case is copied.
+tree, record, verify and bench. No ffmpeg source or recorded case is copied. The port is also
+published on its own as [erkamyaman/ffmpeg-rs-anything](https://github.com/erkamyaman/ffmpeg-rs-anything).
 
 | Step | Result |
 | --- | --- |
@@ -633,6 +634,89 @@ eight are faster, and the other 16 are slower by 3 to 40%, the slowest the 1 ns 
   now passes it.
 - The bridge reads `av_escape`'s `char **dst` (memory it allocates) as a position in `src`; it
   was kept in C by hand (`--keep`).
+
+## ESLint
+
+A Reddit comment asked for ESLint next: Oxlint is fast but differs from ESLint, so an
+exact-behavior Rust ESLint would be something else. This run took
+[ESLint](https://github.com/eslint/eslint) (MIT, tag `v10.15.0`, commit `a2101d9`) and put a Rust
+front door in front of its CLI: the front door lints a run in Rust when its
+whole config comes from flags (`--no-config-lookup --rule ... --stdin`) and every rule it enables
+is one of the 90 ported (`eslint:recommended` and 26 widely used rules), and hands every other run
+to ESLint. Everything is in [`demo/real-world/eslint-rs`](../demo/real-world/eslint-rs); its
+`DECISIONS.md` records the choices. No ESLint source, test or recorded case is copied there.
+
+| Step | Result |
+| --- | --- |
+| inputs | ESLint's own RuleTester cases for the 90 rules, turned into CLI runs by `scripts/harvest-rule-tests.cjs` (options as `--rule`, globals as `--global`, `commonjs`/`script` as `.cjs`, every fifth through `stylish`, invalid cases with an `output` through `--fix-dry-run`); 902 real-file runs (ESLint's own `lib/` and `bin/`, ms, Fuse.js, json-server, all 90 rules on, `json --fix-dry-run` and `stylish`); 555 linter-core runs (directives, inline config, unused directives, fixes, severities, CLI flags, parse errors) |
+| `app record` | 10,585 cases (8,856 rule, 902 real, 555 core, 272 traps), two runs each; the only noise was the HTML formatter's time stamp |
+| parser | oxc 0.158, with its token list mapped to espree's token types and its ranges to UTF-16: tree, tokens and comments equal espree's on 30,082 of 30,099 inputs taken from all of ESLint's rule tests (not only the 90); the other 17 are refused and go to ESLint, none differ |
+| port | about 33,700 lines of Rust: the linter core (`SourceCode`, the token store, selector ordering, directives, inline config, the report translator, the fix loop, the `json` and `stylish` formatters), eslint-scope 9.1.2, ESLint's code path analysis, eslint-utils' `getStaticValue` and `ReferenceTracker`, regexpp's parser and validator, and the 90 rules |
+| code paths | the enter, leave and code path event sequence and every segment graph, compared with ESLint's own `CodePathAnalyzer` on 9,706 inputs: all identical |
+| regexpp | `validatePattern` (message for message) and the parse tree, compared on 31,232 pattern and flag-mode pairs: all identical |
+| `gate eslint-stdin-rs` | passes: `lintStdin(args, text)`, a wrapper that runs ESLint's own `cli.execute` in process, bridged and backed by the port; 10,192/10,192 recorded calls |
+| `app replay --build` | **10,585/10,585 at 3.6% fallback; 10,204 runs answered fully in Rust**, byte-identical stdout, stderr and exit code |
+
+In Rust, by group: 8,848 of the 8,856 rule cases, 886 of the 902 real-file runs, 458 of the 555
+core cases, 12 of the 272 traps. What goes to ESLint, by the first thing the port does not take:
+file names other than `.js`, `.mjs` and `.cjs` 91, `--rule` values ESLint itself rejects (the
+tool's traps) 84, formats other than `json` and `stylish` 82, parse errors 65 (they keep espree's
+messages), `impliedStrict` and other parser options 15, inline config enabling a rule not ported
+13, import assertions (oxc accepts them, acorn does not) 6, and 25 others: inline configs whose
+options the port does not read or whose error message comes from ajv 12, invalid `--rule` options,
+severities and rule names 6, JSX text with HTML entities 2, two literals beyond `1e308` that
+no-loss-of-precision declines, `--help`, `--version`, and one run with config lookup on.
+
+How the port was checked as it grew: `linter-rs/examples/check.rs` runs every recorded case in
+process in about 3 seconds and counts cases claimed and identical, mismatches (always 0) and
+declines with their reasons. A rule that meets something it does not port (a regex option outside
+a small matcher, a value `getStaticValue` cannot reproduce exactly) declines the whole run rather
+than guess.
+
+What the port had to get right, all caught by recorded cases:
+
+- espree types a keyword used as a property name (`a.if`, `{ debugger: 1 }`) as `Identifier`
+  (acorn re-reads it as a name), except `let`, `static` and `yield`, which stay `Keyword`;
+  `new.target`'s `new` stays `Keyword`; template element ranges include the backtick and `${`.
+- oxc's parser leaves early errors to semantic analysis that acorn reports while parsing (`"use
+  strict"` in a function with default parameters); running oxc's syntax checks sends those
+  files to ESLint instead of linting them.
+- Listeners run in esquery's order: by attribute count, identifier count, then the selector
+  text, across rules; selectors with the same text in rule order. Messages at the same line and
+  column keep that order.
+- A suggestion's keys keep the order the rule wrote them, with `desc` appended; a problem from
+  `context.report` and one from the linter (`Definition for rule ... was not found`) put
+  `severity` in different places.
+- `eslint-disable-next-line` takes the comment's end line, unused directives are reported at the
+  comment's start, and removing one rule from a list keeps the commas right.
+- `String(number)`, `toPrecision` and radix conversion as V8 writes them (no-loss-of-precision),
+  UTF-16 lengths in the `stylish` table, JavaScript's `\s` set (which has U+FEFF and not U+0085).
+- `1e400` comes out of oxc's ESTree JSON as `1e+400`, which serde_json refuses; it is read as
+  infinity.
+
+Found in rust-anything, and fixed (all in the [changelog](../CHANGELOG.md)):
+
+- `bridge` and `analyze` found no functions in a CommonJS module (`module.exports = { a, b }`),
+  so no ESLint unit could be bridged; they now read `module.exports = { ... }`,
+  `module.exports.a = a` and `exports.a = a`.
+- The `timestamps` normalizer missed JavaScript's `Date#toString()`, so ESLint's HTML report
+  kept the minutes of its recording run and failed a replay ten minutes later.
+
+Benchmark: Apple M4 (10 cores), Node 24.15.0, two runs at load
+average 3.0 to 3.9, on the 443 real files the port answers with all 90 rules on
+([`bench/`](../demo/real-world/eslint-rs/bench)): one process per file, ESLint's CLI took
+53.5 s and 56.4 s and the front door 2.07 s and 2.15 s (25.9x, 26.3x; per file median 34.5x, the
+slowest file 6.3x, none slower, the same bytes from both). In process, ESLint's `Linter` warm in
+V8 took 2,368 ms and 2,553 ms and the port 754 ms and 759 ms (3.1x, 3.4x; per file median 2.9x
+and 3.0x, lowest 1.2x, none slower). A run that falls back costs about 2.5 ms more than ESLint
+alone. The CLI gap is mostly Node starting and loading ESLint; in process a first build measured
+2.1x to 2.3x (at load 19 to 22) and reached 3x after reading oxc's ESTree JSON straight into the arena instead of through
+`serde_json::Value`, and computing the listener order once per node type.
+
+What it does not cover: config files, plugins and custom parsers (TypeScript, Babel), the other
+202 core rules, formatters other than `json` and `stylish`, linting files named on the command
+line (ignore files, caching, suppressions, `--fix` writing files), and parse error messages. The
+front door is not lifted: ESLint stays installed and answers those runs.
 
 ## Fixtures written to stress the tool
 

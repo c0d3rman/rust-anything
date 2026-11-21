@@ -1,0 +1,20 @@
+[package]
+name = "eslint-linter-rs"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "Rust port of ESLint 10.15.0's linter core and a set of its core rules, on oxc's parser"
+
+[dependencies]
+oxc_allocator = "0.158"
+oxc_ast = { version = "0.158", features = ["serialize"] }
+oxc_parser = "0.158"
+oxc_semantic = "0.158"
+oxc_span = "0.158"
+serde = "1"
+serde_json = { version = "1", features = ["preserve_order", "float_roundtrip", "unbounded_depth"] }
+
+[profile.release]
+lto = true
+
+[workspace]

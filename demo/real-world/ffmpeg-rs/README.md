@@ -4,6 +4,7 @@ Portable C from [FFmpeg](https://ffmpeg.org)'s `libavutil` (tag `n7.1`, commit `
 ported to Rust with rust-anything, one unit at a time, each proven against recordings of the
 real ffmpeg functions and passing `rust-anything gate`. The case study is in
 [`docs/real-world.md`](../../../docs/real-world.md#ffmpeg).
+The same port is also its own repository: [erkamyaman/ffmpeg-rs-anything](https://github.com/erkamyaman/ffmpeg-rs-anything).
 
 This is the portable C of libavutil, not ffmpeg's codecs. Rust does not beat hand-written
 assembly, and a recording on one machine cannot vouch for code written for another CPU, so

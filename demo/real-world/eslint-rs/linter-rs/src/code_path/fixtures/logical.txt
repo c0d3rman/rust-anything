@@ -1,0 +1,165 @@
+onCodePathStart s1 program Program 0-132
+onCodePathSegmentStart s1_1 Program 0-132
+enter Program 0-132
+enter VariableDeclaration 0-31
+enter VariableDeclarator 6-30
+enter Identifier 6-7
+exit Identifier 6-7
+enter LogicalExpression 10-30
+enter LogicalExpression 11-17
+enter Identifier 11-12
+exit Identifier 11-12
+onCodePathSegmentEnd s1_1 Identifier 16-17
+onCodePathSegmentStart s1_2 Identifier 16-17
+enter Identifier 16-17
+exit Identifier 16-17
+exit LogicalExpression 11-17
+onCodePathSegmentEnd s1_2 LogicalExpression 23-29
+onCodePathSegmentStart s1_3 LogicalExpression 23-29
+enter LogicalExpression 23-29
+enter Identifier 23-24
+exit Identifier 23-24
+onCodePathSegmentEnd s1_3 Identifier 28-29
+onCodePathSegmentStart s1_4 Identifier 28-29
+enter Identifier 28-29
+exit Identifier 28-29
+exit LogicalExpression 23-29
+onCodePathSegmentEnd s1_4 LogicalExpression 10-30
+onCodePathSegmentStart s1_5 LogicalExpression 10-30
+exit LogicalExpression 10-30
+exit VariableDeclarator 6-30
+exit VariableDeclaration 0-31
+enter ExpressionStatement 32-40
+enter AssignmentExpression 32-39
+enter Identifier 32-33
+exit Identifier 32-33
+onCodePathSegmentEnd s1_5 Identifier 38-39
+onCodePathSegmentStart s1_6 Identifier 38-39
+enter Identifier 38-39
+exit Identifier 38-39
+onCodePathSegmentEnd s1_6 AssignmentExpression 32-39
+onCodePathSegmentStart s1_7 AssignmentExpression 32-39
+exit AssignmentExpression 32-39
+exit ExpressionStatement 32-40
+enter ExpressionStatement 41-49
+enter AssignmentExpression 41-48
+enter Identifier 41-42
+exit Identifier 41-42
+onCodePathSegmentEnd s1_7 Identifier 47-48
+onCodePathSegmentStart s1_8 Identifier 47-48
+enter Identifier 47-48
+exit Identifier 47-48
+onCodePathSegmentEnd s1_8 AssignmentExpression 41-48
+onCodePathSegmentStart s1_9 AssignmentExpression 41-48
+exit AssignmentExpression 41-48
+exit ExpressionStatement 41-49
+enter ExpressionStatement 50-58
+enter AssignmentExpression 50-57
+enter Identifier 50-51
+exit Identifier 50-51
+onCodePathSegmentEnd s1_9 Identifier 56-57
+onCodePathSegmentStart s1_10 Identifier 56-57
+enter Identifier 56-57
+exit Identifier 56-57
+onCodePathSegmentEnd s1_10 AssignmentExpression 50-57
+onCodePathSegmentStart s1_11 AssignmentExpression 50-57
+exit AssignmentExpression 50-57
+exit ExpressionStatement 50-58
+enter IfStatement 59-86
+enter LogicalExpression 63-76
+enter Identifier 63-64
+exit Identifier 63-64
+onCodePathSegmentEnd s1_11 LogicalExpression 69-75
+onCodePathSegmentStart s1_12 LogicalExpression 69-75
+enter LogicalExpression 69-75
+enter Identifier 69-70
+exit Identifier 69-70
+onCodePathSegmentEnd s1_12 Identifier 74-75
+onCodePathSegmentStart s1_13 Identifier 74-75
+enter Identifier 74-75
+exit Identifier 74-75
+exit LogicalExpression 69-75
+exit LogicalExpression 63-76
+onCodePathSegmentEnd s1_13 BlockStatement 78-86
+onCodePathSegmentStart s1_14 BlockStatement 78-86
+enter BlockStatement 78-86
+enter ExpressionStatement 80-84
+enter CallExpression 80-83
+enter Identifier 80-81
+exit Identifier 80-81
+exit CallExpression 80-83
+exit ExpressionStatement 80-84
+exit BlockStatement 78-86
+onCodePathSegmentEnd s1_14 IfStatement 59-86
+onCodePathSegmentStart s1_15 IfStatement 59-86
+exit IfStatement 59-86
+enter VariableDeclaration 87-107
+enter VariableDeclarator 93-106
+enter Identifier 93-94
+exit Identifier 93-94
+enter ConditionalExpression 97-106
+enter Identifier 97-98
+exit Identifier 97-98
+onCodePathSegmentEnd s1_15 Identifier 101-102
+onCodePathSegmentStart s1_16 Identifier 101-102
+enter Identifier 101-102
+exit Identifier 101-102
+onCodePathSegmentEnd s1_16 Identifier 105-106
+onCodePathSegmentStart s1_17 Identifier 105-106
+enter Identifier 105-106
+exit Identifier 105-106
+onCodePathSegmentEnd s1_17 ConditionalExpression 97-106
+onCodePathSegmentStart s1_18 ConditionalExpression 97-106
+exit ConditionalExpression 97-106
+exit VariableDeclarator 93-106
+exit VariableDeclaration 87-107
+enter WhileStatement 108-131
+onCodePathSegmentEnd s1_18 LogicalExpression 115-121
+onCodePathSegmentStart s1_19 LogicalExpression 115-121
+enter LogicalExpression 115-121
+enter Identifier 115-116
+exit Identifier 115-116
+onCodePathSegmentEnd s1_19 Identifier 120-121
+onCodePathSegmentStart s1_20 Identifier 120-121
+enter Identifier 120-121
+exit Identifier 120-121
+exit LogicalExpression 115-121
+onCodePathSegmentEnd s1_20 BlockStatement 123-131
+onCodePathSegmentStart s1_21 BlockStatement 123-131
+enter BlockStatement 123-131
+enter ExpressionStatement 125-129
+enter CallExpression 125-128
+enter Identifier 125-126
+exit Identifier 125-126
+exit CallExpression 125-128
+exit ExpressionStatement 125-129
+exit BlockStatement 123-131
+onCodePathSegmentLoop s1_21 s1_19 WhileStatement 108-131
+onCodePathSegmentEnd s1_21 WhileStatement 108-131
+onCodePathSegmentStart s1_22 WhileStatement 108-131
+exit WhileStatement 108-131
+exit Program 0-132
+onCodePathSegmentEnd s1_22 Program 0-132
+onCodePathEnd s1 Program 0-132 initial=s1_1 final=[s1_22] returned=[s1_22] thrown=[]
+  seg s1_1 reachable=true prev=[] next=[s1_2,s1_3] allPrev=[] allNext=[s1_2,s1_3] looped=[]
+  seg s1_2 reachable=true prev=[s1_1] next=[s1_3,s1_5] allPrev=[s1_1] allNext=[s1_3,s1_5] looped=[]
+  seg s1_3 reachable=true prev=[s1_1,s1_2] next=[s1_4,s1_5] allPrev=[s1_1,s1_2] allNext=[s1_4,s1_5] looped=[]
+  seg s1_4 reachable=true prev=[s1_3] next=[s1_5] allPrev=[s1_3] allNext=[s1_5] looped=[]
+  seg s1_5 reachable=true prev=[s1_2,s1_3,s1_4] next=[s1_6,s1_7] allPrev=[s1_2,s1_3,s1_4] allNext=[s1_6,s1_7] looped=[]
+  seg s1_6 reachable=true prev=[s1_5] next=[s1_7] allPrev=[s1_5] allNext=[s1_7] looped=[]
+  seg s1_7 reachable=true prev=[s1_5,s1_6] next=[s1_8,s1_9] allPrev=[s1_5,s1_6] allNext=[s1_8,s1_9] looped=[]
+  seg s1_8 reachable=true prev=[s1_7] next=[s1_9] allPrev=[s1_7] allNext=[s1_9] looped=[]
+  seg s1_9 reachable=true prev=[s1_8,s1_7] next=[s1_10,s1_11] allPrev=[s1_8,s1_7] allNext=[s1_10,s1_11] looped=[]
+  seg s1_10 reachable=true prev=[s1_9] next=[s1_11] allPrev=[s1_9] allNext=[s1_11] looped=[]
+  seg s1_11 reachable=true prev=[s1_9,s1_10] next=[s1_12,s1_15] allPrev=[s1_9,s1_10] allNext=[s1_12,s1_15] looped=[]
+  seg s1_12 reachable=true prev=[s1_11] next=[s1_13,s1_14] allPrev=[s1_11] allNext=[s1_13,s1_14] looped=[]
+  seg s1_13 reachable=true prev=[s1_12] next=[s1_14,s1_15] allPrev=[s1_12] allNext=[s1_14,s1_15] looped=[]
+  seg s1_14 reachable=true prev=[s1_12,s1_13] next=[s1_15] allPrev=[s1_12,s1_13] allNext=[s1_15] looped=[]
+  seg s1_15 reachable=true prev=[s1_14,s1_11,s1_13] next=[s1_16,s1_17] allPrev=[s1_14,s1_11,s1_13] allNext=[s1_16,s1_17] looped=[]
+  seg s1_16 reachable=true prev=[s1_15] next=[s1_18] allPrev=[s1_15] allNext=[s1_18] looped=[]
+  seg s1_17 reachable=true prev=[s1_15] next=[s1_18] allPrev=[s1_15] allNext=[s1_18] looped=[]
+  seg s1_18 reachable=true prev=[s1_16,s1_17] next=[s1_19] allPrev=[s1_16,s1_17] allNext=[s1_19] looped=[]
+  seg s1_19 reachable=true prev=[s1_18,s1_21] next=[s1_20,s1_21] allPrev=[s1_18,s1_21] allNext=[s1_20,s1_21] looped=[s1_21]
+  seg s1_20 reachable=true prev=[s1_19] next=[s1_21,s1_22] allPrev=[s1_19] allNext=[s1_21,s1_22] looped=[]
+  seg s1_21 reachable=true prev=[s1_19,s1_20] next=[s1_19] allPrev=[s1_19,s1_20] allNext=[s1_19] looped=[]
+  seg s1_22 reachable=true prev=[s1_20] next=[] allPrev=[s1_20] allNext=[] looped=[]

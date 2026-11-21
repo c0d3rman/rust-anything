@@ -1,0 +1,133 @@
+onCodePathStart s1 program Program 0-151
+onCodePathSegmentStart s1_1 Program 0-151
+enter Program 0-151
+onCodePathStart s2 function FunctionDeclaration 0-92
+onCodePathSegmentStart s2_1 FunctionDeclaration 0-92
+enter FunctionDeclaration 0-92
+enter Identifier 9-10
+exit Identifier 9-10
+enter BlockStatement 13-92
+enter TryStatement 19-81
+enter BlockStatement 23-41
+enter ExpressionStatement 25-29
+enter CallExpression 25-28
+enter Identifier 25-26
+exit Identifier 25-26
+onCodePathSegmentEnd s2_1 CallExpression 25-28
+onCodePathSegmentStart s2_2 CallExpression 25-28
+exit CallExpression 25-28
+exit ExpressionStatement 25-29
+enter ReturnStatement 30-39
+enter Literal 37-38
+exit Literal 37-38
+exit ReturnStatement 30-39
+onCodePathSegmentEnd s2_2 BlockStatement 23-41
+onUnreachableCodePathSegmentStart s2_3 BlockStatement 23-41
+exit BlockStatement 23-41
+onUnreachableCodePathSegmentEnd s2_3 CatchClause 42-64
+onCodePathSegmentStart s2_4 CatchClause 42-64
+enter CatchClause 42-64
+enter Identifier 49-50
+exit Identifier 49-50
+enter BlockStatement 52-64
+enter ThrowStatement 54-62
+enter Identifier 60-61
+exit Identifier 60-61
+onCodePathSegmentEnd s2_4 ThrowStatement 54-62
+onCodePathSegmentStart s2_5 ThrowStatement 54-62
+exit ThrowStatement 54-62
+onCodePathSegmentEnd s2_5 BlockStatement 52-64
+onUnreachableCodePathSegmentStart s2_6 BlockStatement 52-64
+exit BlockStatement 52-64
+exit CatchClause 42-64
+onUnreachableCodePathSegmentEnd s2_6 BlockStatement 73-81
+onUnreachableCodePathSegmentStart s2_8 BlockStatement 73-81
+onCodePathSegmentStart s2_9 BlockStatement 73-81
+enter BlockStatement 73-81
+enter ExpressionStatement 75-79
+enter CallExpression 75-78
+enter Identifier 75-76
+exit Identifier 75-76
+exit CallExpression 75-78
+exit ExpressionStatement 75-79
+exit BlockStatement 73-81
+onCodePathSegmentEnd s2_9 TryStatement 19-81
+exit TryStatement 19-81
+enter ExpressionStatement 86-90
+enter CallExpression 86-89
+enter Identifier 86-87
+exit Identifier 86-87
+exit CallExpression 86-89
+exit ExpressionStatement 86-90
+exit BlockStatement 13-92
+exit FunctionDeclaration 0-92
+onUnreachableCodePathSegmentEnd s2_8 FunctionDeclaration 0-92
+onCodePathEnd s2 FunctionDeclaration 0-92 initial=s2_1 final=[s2_9] returned=[s2_9] thrown=[s2_9]
+  seg s2_1 reachable=true prev=[] next=[s2_2,s2_4] allPrev=[] allNext=[s2_2,s2_4] looped=[]
+  seg s2_2 reachable=true prev=[s2_1] next=[s2_9] allPrev=[s2_1] allNext=[s2_3,s2_9] looped=[]
+  seg s2_3 reachable=false prev=[s2_2] next=[s2_4] allPrev=[s2_2] allNext=[s2_4,s2_8] looped=[]
+  seg s2_4 reachable=true prev=[s2_1] next=[s2_5,s2_9] allPrev=[s2_1,s2_3] allNext=[s2_5,s2_9] looped=[]
+  seg s2_5 reachable=true prev=[s2_4] next=[s2_9] allPrev=[s2_4] allNext=[s2_6,s2_9] looped=[]
+  seg s2_6 reachable=false prev=[s2_5] next=[s2_9] allPrev=[s2_5] allNext=[s2_8,s2_9] looped=[]
+  seg s2_8 reachable=false prev=[] next=[] allPrev=[s2_3,s2_6] allNext=[] looped=[]
+  seg s2_9 reachable=true prev=[s2_2,s2_4,s2_5] next=[] allPrev=[s2_6,s2_2,s2_4,s2_5] allNext=[] looped=[]
+enter TryStatement 93-122
+enter BlockStatement 97-105
+enter ExpressionStatement 99-103
+enter CallExpression 99-102
+enter Identifier 99-100
+exit Identifier 99-100
+onCodePathSegmentEnd s1_1 CallExpression 99-102
+onCodePathSegmentStart s1_2 CallExpression 99-102
+exit CallExpression 99-102
+exit ExpressionStatement 99-103
+exit BlockStatement 97-105
+onCodePathSegmentEnd s1_2 BlockStatement 114-122
+onCodePathSegmentStart s1_3 BlockStatement 114-122
+onCodePathSegmentStart s1_4 BlockStatement 114-122
+enter BlockStatement 114-122
+enter ExpressionStatement 116-120
+enter CallExpression 116-119
+enter Identifier 116-117
+exit Identifier 116-117
+exit CallExpression 116-119
+exit ExpressionStatement 116-120
+exit BlockStatement 114-122
+onCodePathSegmentEnd s1_4 TryStatement 93-122
+exit TryStatement 93-122
+enter TryStatement 123-150
+enter BlockStatement 127-135
+enter ExpressionStatement 129-133
+enter CallExpression 129-132
+enter Identifier 129-130
+exit Identifier 129-130
+onCodePathSegmentEnd s1_3 CallExpression 129-132
+onCodePathSegmentStart s1_5 CallExpression 129-132
+exit CallExpression 129-132
+exit ExpressionStatement 129-133
+exit BlockStatement 127-135
+onCodePathSegmentEnd s1_5 CatchClause 136-150
+onCodePathSegmentStart s1_6 CatchClause 136-150
+enter CatchClause 136-150
+enter BlockStatement 142-150
+enter ExpressionStatement 144-148
+enter CallExpression 144-147
+enter Identifier 144-145
+exit Identifier 144-145
+exit CallExpression 144-147
+exit ExpressionStatement 144-148
+exit BlockStatement 142-150
+exit CatchClause 136-150
+onCodePathSegmentEnd s1_6 TryStatement 123-150
+onCodePathSegmentStart s1_7 TryStatement 123-150
+exit TryStatement 123-150
+exit Program 0-151
+onCodePathSegmentEnd s1_7 Program 0-151
+onCodePathEnd s1 Program 0-151 initial=s1_1 final=[s1_4,s1_7] returned=[s1_7] thrown=[s1_4]
+  seg s1_1 reachable=true prev=[] next=[s1_2,s1_4] allPrev=[] allNext=[s1_2,s1_4] looped=[]
+  seg s1_2 reachable=true prev=[s1_1] next=[s1_3,s1_4] allPrev=[s1_1] allNext=[s1_3,s1_4] looped=[]
+  seg s1_3 reachable=true prev=[s1_2] next=[s1_5,s1_6] allPrev=[s1_2] allNext=[s1_5,s1_6] looped=[]
+  seg s1_4 reachable=true prev=[s1_2,s1_1] next=[] allPrev=[s1_2,s1_1] allNext=[] looped=[]
+  seg s1_5 reachable=true prev=[s1_3] next=[s1_6,s1_7] allPrev=[s1_3] allNext=[s1_6,s1_7] looped=[]
+  seg s1_6 reachable=true prev=[s1_3,s1_5] next=[s1_7] allPrev=[s1_3,s1_5] allNext=[s1_7] looped=[]
+  seg s1_7 reachable=true prev=[s1_5,s1_6] next=[] allPrev=[s1_5,s1_6] allNext=[] looped=[]

@@ -1,0 +1,117 @@
+onCodePathStart s1 program Program 0-146
+onCodePathSegmentStart s1_1 Program 0-146
+enter Program 0-146
+enter SwitchStatement 0-74
+enter Identifier 8-9
+exit Identifier 8-9
+enter SwitchCase 13-25
+enter Literal 18-19
+exit Literal 18-19
+onCodePathSegmentEnd s1_1 ExpressionStatement 21-25
+onCodePathSegmentStart s1_2 ExpressionStatement 21-25
+enter ExpressionStatement 21-25
+enter CallExpression 21-24
+enter Identifier 21-22
+exit Identifier 21-22
+exit CallExpression 21-24
+exit ExpressionStatement 21-25
+exit SwitchCase 13-25
+onCodePathSegmentEnd s1_2 SwitchCase 26-45
+onCodePathSegmentStart s1_3 SwitchCase 26-45
+enter SwitchCase 26-45
+enter Literal 31-32
+exit Literal 31-32
+onCodePathSegmentEnd s1_3 ExpressionStatement 34-38
+onCodePathSegmentStart s1_4 ExpressionStatement 34-38
+enter ExpressionStatement 34-38
+enter CallExpression 34-37
+enter Identifier 34-35
+exit Identifier 34-35
+exit CallExpression 34-37
+exit ExpressionStatement 34-38
+enter BreakStatement 39-45
+exit BreakStatement 39-45
+onCodePathSegmentEnd s1_4 SwitchCase 26-45
+onUnreachableCodePathSegmentStart s1_5 SwitchCase 26-45
+exit SwitchCase 26-45
+onUnreachableCodePathSegmentEnd s1_5 SwitchCase 46-59
+onCodePathSegmentStart s1_6 SwitchCase 46-59
+enter SwitchCase 46-59
+onCodePathSegmentEnd s1_6 ExpressionStatement 55-59
+onCodePathSegmentStart s1_7 ExpressionStatement 55-59
+enter ExpressionStatement 55-59
+enter CallExpression 55-58
+enter Identifier 55-56
+exit Identifier 55-56
+exit CallExpression 55-58
+exit ExpressionStatement 55-59
+exit SwitchCase 46-59
+onCodePathSegmentEnd s1_7 SwitchCase 60-72
+onCodePathSegmentStart s1_8 SwitchCase 60-72
+enter SwitchCase 60-72
+enter Literal 65-66
+exit Literal 65-66
+onCodePathSegmentEnd s1_8 ExpressionStatement 68-72
+onCodePathSegmentStart s1_9 ExpressionStatement 68-72
+enter ExpressionStatement 68-72
+enter CallExpression 68-71
+enter Identifier 68-69
+exit Identifier 68-69
+exit CallExpression 68-71
+exit ExpressionStatement 68-72
+exit SwitchCase 60-72
+onCodePathSegmentLoop s1_8 s1_7 SwitchStatement 0-74
+onCodePathSegmentEnd s1_9 SwitchStatement 0-74
+onCodePathSegmentStart s1_10 SwitchStatement 0-74
+exit SwitchStatement 0-74
+enter SwitchStatement 75-98
+enter Identifier 83-84
+exit Identifier 83-84
+enter SwitchCase 88-96
+exit SwitchCase 88-96
+exit SwitchStatement 75-98
+enter LabeledStatement 99-145
+enter Identifier 99-102
+exit Identifier 99-102
+enter SwitchStatement 104-145
+enter Identifier 112-113
+exit Identifier 112-113
+enter SwitchCase 117-135
+enter Literal 122-123
+exit Literal 122-123
+onCodePathSegmentEnd s1_10 BreakStatement 125-135
+onCodePathSegmentStart s1_11 BreakStatement 125-135
+enter BreakStatement 125-135
+enter Identifier 131-134
+exit Identifier 131-134
+exit BreakStatement 125-135
+onCodePathSegmentEnd s1_11 SwitchCase 117-135
+onUnreachableCodePathSegmentStart s1_12 SwitchCase 117-135
+exit SwitchCase 117-135
+onUnreachableCodePathSegmentEnd s1_12 SwitchCase 136-143
+onCodePathSegmentStart s1_13 SwitchCase 136-143
+enter SwitchCase 136-143
+enter Literal 141-142
+exit Literal 141-142
+exit SwitchCase 136-143
+onCodePathSegmentEnd s1_13 SwitchStatement 104-145
+onCodePathSegmentStart s1_15 SwitchStatement 104-145
+exit SwitchStatement 104-145
+exit LabeledStatement 99-145
+exit Program 0-146
+onCodePathSegmentEnd s1_15 Program 0-146
+onCodePathEnd s1 Program 0-146 initial=s1_1 final=[s1_15] returned=[s1_15] thrown=[]
+  seg s1_1 reachable=true prev=[] next=[s1_2,s1_3] allPrev=[] allNext=[s1_2,s1_3] looped=[]
+  seg s1_2 reachable=true prev=[s1_1] next=[s1_4] allPrev=[s1_1] allNext=[s1_4] looped=[]
+  seg s1_3 reachable=true prev=[s1_1] next=[s1_4,s1_6] allPrev=[s1_1] allNext=[s1_4,s1_6] looped=[]
+  seg s1_4 reachable=true prev=[s1_2,s1_3] next=[s1_10] allPrev=[s1_2,s1_3] allNext=[s1_5,s1_10] looped=[]
+  seg s1_5 reachable=false prev=[s1_4] next=[s1_7] allPrev=[s1_4] allNext=[s1_7] looped=[]
+  seg s1_6 reachable=true prev=[s1_3] next=[s1_8] allPrev=[s1_3] allNext=[s1_8] looped=[]
+  seg s1_7 reachable=true prev=[s1_8] next=[s1_9] allPrev=[s1_5,s1_8] allNext=[s1_9] looped=[s1_8]
+  seg s1_8 reachable=true prev=[s1_6] next=[s1_9,s1_7] allPrev=[s1_6] allNext=[s1_9,s1_7] looped=[]
+  seg s1_9 reachable=true prev=[s1_7,s1_8] next=[s1_10] allPrev=[s1_7,s1_8] allNext=[s1_10] looped=[]
+  seg s1_10 reachable=true prev=[s1_4,s1_9] next=[s1_11,s1_13] allPrev=[s1_4,s1_9] allNext=[s1_11,s1_13] looped=[]
+  seg s1_11 reachable=true prev=[s1_10] next=[s1_15] allPrev=[s1_10] allNext=[s1_12,s1_15] looped=[]
+  seg s1_12 reachable=false prev=[s1_11] next=[s1_15] allPrev=[s1_11] allNext=[s1_15] looped=[]
+  seg s1_13 reachable=true prev=[s1_10] next=[s1_15] allPrev=[s1_10] allNext=[s1_15] looped=[]
+  seg s1_15 reachable=true prev=[s1_11,s1_13] next=[] allPrev=[s1_11,s1_12,s1_13] allNext=[] looped=[]

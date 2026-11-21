@@ -527,19 +527,19 @@ fit = "partial"
 note = "Binds the C libraries. For pure Rust, remade-ffmpeg covers a subset of codecs (and has an ffmpeg-compatible CLI): check its codec table."
 
 [[ruby]]
-names = ["rails", "sinatra", "roda", "hanami"]
+names = ["rails", "sinatra", "roda", "hanami", "action_controller", "action_view", "action_mailer", "action_cable", "action_dispatch", "active_job", "active_storage", "railties"]
 crates = "axum"
 fit = "none"
 note = "a web framework is an application rewrite, not a port"
 
 [[ruby]]
-names = ["activesupport"]
+names = ["activesupport", "active_support"]
 crates = "chrono, heck, inflector"
 fit = "partial"
 note = "core extensions have no single counterpart"
 
 [[ruby]]
-names = ["activerecord", "sequel"]
+names = ["activerecord", "active_record", "sequel"]
 crates = "sqlx, diesel"
 fit = "partial"
 note = "an ORM's dynamic queries need redesign"

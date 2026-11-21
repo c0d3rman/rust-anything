@@ -139,4 +139,33 @@ mod tests {
         }
         assert!(find("c", "<libavcodecx.h>").is_none());
     }
+
+    #[test]
+    fn ruby_require_names_map_to_the_gem_that_serves_them() {
+        // `require "active_support/core_ext/..."` names `active_support`; the gem is
+        // `activesupport`, and the Rails components are separate gems again.
+        for (required, crates, fit) in [
+            ("active_support", "chrono, heck, inflector", Fit::Partial),
+            ("active_record", "sqlx, diesel", Fit::Partial),
+            ("action_controller", "axum", Fit::None),
+            ("action_view", "axum", Fit::None),
+            ("action_mailer", "axum", Fit::None),
+            ("active_job", "axum", Fit::None),
+            ("active_storage", "axum", Fit::None),
+            ("railties", "axum", Fit::None),
+        ] {
+            let m = find("ruby", required).unwrap_or_else(|| panic!("ruby: {required}"));
+            assert_eq!((m.crates, m.fit), (crates, fit), "ruby: {required}");
+        }
+        // The gem names themselves keep answering the same way.
+        assert_eq!(
+            find("ruby", "activesupport").map(|m| m.crates),
+            Some("chrono, heck, inflector")
+        );
+        assert_eq!(
+            find("ruby", "sequel").map(|m| m.crates),
+            Some("sqlx, diesel")
+        );
+        assert!(find("ruby", "railsx").is_none());
+    }
 }
